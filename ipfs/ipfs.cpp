@@ -44,7 +44,8 @@ void Ipfs::replyFinished(QNetworkReply *reply)
 {
     if(reply->error())
     {
-        qDebug() << "http error: " << reply->errorString();
+        qDebug() << "http error: " << reply->errorString() << endl;
+        qDebug() << reply->readAll();
         return;
     }
 

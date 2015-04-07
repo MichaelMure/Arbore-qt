@@ -2,6 +2,7 @@
 #define IPFS_H
 
 #include <QObject>
+#include "ipfs/ipfspin.h"
 #include "ipfs/ipfsversion.h"
 
 class QNetworkAccessManager;
@@ -14,6 +15,7 @@ public:
     // Singleton
     static Ipfs& instance();
 
+    IpfsPin pin;
     IpfsVersion version;
 
     void query(QUrl &url, IpfsCommand *originator);

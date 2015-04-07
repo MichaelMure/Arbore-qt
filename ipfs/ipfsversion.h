@@ -2,7 +2,6 @@
 #define IPFS_VERSION_H
 
 #include "ipfs/ipfscommand.h"
-
 #include <QObject>
 
 class IpfsVersion : IpfsCommand

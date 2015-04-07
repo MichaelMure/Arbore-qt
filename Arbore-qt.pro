@@ -15,11 +15,14 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     ipfs/ipfs.cpp \
-    ipfs/ipfsversion.cpp
+    ipfs/ipfsversion.cpp \
+    ipfs/ipfspin.cpp
 
 HEADERS  += mainwindow.h \
     ipfs/ipfs.h \
     ipfs/ipfscommand.h \
-    ipfs/ipfsversion.h
+    ipfs/ipfsversion.h \
+    ipfs/ipfspin.h \
+    ipfs/ipfshash.h
 
 FORMS    += mainwindow.ui
