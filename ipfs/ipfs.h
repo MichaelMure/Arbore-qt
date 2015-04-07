@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include "ipfs/ipfspin.h"
+#include "ipfs/ipfsswarm.h"
 #include "ipfs/ipfsversion.h"
 
 class QNetworkAccessManager;
@@ -16,15 +17,16 @@ public:
     static Ipfs& instance();
 
     IpfsPin pin;
+    IpfsSwarm swarm;
     IpfsVersion version;
 
-    void query(QUrl &url, IpfsCommand *originator);
+    void query(const QUrl &url, IpfsCommand *originator);
 
 private:
-    Ipfs() {}
-    ~Ipfs();
-    Ipfs(Ipfs const&);
-    void operator=(Ipfs const&);
+    Ipfs() {}                    // hide constructor
+    ~Ipfs();                     // hide destructor
+    Ipfs(Ipfs const&);           // hide copy constructor
+    void operator=(Ipfs const&); // hide assign op
 
     void init();
 

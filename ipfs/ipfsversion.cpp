@@ -4,8 +4,10 @@
 #include <QUrl>
 #include <QJsonObject>
 
-IpfsVersion::IpfsVersion(QObject *parent) :
-    IpfsCommand(parent)
+const QString API_URL = "http://127.0.0.1:5001/api/v0/version/";
+
+IpfsVersion::IpfsVersion(QObject *parent)
+    : IpfsCommand(parent)
 {
 }
 
@@ -26,8 +28,7 @@ int IpfsVersion::micro() const
 
 void IpfsVersion::init()
 {
-    QUrl url("http://127.0.0.1:5001/api/v0/version/");
-    Ipfs::instance().query(url, this);
+    Ipfs::instance().query(API_URL, this);
 }
 
 void IpfsVersion::on_reply(const QJsonObject *json)

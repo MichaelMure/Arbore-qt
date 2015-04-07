@@ -18,7 +18,7 @@ Ipfs& Ipfs::instance()
     return instance;
 }
 
-void Ipfs::query(QUrl &url, IpfsCommand *originator)
+void Ipfs::query(const QUrl &url, IpfsCommand *originator)
 {
     QNetworkRequest request = QNetworkRequest(url);
     request.setOriginatingObject(originator);
@@ -32,6 +32,8 @@ void Ipfs::init()
     connect(manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(replyFinished(QNetworkReply*)));
 
+    pin.init();
+    swarm.init();
     version.init();
 }
 

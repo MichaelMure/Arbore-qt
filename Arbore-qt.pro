@@ -16,13 +16,16 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     ipfs/ipfs.cpp \
     ipfs/ipfsversion.cpp \
-    ipfs/ipfspin.cpp
+    ipfs/ipfspin.cpp \
+    ipfs/ipfsswarm.cpp
 
 HEADERS  += mainwindow.h \
     ipfs/ipfs.h \
     ipfs/ipfscommand.h \
     ipfs/ipfsversion.h \
     ipfs/ipfspin.h \
-    ipfs/ipfshash.h
+    ipfs/ipfshash.h \
+    ipfs/ipfsswarm.h \
+    ipfs/ipfspeer.h
 
 FORMS    += mainwindow.ui

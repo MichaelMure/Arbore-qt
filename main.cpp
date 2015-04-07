@@ -2,6 +2,7 @@
 #include "ipfs/ipfs.h"
 #include <QApplication>
 #include <QDebug>
+#include <QTime>
 
 
 int main(int argc, char *argv[])
@@ -12,10 +13,10 @@ int main(int argc, char *argv[])
 
     qDebug() << Ipfs::instance().version.ToString();
 
-    Ipfs::instance().pin.ls_pin();
+    /*Ipfs::instance().pin.ls_pin();
 
     IpfsHash hash = IpfsHash("QmPXME1oRtoT627YKaDPDQ3PwA8tdP9rWuAAweLzqSwAWT");
-    Ipfs::instance().pin.add_pin(hash);
+    Ipfs::instance().pin.add_pin(hash);*/
 
     return a.exec();
 }
