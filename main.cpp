@@ -1,10 +1,7 @@
 #include "mainwindow.h"
+#include "ipfs/ipfs.h"
 #include <QApplication>
-#include <QNetworkAccessManager>
-#include <QUrl>
-#include <QNetworkRequest>
-
-#include "ipfs.h"
+#include <QDebug>
 
 
 int main(int argc, char *argv[])
@@ -14,8 +11,10 @@ int main(int argc, char *argv[])
     w.show();
 
 
-    Ipfs ipfs;
-    ipfs.test();
+    /*ipfs ipfs;
+    ipfs.test();*/
+
+    qDebug() << Ipfs::instance().version.ToString();
 
     return a.exec();
 }
