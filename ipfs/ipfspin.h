@@ -12,6 +12,7 @@ class IpfsPin : public IpfsCommand
     Q_OBJECT
 public:
     explicit IpfsPin(QObject *parent = 0);
+    virtual ~IpfsPin() {}
     void init();
     void on_reply(const QJsonObject *json);
 

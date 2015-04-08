@@ -17,7 +17,9 @@ SOURCES += main.cpp\
     ipfs/ipfs.cpp \
     ipfs/ipfsversion.cpp \
     ipfs/ipfspin.cpp \
-    ipfs/ipfsswarm.cpp
+    ipfs/ipfsswarm.cpp \
+    download.cpp \
+    downloadmodel.cpp
 
 HEADERS  += mainwindow.h \
     ipfs/ipfs.h \
@@ -26,6 +28,8 @@ HEADERS  += mainwindow.h \
     ipfs/ipfspin.h \
     ipfs/ipfshash.h \
     ipfs/ipfsswarm.h \
-    ipfs/ipfspeer.h
+    ipfs/ipfspeer.h \
+    download.h \
+    downloadmodel.h
 
 FORMS    += mainwindow.ui

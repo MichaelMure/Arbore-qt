@@ -5,8 +5,10 @@
 
 class IpfsPeer : private QString
 {
+   // Q_OBJECT
 public:
     IpfsPeer(QString id) : QString(id) {}
+    virtual ~IpfsPeer() {}
 
     QString ToString() const { return *this; }
 };

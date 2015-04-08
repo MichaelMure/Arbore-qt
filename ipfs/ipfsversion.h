@@ -9,6 +9,7 @@ class IpfsVersion : IpfsCommand
     Q_OBJECT
 public:
     explicit IpfsVersion(QObject *parent = 0);
+    virtual ~IpfsVersion() {}
     void init();
     void on_reply(const QJsonObject *json);
 

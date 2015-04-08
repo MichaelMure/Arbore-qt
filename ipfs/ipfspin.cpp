@@ -53,5 +53,5 @@ void IpfsPin::ls_pin(IpfsPinType pin_type)
 
 void IpfsPin::on_reply(const QJsonObject *json)
 {
-    (void)json; // silence unused warning
+    Q_UNUSED(json);
 }

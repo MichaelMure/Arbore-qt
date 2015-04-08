@@ -12,6 +12,9 @@ public:
     explicit IpfsCommand(QObject *parent = 0) : QObject(parent) {}
     virtual void init() = 0;
     virtual void on_reply(const QJsonObject *json) = 0;
+
+protected:
+    virtual ~IpfsCommand() {}
 };
 
 #endif // IPFSCOMMAND_H

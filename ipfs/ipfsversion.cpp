@@ -7,8 +7,15 @@
 const QString API_URL = "http://127.0.0.1:5001/api/v0/version/";
 
 IpfsVersion::IpfsVersion(QObject *parent)
-    : IpfsCommand(parent)
+    : IpfsCommand(parent),
+      major_(0),
+      minor_(0),
+      micro_(0)
 {
+    qDebug() << "constructor";
+    qDebug() << major_;
+    qDebug() << minor_;
+    qDebug() << micro_;
 }
 
 int IpfsVersion::major() const
@@ -46,10 +53,15 @@ void IpfsVersion::on_reply(const QJsonObject *json)
 
 QString IpfsVersion::ToString() const
 {
+    qDebug() << "tostring" << major_;
+    qDebug() << minor_;
+    qDebug() << micro_;
+
+
     QString str;
-    str += QString::number(major()) + ".";
-    str += QString::number(minor()) + ".";
-    str += QString::number(micro());
+    str += QString::number(major_) + ".";
+    str += QString::number(minor_) + ".";
+    str += QString::number(micro_);
 
     return str;
 }

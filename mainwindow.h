@@ -1,7 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "downloadmodel.h"
 #include <QMainWindow>
+#include <QTimer>
 
 namespace Ui {
 class MainWindow;
@@ -17,6 +19,11 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    QTimer refreshTimer_;
+    DownloadModel downloadModel_;
+
+private slots:
+    void refresh();
 };
 
 #endif // MAINWINDOW_H
