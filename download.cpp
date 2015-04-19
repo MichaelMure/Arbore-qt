@@ -6,9 +6,10 @@ Download::Download(QObject *parent):
 {
 }
 
-Download::Download(QString name, float progress, int size, QObject *parent):
+Download::Download(QString name, DownloadState state, float progress, int size, QObject *parent):
     QObject(parent),
     name_(name),
+    state_(state),
     progress_(progress),
     size_(size)
 {
@@ -17,6 +18,11 @@ Download::Download(QString name, float progress, int size, QObject *parent):
 const QString& Download::name() const
 {
     return name_;
+}
+
+DownloadState Download::state() const
+{
+    return state_;
 }
 
 float Download::progress() const

@@ -10,7 +10,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     refreshTimer_(this),
-    downloadModel_(this)
+    downloadModel_(this),
+    downloadDelegate_(this)
 {
     ui->setupUi(this);
 
@@ -19,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     refreshTimer_.start(1000);
 
     ui->downloadListView->setModel(&downloadModel_);
+    ui->downloadListView->setItemDelegate(&downloadDelegate_);
 
     refresh();
 }

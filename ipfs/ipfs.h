@@ -16,6 +16,7 @@ public:
     // Singleton
     static Ipfs& instance();
 
+    // IPFS API access
     IpfsPin pin;
     IpfsSwarm swarm;
     IpfsVersion version;

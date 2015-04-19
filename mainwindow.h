@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "downloadmodel.h"
+#include "downloaddelegate.h"
 #include <QMainWindow>
 #include <QTimer>
 
@@ -21,6 +22,7 @@ private:
     Ui::MainWindow *ui;
     QTimer refreshTimer_;
     DownloadModel downloadModel_;
+    DownloadDelegate downloadDelegate_;
 
 private slots:
     void refresh();

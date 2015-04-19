@@ -10,6 +10,7 @@ class DownloadModel : public QAbstractListModel
     Q_OBJECT
 public:
     explicit DownloadModel(QObject *parent = 0);
+    virtual ~DownloadModel() {}
 
     int rowCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
