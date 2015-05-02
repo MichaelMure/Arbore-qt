@@ -1,13 +1,13 @@
 #ifndef IPFSPIN_H
 #define IPFSPIN_H
 
-#include "ipfs/ipfscommand.h"
+#include "ipfs/abstractipfscommand.h"
 #include "ipfs/ipfshash.h"
 #include <QObject>
 
 enum IpfsPinType { DIRECT, RECURSIVE, INDIRECT, ALL };
 
-class IpfsPin : public IpfsCommand
+class IpfsPin : public AbstractIpfsCommand
 {
     Q_OBJECT
 public:

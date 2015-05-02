@@ -20,11 +20,12 @@ SOURCES += main.cpp\
     ipfs/ipfsswarm.cpp \
     download.cpp \
     downloadmodel.cpp \
-    downloaddelegate.cpp
+    downloaddelegate.cpp \
+    ipfs/ipfsid.cpp \
+    ipfs/ipfspeer.cpp
 
 HEADERS  += mainwindow.h \
     ipfs/ipfs.h \
-    ipfs/ipfscommand.h \
     ipfs/ipfsversion.h \
     ipfs/ipfspin.h \
     ipfs/ipfshash.h \
@@ -32,6 +33,8 @@ HEADERS  += mainwindow.h \
     ipfs/ipfspeer.h \
     download.h \
     downloadmodel.h \
-    downloaddelegate.h
+    downloaddelegate.h \
+    ipfs/ipfsid.h \
+    ipfs/abstractipfscommand.h
 
 FORMS    += mainwindow.ui

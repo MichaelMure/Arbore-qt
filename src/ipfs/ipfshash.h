@@ -3,6 +3,10 @@
 
 #include <QString>
 
+/**
+ * @brief The IpfsHash class hold an IPFS multi-hash
+ * https://github.com/jbenet/multihash/
+ */
 class IpfsHash : private QString
 {
     //Q_OBJECT

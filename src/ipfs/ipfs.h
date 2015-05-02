@@ -2,6 +2,7 @@
 #define IPFS_H
 
 #include <QObject>
+#include "ipfs/ipfsid.h"
 #include "ipfs/ipfspin.h"
 #include "ipfs/ipfsswarm.h"
 #include "ipfs/ipfsversion.h"
@@ -17,11 +18,12 @@ public:
     static Ipfs& instance();
 
     // IPFS API access
+    IpfsId id;
     IpfsPin pin;
     IpfsSwarm swarm;
     IpfsVersion version;
 
-    void query(const QUrl &url, IpfsCommand *originator);
+    void query(const QUrl &url, AbstractIpfsCommand *originator);
 
 private:
     Ipfs() {}                    // hide constructor

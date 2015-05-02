@@ -1,12 +1,12 @@
 #ifndef IPFSSWARM_H
 #define IPFSSWARM_H
 
-#include "ipfs/ipfscommand.h"
+#include "ipfs/abstractipfscommand.h"
 #include "ipfs/ipfspeer.h"
 #include <QObject>
 #include <QTimer>
 
-class IpfsSwarm : public IpfsCommand
+class IpfsSwarm : public AbstractIpfsCommand
 {
     Q_OBJECT
 public:

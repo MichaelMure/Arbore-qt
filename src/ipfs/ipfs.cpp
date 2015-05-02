@@ -18,7 +18,7 @@ Ipfs& Ipfs::instance()
     return instance;
 }
 
-void Ipfs::query(const QUrl &url, IpfsCommand *originator)
+void Ipfs::query(const QUrl &url, AbstractIpfsCommand *originator)
 {
     QNetworkRequest request = QNetworkRequest(url);
     request.setOriginatingObject(originator);
@@ -32,6 +32,7 @@ void Ipfs::init()
     connect(manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(replyFinished(QNetworkReply*)));
 
+    id.init();
     pin.init();
     swarm.init();
     version.init();
@@ -57,7 +58,7 @@ void Ipfs::replyFinished(QNetworkReply *reply)
     QJsonDocument doc(QJsonDocument::fromJson(str.toUtf8()));
     QJsonObject json = doc.object();
 
-    IpfsCommand *command = (IpfsCommand*) reply->request().originatingObject();
+    AbstractIpfsCommand *command = (AbstractIpfsCommand*) reply->request().originatingObject();
     command->on_reply(&json);
 
     reply->deleteLater();

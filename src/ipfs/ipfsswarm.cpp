@@ -10,7 +10,7 @@
 const QString API_URL = "http://127.0.0.1:5001/api/v0/swarm/";
 
 IpfsSwarm::IpfsSwarm(QObject *parent)
-    : IpfsCommand(parent),
+    : AbstractIpfsCommand(parent),
       refreshTimer_(this)
 {
     connect(&refreshTimer_, SIGNAL(timeout()),

@@ -1,10 +1,10 @@
 #ifndef IPFS_VERSION_H
 #define IPFS_VERSION_H
 
-#include "ipfs/ipfscommand.h"
+#include "ipfs/abstractipfscommand.h"
 #include <QObject>
 
-class IpfsVersion : IpfsCommand
+class IpfsVersion : AbstractIpfsCommand
 {
     Q_OBJECT
 public:
