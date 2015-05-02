@@ -12,15 +12,20 @@ class IpfsSwarm : public AbstractIpfsCommand
 public:
     explicit IpfsSwarm(QObject *parent = 0);
     virtual ~IpfsSwarm() {}
-    void init();
-    void on_reply(const QJsonObject *json);
 
     const QList<IpfsPeer> &peers() const;
+
+    // AbstractIpfsCommand interface
+public:
+    void init();
+    void on_reply(const QJsonObject *json);
+    bool valid_data() const;
 
 private slots:
     void refresh_peers();
 
 private:
+    bool valid_data_;
     QList<IpfsPeer> peers_;
     QTimer refreshTimer_;
 };

@@ -10,8 +10,6 @@ class IpfsVersion : AbstractIpfsCommand
 public:
     explicit IpfsVersion(QObject *parent = 0);
     virtual ~IpfsVersion() {}
-    void init();
-    void on_reply(const QJsonObject *json);
 
     QString ToString() const;
 
@@ -19,7 +17,14 @@ public:
     int minor() const;
     int micro() const;
 
+    // AbstractIpfsCommand interface
+public:
+    void init();
+    void on_reply(const QJsonObject *json);
+    bool valid_data() const;
+
 private:
+    bool valid_data_;
     int major_;
     int minor_;
     int micro_;

@@ -11,6 +11,7 @@ const QString API_URL = "http://127.0.0.1:5001/api/v0/swarm/";
 
 IpfsSwarm::IpfsSwarm(QObject *parent)
     : AbstractIpfsCommand(parent),
+      valid_data_(false),
       refreshTimer_(this)
 {
     connect(&refreshTimer_, SIGNAL(timeout()),
@@ -39,6 +40,12 @@ void IpfsSwarm::on_reply(const QJsonObject *json)
     {
         peers_ << IpfsPeer(value.toString());
     }
+    valid_data_ = true;
+}
+
+bool IpfsSwarm::valid_data() const
+{
+    return valid_data_;
 }
 
 const QList<IpfsPeer> &IpfsSwarm::peers() const

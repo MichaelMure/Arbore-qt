@@ -13,11 +13,15 @@ class IpfsPin : public AbstractIpfsCommand
 public:
     explicit IpfsPin(QObject *parent = 0);
     virtual ~IpfsPin() {}
-    void init();
-    void on_reply(const QJsonObject *json);
 
     void add_pin(IpfsHash &hash, bool recursive = false);
     void ls_pin(IpfsPinType pin_type = DIRECT);
+
+    // AbstractIpfsCommand interface
+public:
+    void init();
+    void on_reply(const QJsonObject *json);
+
 };
 
 #endif // IPFSPIN_H
