@@ -13,10 +13,6 @@ IpfsVersion::IpfsVersion(QObject *parent)
       minor_(0),
       micro_(0)
 {
-    qDebug() << "constructor";
-    qDebug() << major_;
-    qDebug() << minor_;
-    qDebug() << micro_;
 }
 
 int IpfsVersion::major() const
