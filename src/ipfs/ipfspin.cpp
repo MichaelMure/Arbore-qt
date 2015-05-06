@@ -4,7 +4,7 @@
 #include <QUrl>
 #include <QUrlQuery>
 
-const QString API_URL = "http://127.0.0.1:5001/api/v0/pin/";
+const QString API_COMMAND = "pin";
 
 IpfsPin::IpfsPin(QObject *parent)
     : AbstractIpfsCommand(parent)
@@ -15,7 +15,7 @@ void IpfsPin::init() { }
 
 void IpfsPin::add_pin(IpfsHash &hash, bool recursive)
 {
-    QUrl url = API_URL + "add";
+    QUrl url = Ipfs::instance().api_url(API_COMMAND + "/add");
     QUrlQuery query;
 
     query.addQueryItem("arg", hash.ToString());
@@ -29,7 +29,7 @@ void IpfsPin::add_pin(IpfsHash &hash, bool recursive)
 
 void IpfsPin::ls_pin(IpfsPinType pin_type)
 {
-    QUrl url = API_URL + "ls";
+    QUrl url = Ipfs::instance().api_url(API_COMMAND + "/ls");
     QUrlQuery query;
 
     QString type;

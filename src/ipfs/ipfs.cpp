@@ -13,7 +13,9 @@ static bool initialized = false;
 
 Ipfs::Ipfs()
     : state_(PING_DAEMON),
-      refreshTimer_(this)
+      refreshTimer_(this),
+      api_ip_("127.0.0.1"),
+      api_port_("5001")
 {
 }
 
@@ -28,8 +30,20 @@ Ipfs& Ipfs::instance()
     return instance;
 }
 
+QUrl Ipfs::api_url(const QString &command)
+{
+    return QUrl(QString("http://%1:%2/api/v0/%3")
+                .arg(api_ip_, api_port_, command));
+}
+
+void Ipfs::query(const QString &command, AbstractIpfsCommand *originator)
+{
+    query(api_url(command), originator);
+}
+
 void Ipfs::query(const QUrl &url, AbstractIpfsCommand *originator)
 {
+    qDebug() << "HTTP query: " << url << endl;
     QNetworkRequest request = QNetworkRequest(url);
     request.setOriginatingObject(originator);
     manager_->get(request);
@@ -45,7 +59,7 @@ void Ipfs::init()
 
     // Ping the HTTP API to find out if a daemon is running
     state_ = PING_DAEMON;
-    query(QUrl("http://127.0.0.1:5001/api/v0/version/"), NULL);
+    query("version", NULL);
 }
 
 void Ipfs::init_commands()
@@ -96,7 +110,7 @@ void Ipfs::replyFinished(QNetworkReply *reply)
     {
         if(reply->error())
         {
-            qDebug() << "Error while pinging the API, lauching daemon manually";
+            qDebug() << "Could not ping the API, lauching daemon manually";
             launch_daemon();
             return;
         }
@@ -129,7 +143,7 @@ void Ipfs::replyFinished(QNetworkReply *reply)
     if(reply->error())
     {
         qDebug() << "http error: " << reply->errorString() << endl;
-        qDebug() << reply->readAll();
+        qDebug() << "request: " << reply->request().url() << endl;
         return;
     }
 
@@ -166,9 +180,16 @@ void Ipfs::timer()
     if(state_ == LAUNCH_DAEMON)
     {
         QString stdout = daemon_process_->readAllStandardOutput();
+        QRegExp regex = QRegExp("API server listening on \\/([^\\/]+)\\/([^\\/]+)\\/([^\\/]+)\\/([^\\/]+)\\n");
 
-        if(stdout.contains(QRegExp("^API server listening.*")))
+        int index = regex.indexIn(stdout);
+        if(index >= 0)
         {
+            //QString network = regex.cap(1);
+            api_ip_ = regex.cap(2);
+            //QString transport = regex.cap(3);
+            api_port_ = regex.cap(4);
+
             refreshTimer_.stop();
             state_ = RUNNING;
             init_commands();

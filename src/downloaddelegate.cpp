@@ -69,8 +69,6 @@ void DownloadDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
 
     painter->restore ();
-
-    qDebug() << "styling " << dl->name();
 }
 
 QSize DownloadDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const

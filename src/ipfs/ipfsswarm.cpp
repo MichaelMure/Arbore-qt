@@ -7,7 +7,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-const QString API_URL = "http://127.0.0.1:5001/api/v0/swarm/";
+const QString API_COMMAND = "swarm";
 
 IpfsSwarm::IpfsSwarm(QObject *parent)
     : AbstractIpfsCommand(parent),
@@ -27,8 +27,7 @@ void IpfsSwarm::init()
 
 void IpfsSwarm::refresh_peers()
 {
-    QUrl url = API_URL + "peers";
-    Ipfs::instance().query(url, this);
+    Ipfs::instance().query(API_COMMAND + "/peers", this);
 
     qDebug() << "refreshing peers";
 }

@@ -7,7 +7,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-const QString API_URL = "http://127.0.0.1:5001/api/v0/id";
+const QString API_COMMAND = "id";
 
 IpfsId::IpfsId(QObject *parent)
     : AbstractIpfsCommand(parent),
@@ -18,7 +18,7 @@ IpfsId::IpfsId(QObject *parent)
 
 void IpfsId::init()
 {
-    Ipfs::instance().query(API_URL, this);
+    Ipfs::instance().query(API_COMMAND, this);
 }
 
 void IpfsId::on_reply(const QJsonObject *json)

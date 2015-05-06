@@ -25,6 +25,23 @@ public:
     IpfsSwarm swarm;
     IpfsVersion version;
 
+    /**
+     * @return the API url for the specified command
+     */
+    QUrl api_url(const QString &command);
+
+    /**
+     * Query the API with only a command name
+     * @param command
+     * @param originator
+     */
+    void query(const QString &command, AbstractIpfsCommand *originator);
+
+    /**
+     * Query a specific API url, constructed from api_url()
+     * @param url
+     * @param originator
+     */
     void query(const QUrl &url, AbstractIpfsCommand *originator);
 
 private:
@@ -51,6 +68,8 @@ private:
     QNetworkAccessManager *manager_;
     QProcess *daemon_process_;
     QTimer refreshTimer_;
+    QString api_ip_;
+    QString api_port_;
 };
 
 #endif // IPFS_H
