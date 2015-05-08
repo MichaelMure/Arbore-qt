@@ -2,19 +2,34 @@
 #define IPFSHASH_H
 
 #include <QString>
+#include <QHash>
 
 /**
  * @brief The IpfsHash class hold an IPFS multi-hash
  * https://github.com/jbenet/multihash/
  */
-class IpfsHash : private QString
+class IpfsHash
 {
-    //Q_OBJECT
 public:
-    IpfsHash(QString hash) : QString(hash) {}
+    IpfsHash();
+    IpfsHash(QString hash);
+    IpfsHash(const IpfsHash &hash);
     virtual ~IpfsHash() {}
 
-    QString ToString() const { return *this; }
+    IpfsHash& operator=(const IpfsHash& other);
+    const QString &ToString() const;
+
+private:
+    QString str_;
 };
 
+inline uint qHash(const IpfsHash &key, uint seed)
+{
+    return qHash(key.ToString(), seed);
+}
+
+inline bool operator==(const IpfsHash &hash1, const IpfsHash &hash2)
+{
+    return hash1.ToString() == hash2.ToString();
+}
 #endif // IPFSHASH_H

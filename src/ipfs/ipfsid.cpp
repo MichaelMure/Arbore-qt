@@ -10,7 +10,7 @@
 const QString API_COMMAND = "id";
 
 IpfsId::IpfsId(QObject *parent)
-    : AbstractIpfsCommand(parent),
+    : QObject(parent),
       valid_data_(false),
       id_(NULL)
 {

@@ -7,9 +7,8 @@
 const QString API_COMMAND = "get";
 
 IpfsGet::IpfsGet(QObject *parent)
-    : AbstractIpfsCommand(parent)
+    : QObject(parent)
 {
-
 }
 
 void IpfsGet::write_on_disk(const IpfsHash &hash, const QString &path)
@@ -21,13 +20,5 @@ void IpfsGet::write_on_disk(const IpfsHash &hash, const QString &path)
     query.addQueryItem("o", path);
 
     url.setQuery(query);
-    Ipfs::instance().query(url, this);
+    Ipfs::instance().query(url);
 }
-
-void IpfsGet::init() {}
-
-void IpfsGet::on_reply(const QJsonObject *json)
-{
-    Q_UNUSED(json);
-}
-

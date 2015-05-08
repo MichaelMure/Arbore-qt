@@ -9,6 +9,12 @@ IpfsPeer::IpfsPeer(QString full_desc)
 {
 }
 
+IpfsPeer::IpfsPeer(const IpfsPeer &other)
+    : full_desc_(other.full_desc_),
+      hash_(other.hash_)
+{
+}
+
 QString IpfsPeer::ToString() const
 {
     return full_desc_;

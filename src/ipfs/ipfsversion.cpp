@@ -7,7 +7,7 @@
 const QString API_COMMAND = "version";
 
 IpfsVersion::IpfsVersion(QObject *parent)
-    : AbstractIpfsCommand(parent),
+    : QObject(parent),
       valid_data_(false),
       major_(0),
       minor_(0),

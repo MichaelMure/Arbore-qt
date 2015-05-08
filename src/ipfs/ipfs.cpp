@@ -9,6 +9,8 @@
 #include <QProcess>
 #include <QRegExp>
 
+#include "directory.h"
+
 static bool initialized = false;
 
 Ipfs::Ipfs()
@@ -38,26 +40,44 @@ QUrl Ipfs::api_url(const QString &command)
                 .arg(api_ip_, api_port_, command));
 }
 
-void Ipfs::query(const QString &command, AbstractIpfsCommand *originator)
+void Ipfs::query(const QString &command, IApiListener *listener)
 {
-    query(api_url(command), originator);
+    query(api_url(command), listener);
 }
 
-void Ipfs::query(const QUrl &url, AbstractIpfsCommand *originator)
+void Ipfs::query(const QUrl &url, IApiListener *listener)
 {
     qDebug() << "HTTP query: " << url << endl;
     QNetworkRequest request = QNetworkRequest(url);
-    request.setOriginatingObject(originator);
-    manager_->get(request);
+
+    QNetworkReply *reply = manager_->get(request);
+
+    if(listener)
+    {
+        replies_listener[reply] = listener;
+    }
+
+    connect(reply, SIGNAL(finished()),
+            this, SLOT(replyFinished()));
+}
+
+QNetworkReply *Ipfs::manual_query(const QString &command)
+{
+    return manual_query(api_url(command));
+}
+
+QNetworkReply *Ipfs::manual_query(const QUrl &url)
+{
+    qDebug() << "HTTP query: " << url << endl;
+    QNetworkRequest request = QNetworkRequest(url);
+
+    return manager_->get(request);
 }
 
 void Ipfs::init()
 {
     manager_ = new QNetworkAccessManager();
     daemon_process_ = NULL;
-
-    connect(manager_, SIGNAL(finished(QNetworkReply*)),
-            this, SLOT(replyFinished(QNetworkReply*)));
 
     // Ping the HTTP API to find out if a daemon is running
     state_ = PING_DAEMON;
@@ -66,9 +86,7 @@ void Ipfs::init()
 
 void Ipfs::init_commands()
 {
-    get.init();
     id.init();
-    pin.init();
     swarm.init();
     version.init();
 }
@@ -111,8 +129,10 @@ Ipfs::~Ipfs()
     manager_->deleteLater();
 }
 
-void Ipfs::replyFinished(QNetworkReply *reply)
+void Ipfs::replyFinished()
 {
+    QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
+
     if(state_ == PING_DAEMON)
     {
         if(reply->error())
@@ -160,8 +180,11 @@ void Ipfs::replyFinished(QNetworkReply *reply)
     QJsonDocument doc = QJsonDocument::fromJson(str.toUtf8());
     QJsonObject json = doc.object();
 
-    AbstractIpfsCommand *command = (AbstractIpfsCommand*) reply->request().originatingObject();
-    command->on_reply(&json);
+    if(replies_listener.contains(reply))
+    {
+        replies_listener[reply]->on_reply(&json);
+        replies_listener.remove(reply);
+    }
 
     reply->deleteLater();
 }

@@ -1,13 +1,12 @@
 #ifndef IPFSPIN_H
 #define IPFSPIN_H
 
-#include "ipfs/abstractipfscommand.h"
-#include "ipfs/ipfshash.h"
 #include <QObject>
+#include "ipfs/ipfshash.h"
 
 enum IpfsPinType { DIRECT, RECURSIVE, INDIRECT, ALL };
 
-class IpfsPin : public AbstractIpfsCommand
+class IpfsPin : public QObject
 {
     Q_OBJECT
 public:
@@ -16,12 +15,6 @@ public:
 
     void add_pin(const IpfsHash &hash, bool recursive = false);
     void ls_pin(IpfsPinType pin_type = DIRECT);
-
-    // AbstractIpfsCommand interface
-public:
-    void init();
-    void on_reply(const QJsonObject *json);
-
 };
 
 #endif // IPFSPIN_H

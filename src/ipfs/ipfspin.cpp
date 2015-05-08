@@ -7,11 +7,9 @@
 const QString API_COMMAND = "pin";
 
 IpfsPin::IpfsPin(QObject *parent)
-    : AbstractIpfsCommand(parent)
+    : QObject(parent)
 {
 }
-
-void IpfsPin::init() { }
 
 void IpfsPin::add_pin(const IpfsHash &hash, bool recursive)
 {
@@ -24,7 +22,7 @@ void IpfsPin::add_pin(const IpfsHash &hash, bool recursive)
         query.addQueryItem("r", "true");
 
     url.setQuery(query);
-    Ipfs::instance().query(url, this);
+    Ipfs::instance().query(url);
 }
 
 void IpfsPin::ls_pin(IpfsPinType pin_type)
@@ -48,10 +46,5 @@ void IpfsPin::ls_pin(IpfsPinType pin_type)
     query.addQueryItem("type", type);
 
     url.setQuery(query);
-    Ipfs::instance().query(url, this);
-}
-
-void IpfsPin::on_reply(const QJsonObject *json)
-{
-    Q_UNUSED(json);
+    Ipfs::instance().query(url);
 }

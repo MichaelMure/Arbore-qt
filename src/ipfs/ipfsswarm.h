@@ -1,12 +1,12 @@
 #ifndef IPFSSWARM_H
 #define IPFSSWARM_H
 
-#include "ipfs/abstractipfscommand.h"
-#include "ipfs/ipfspeer.h"
 #include <QObject>
+#include "ipfs/iapilistener.h"
+#include "ipfs/ipfspeer.h"
 #include <QTimer>
 
-class IpfsSwarm : public AbstractIpfsCommand
+class IpfsSwarm : public QObject, public IApiListener
 {
     Q_OBJECT
 public:
@@ -15,7 +15,6 @@ public:
 
     const QList<IpfsPeer> &peers() const;
 
-    // AbstractIpfsCommand interface
 public:
     void init();
     void on_reply(const QJsonObject *json);

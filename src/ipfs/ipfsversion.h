@@ -1,10 +1,10 @@
 #ifndef IPFS_VERSION_H
 #define IPFS_VERSION_H
 
-#include "ipfs/abstractipfscommand.h"
 #include <QObject>
+#include "ipfs/iapilistener.h"
 
-class IpfsVersion : AbstractIpfsCommand
+class IpfsVersion : public QObject, public IApiListener
 {
     Q_OBJECT
 public:

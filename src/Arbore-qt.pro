@@ -8,6 +8,8 @@ QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+CONFIG += c++11
+
 TARGET = Arbore-qt
 TEMPLATE = app
 
@@ -23,7 +25,13 @@ SOURCES += main.cpp\
     ipfs/ipfsget.cpp \
     share.cpp \
     sharedelegate.cpp \
-    sharemodel.cpp
+    sharemodel.cpp \
+    ipfs/ipfsls.cpp \
+    ipfs/ipfshash.cpp \
+    directory.cpp \
+    file.cpp \
+    object.cpp \
+    ipfs/ipfsrefs.cpp
 
 HEADERS  += mainwindow.h \
     ipfs/ipfs.h \
@@ -33,10 +41,15 @@ HEADERS  += mainwindow.h \
     ipfs/ipfsswarm.h \
     ipfs/ipfspeer.h \
     ipfs/ipfsid.h \
-    ipfs/abstractipfscommand.h \
     ipfs/ipfsget.h \
+    ipfs/iapilistener.h \
+    ipfs/ipfsls.h \
+    directory.h \
+    file.h \
+    object.h \
     share.h \
+    sharedelegate.h \
     sharemodel.h \
-    sharedelegate.h
+    ipfs/ipfsrefs.h
 
 FORMS    += mainwindow.ui

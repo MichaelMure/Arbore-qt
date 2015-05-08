@@ -10,7 +10,7 @@
 const QString API_COMMAND = "swarm";
 
 IpfsSwarm::IpfsSwarm(QObject *parent)
-    : AbstractIpfsCommand(parent),
+    : QObject(parent),
       valid_data_(false),
       refreshTimer_(this)
 {

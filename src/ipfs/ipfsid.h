@@ -1,12 +1,12 @@
 #ifndef IPFSID_H
 #define IPFSID_H
 
-#include "ipfs/abstractipfscommand.h"
-#include "ipfs/ipfshash.h"
 #include <QObject>
+#include "ipfs/iapilistener.h"
+#include "ipfs/ipfshash.h"
 
 
-class IpfsId : public AbstractIpfsCommand
+class IpfsId : public QObject, public IApiListener
 {
     Q_OBJECT
 public:
@@ -15,7 +15,6 @@ public:
 
     const IpfsHash& id() const;
 
-    // AbstractIpfsCommand interface
 public:
     void init();
     void on_reply(const QJsonObject *json);

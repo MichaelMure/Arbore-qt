@@ -16,6 +16,7 @@ public:
      * @param full_desc "/ip4/69.181.137.57/tcp/4001/ipfs/QmeUt5MQMYCw5LRx6gvgSzTMfJ93YzrV3E99wsgqUu5P9r"
      */
     IpfsPeer(QString full_desc);
+    IpfsPeer(const IpfsPeer &other);
     virtual ~IpfsPeer() {}
 
     QString ToString() const;
