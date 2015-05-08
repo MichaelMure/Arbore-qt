@@ -18,12 +18,12 @@ SOURCES += main.cpp\
     ipfs/ipfsversion.cpp \
     ipfs/ipfspin.cpp \
     ipfs/ipfsswarm.cpp \
-    download.cpp \
-    downloadmodel.cpp \
-    downloaddelegate.cpp \
     ipfs/ipfsid.cpp \
     ipfs/ipfspeer.cpp \
-    ipfs/ipfsget.cpp
+    ipfs/ipfsget.cpp \
+    share.cpp \
+    sharedelegate.cpp \
+    sharemodel.cpp
 
 HEADERS  += mainwindow.h \
     ipfs/ipfs.h \
@@ -32,11 +32,11 @@ HEADERS  += mainwindow.h \
     ipfs/ipfshash.h \
     ipfs/ipfsswarm.h \
     ipfs/ipfspeer.h \
-    download.h \
-    downloadmodel.h \
-    downloaddelegate.h \
     ipfs/ipfsid.h \
     ipfs/abstractipfscommand.h \
-    ipfs/ipfsget.h
+    ipfs/ipfsget.h \
+    share.h \
+    sharemodel.h \
+    sharedelegate.h
 
 FORMS    += mainwindow.ui

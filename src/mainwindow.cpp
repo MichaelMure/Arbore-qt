@@ -10,8 +10,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     refreshTimer_(this),
-    downloadModel_(this),
-    downloadDelegate_(this)
+    shareModel_(this),
+    shareDelegate_(this)
 {
     ui->setupUi(this);
 
@@ -19,8 +19,8 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(refresh()));
     refreshTimer_.start(1000);
 
-    ui->downloadListView->setModel(&downloadModel_);
-    ui->downloadListView->setItemDelegate(&downloadDelegate_);
+    ui->downloadListView->setModel(&shareModel_);
+    ui->downloadListView->setItemDelegate(&shareDelegate_);
 
     refresh();
 }

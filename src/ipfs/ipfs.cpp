@@ -13,6 +13,8 @@ static bool initialized = false;
 
 Ipfs::Ipfs()
     : state_(PING_DAEMON),
+      manager_(NULL),
+      daemon_process_(NULL),
       refreshTimer_(this),
       api_ip_("127.0.0.1"),
       api_port_("5001")
@@ -97,10 +99,14 @@ void Ipfs::launch_daemon()
 
 Ipfs::~Ipfs()
 {
-    daemon_process_->terminate();
-    if(!daemon_process_->waitForFinished())
+    if(daemon_process_)
     {
-        daemon_process_->kill();
+        daemon_process_->terminate();
+        if(!daemon_process_->waitForFinished())
+        {
+            daemon_process_->kill();
+        }
+        daemon_process_->deleteLater();
     }
     manager_->deleteLater();
 }

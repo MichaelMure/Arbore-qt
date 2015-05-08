@@ -1,5 +1,5 @@
-#include "downloaddelegate.h"
-#include "download.h"
+#include "sharedelegate.h"
+#include "share.h"
 
 #include <QApplication>
 #include <QPainter>
@@ -11,14 +11,14 @@ enum
     GUI_PAD = 6
 };
 
-DownloadDelegate::DownloadDelegate(QObject *parent) :
+ShareDelegate::ShareDelegate(QObject *parent) :
     QStyledItemDelegate(parent)
 {
 }
 
-void DownloadDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+void ShareDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    const Download * dl (index.data(Qt::UserRole).value<const Download*>());
+    const Share * dl (index.data(Qt::UserRole).value<const Share*>());
     QStyle *style = option.widget ? option.widget->style() : QApplication::style();
 
     painter->save();
@@ -71,7 +71,7 @@ void DownloadDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     painter->restore ();
 }
 
-QSize DownloadDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
+QSize ShareDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     QSize result = QStyledItemDelegate::sizeHint(option, index);
     result.setHeight(50);

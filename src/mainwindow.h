@@ -1,8 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "downloadmodel.h"
-#include "downloaddelegate.h"
+#include "sharemodel.h"
+#include "sharedelegate.h"
 #include <QMainWindow>
 #include <QTimer>
 
@@ -21,8 +21,8 @@ public:
 private:
     Ui::MainWindow *ui;
     QTimer refreshTimer_;
-    DownloadModel downloadModel_;
-    DownloadDelegate downloadDelegate_;
+    ShareModel shareModel_;
+    ShareDelegate shareDelegate_;
 
 private slots:
     void refresh();
