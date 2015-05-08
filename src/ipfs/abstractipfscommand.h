@@ -17,7 +17,6 @@ public:
     explicit AbstractIpfsCommand(QObject *parent = 0) : QObject(parent) {}
     virtual void init() = 0;
     virtual void on_reply(const QJsonObject *json) = 0;
-    virtual bool valid_data() const { return true; }
 
 protected:
     virtual ~AbstractIpfsCommand() {}

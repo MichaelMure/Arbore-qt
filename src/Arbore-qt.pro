@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     downloadmodel.cpp \
     downloaddelegate.cpp \
     ipfs/ipfsid.cpp \
-    ipfs/ipfspeer.cpp
+    ipfs/ipfspeer.cpp \
+    ipfs/ipfsget.cpp
 
 HEADERS  += mainwindow.h \
     ipfs/ipfs.h \
@@ -35,6 +36,7 @@ HEADERS  += mainwindow.h \
     downloadmodel.h \
     downloaddelegate.h \
     ipfs/ipfsid.h \
-    ipfs/abstractipfscommand.h
+    ipfs/abstractipfscommand.h \
+    ipfs/ipfsget.h
 
 FORMS    += mainwindow.ui

@@ -64,6 +64,7 @@ void Ipfs::init()
 
 void Ipfs::init_commands()
 {
+    get.init();
     id.init();
     pin.init();
     swarm.init();

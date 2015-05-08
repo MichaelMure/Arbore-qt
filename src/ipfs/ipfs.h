@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QProcess>
 #include <QTimer>
+#include "ipfs/ipfsget.h"
 #include "ipfs/ipfsid.h"
 #include "ipfs/ipfspin.h"
 #include "ipfs/ipfsswarm.h"
@@ -20,6 +21,7 @@ public:
     static Ipfs& instance();
 
     // IPFS API access
+    IpfsGet get;
     IpfsId id;
     IpfsPin pin;
     IpfsSwarm swarm;

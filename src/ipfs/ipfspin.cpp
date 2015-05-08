@@ -13,7 +13,7 @@ IpfsPin::IpfsPin(QObject *parent)
 
 void IpfsPin::init() { }
 
-void IpfsPin::add_pin(IpfsHash &hash, bool recursive)
+void IpfsPin::add_pin(const IpfsHash &hash, bool recursive)
 {
     QUrl url = Ipfs::instance().api_url(API_COMMAND + "/add");
     QUrlQuery query;

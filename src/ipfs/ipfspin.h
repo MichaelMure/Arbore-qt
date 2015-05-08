@@ -14,7 +14,7 @@ public:
     explicit IpfsPin(QObject *parent = 0);
     virtual ~IpfsPin() {}
 
-    void add_pin(IpfsHash &hash, bool recursive = false);
+    void add_pin(const IpfsHash &hash, bool recursive = false);
     void ls_pin(IpfsPinType pin_type = DIRECT);
 
     // AbstractIpfsCommand interface
