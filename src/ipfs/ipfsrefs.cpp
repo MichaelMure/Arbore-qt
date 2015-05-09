@@ -39,9 +39,6 @@ RefsReply *IpfsRefs::recursive_refs(const IpfsHash &hash)
             return;
         }
 
-        QString str = network_reply->readAll();
-        qDebug() << "http reply : " << str;
-
         QTextStream stream(network_reply->readAll());
 
         while(!stream.atEnd())

@@ -89,6 +89,8 @@ void Ipfs::init_commands()
     id.init();
     swarm.init();
     version.init();
+
+    new Directory("QmXRQNG3FgWiSnv4mPkZcwVxwyozocWqySJcU2aEfRKdYG");
 }
 
 void Ipfs::launch_daemon()
@@ -175,7 +177,7 @@ void Ipfs::replyFinished()
     }
 
     QString str = reply->readAll();
-    qDebug() << "http reply : " << str;
+    //qDebug() << "http reply : " << str;
 
     QJsonDocument doc = QJsonDocument::fromJson(str.toUtf8());
     QJsonObject json = doc.object();

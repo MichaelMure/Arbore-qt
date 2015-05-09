@@ -67,6 +67,10 @@ void ShareDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
     painter->setFont(nameFont);
     painter->drawText(nameRect, nameText);
 
+    qDebug() << dl->name()
+             << " " << dl->block_local() << "/" << dl->block_total() << "blocks"
+             << " " << dl->size_local() << "/" << dl->size_total() << "octet"
+             << " " << dl->file_local() << "/" << dl->file_total() << "file";
 
     painter->restore ();
 }

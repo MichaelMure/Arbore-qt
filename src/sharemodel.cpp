@@ -1,14 +1,15 @@
 #include "sharemodel.h"
 #include "share.h"
+#include "ipfs/ipfshash.h"
 
 ShareModel::ShareModel(QObject *parent) :
     QAbstractListModel(parent)
 {
     // FAKE DATA FOR NOW
-    shares_.append(new Share("fake 1", DOWNLOADING, 0.25f, 4568, this));
-    shares_.append(new Share("fake 2 with overly long name, like really long with a lot of letters and phrase and stuff",
+    shares_.append(new Share("WebUI", IpfsHash("QmXX7YRpU7nNBKfw75VG7Y1c3GwpSAGHRev67XVPgZFv9R"), this));
+    /*shares_.append(new Share("fake 2 with overly long name, like really long with a lot of letters and phrase and stuff",
                                    DOWNLOADING, 0.43f, 16531, this));
-    shares_.append(new Share("fake 3", DOWNLOADING, 0.91f, 126533, this));
+    shares_.append(new Share("fake 3", DOWNLOADING, 0.91f, 126533, this));*/
 }
 
 int ShareModel::rowCount(const QModelIndex &parent) const

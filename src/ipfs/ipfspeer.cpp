@@ -3,26 +3,26 @@
 
 #include <QStringList>
 
-IpfsPeer::IpfsPeer(QString full_desc)
-    : full_desc_(full_desc),
-      hash_(full_desc.split("/").last())
+IpfsPeer::IpfsPeer(QString multiaddr)
+    : multiaddr_(multiaddr),
+      hash_(multiaddr.split("/").last())
 {
 }
 
 IpfsPeer::IpfsPeer(const IpfsPeer &other)
-    : full_desc_(other.full_desc_),
+    : multiaddr_(other.multiaddr_),
       hash_(other.hash_)
 {
 }
 
 QString IpfsPeer::ToString() const
 {
-    return full_desc_;
+    return multiaddr_;
 }
 
-QString IpfsPeer::full_desc() const
+QString IpfsPeer::multiaddr() const
 {
-    return full_desc_;
+    return multiaddr_;
 }
 
 const IpfsHash& IpfsPeer::hash() const
