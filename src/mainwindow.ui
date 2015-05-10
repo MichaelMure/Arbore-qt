@@ -54,6 +54,13 @@
         </spacer>
        </item>
        <item>
+        <widget class="QLabel" name="statslabel">
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="peerslabel">
          <property name="text">
           <string>TextLabel</string>

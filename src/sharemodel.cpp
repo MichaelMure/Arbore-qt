@@ -7,9 +7,9 @@ ShareModel::ShareModel(QObject *parent) :
 {
     // FAKE DATA FOR NOW
     shares_.append(new Share("WebUI", IpfsHash("QmXX7YRpU7nNBKfw75VG7Y1c3GwpSAGHRev67XVPgZFv9R"), this));
-    /*shares_.append(new Share("fake 2 with overly long name, like really long with a lot of letters and phrase and stuff",
-                                   DOWNLOADING, 0.43f, 16531, this));
-    shares_.append(new Share("fake 3", DOWNLOADING, 0.91f, 126533, this));*/
+    shares_.append(new Share("fake 2 with overly long name, like really long with a lot of letters and phrase and stuff",
+                                   IpfsHash("QmTkzDwWqPbnAh5YiV5VwcTLnGdwSNsNTn2aDxdXBFca7D"), this));
+    shares_.append(new Share("Example 3", IpfsHash("QmX6gcmX2vy2gs5dWB45w8aUNynEiqGhLayXySGb7RF2TM"), this));
 }
 
 int ShareModel::rowCount(const QModelIndex &parent) const

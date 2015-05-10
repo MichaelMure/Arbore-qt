@@ -16,8 +16,6 @@ File::File(const IpfsHash &hash)
 {
     RefsReply *reply = Ipfs::instance().refs.recursive_refs(hash);
 
-    qDebug() << "File constructor for: " << hash.ToString();
-
     connect(reply, &RefsReply::finished, [reply, this]()
     {
         foreach (const IpfsHash* block_hash, reply->refs)
@@ -26,8 +24,6 @@ File::File(const IpfsHash &hash)
 
             block->hash = *block_hash;
             block->size = 1000; // TODO
-
-            qDebug() << "Found block: " << block_hash->ToString();
 
             this->blocks_[block->hash] = block;
         }

@@ -19,8 +19,6 @@ Directory::Directory(const IpfsHash &hash)
 {
     LsReply *reply = Ipfs::instance().ls.ls(hash);
 
-    qDebug() << "Directory constructor for: " << hash.ToString();
-
     connect(reply, &LsReply::finished, [reply, this]()
     {
         foreach (const LsEntry* entry, reply->entries)
@@ -35,11 +33,9 @@ Directory::Directory(const IpfsHash &hash)
             {
             case LsEntry::DIRECTORY:
                 child->object = new Directory(entry->hash());
-                qDebug() << "Instanciating directory: " << child->name;
                 break;
             case LsEntry::FILE:
                 child->object = new File(entry->hash());
-                qDebug() << "Instanciating file: " << child->name;
                 break;
             case LsEntry::RAW:
             case LsEntry::METADATA:

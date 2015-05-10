@@ -31,7 +31,8 @@ SOURCES += main.cpp\
     directory.cpp \
     file.cpp \
     object.cpp \
-    ipfs/ipfsrefs.cpp
+    ipfs/ipfsrefs.cpp \
+    ipfs/ipfsstats.cpp
 
 HEADERS  += mainwindow.h \
     ipfs/ipfs.h \
@@ -50,6 +51,7 @@ HEADERS  += mainwindow.h \
     share.h \
     sharedelegate.h \
     sharemodel.h \
-    ipfs/ipfsrefs.h
+    ipfs/ipfsrefs.h \
+    ipfs/ipfsstats.h
 
 FORMS    += mainwindow.ui

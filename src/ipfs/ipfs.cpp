@@ -14,7 +14,8 @@
 static bool initialized = false;
 
 Ipfs::Ipfs()
-    : state_(PING_DAEMON),
+    : stats(),
+      state_(PING_DAEMON),
       manager_(NULL),
       daemon_process_(NULL),
       refreshTimer_(this),
@@ -88,6 +89,7 @@ void Ipfs::init_commands()
 {
     id.init();
     refs.init();
+    stats.init();
     swarm.init();
     version.init();
 

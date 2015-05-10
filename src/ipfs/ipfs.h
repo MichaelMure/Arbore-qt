@@ -10,6 +10,7 @@
 #include "ipfs/ipfsls.h"
 #include "ipfs/ipfspin.h"
 #include "ipfs/ipfsrefs.h"
+#include "ipfs/ipfsstats.h"
 #include "ipfs/ipfsswarm.h"
 #include "ipfs/ipfsversion.h"
 
@@ -29,6 +30,7 @@ public:
     IpfsLs ls;
     IpfsPin pin;
     IpfsRefs refs;
+    IpfsStats stats;
     IpfsSwarm swarm;
     IpfsVersion version;
 
