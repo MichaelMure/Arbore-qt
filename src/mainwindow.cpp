@@ -33,5 +33,5 @@ MainWindow::~MainWindow()
 void MainWindow::refresh()
 {
     ui->peerslabel->setText(
-        QString::number(Ipfs::instance().swarm.peers().count()) + " peers");
+        QString::number(Ipfs::instance().swarm.peer_count()) + " peers");
 }

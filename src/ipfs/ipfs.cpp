@@ -87,6 +87,7 @@ void Ipfs::init()
 void Ipfs::init_commands()
 {
     id.init();
+    refs.init();
     swarm.init();
     version.init();
 

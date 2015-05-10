@@ -49,18 +49,25 @@ File::~File()
 
 uint File::size_total() const
 {
-    uint size = 0;
+    uint size_total = 0;
     for(QHash<IpfsHash, Block*>::const_iterator i = blocks_.constBegin(); i != blocks_.constEnd(); i++)
     {
-        size += i.value()->size;
+        size_total += i.value()->size;
     }
-    return size;
+    return size_total;
 }
 
 uint File::size_local() const
 {
-    // TODO
-    return ((double) qrand() / RAND_MAX) * size_total();
+    uint size_local = 0;
+    for(QHash<IpfsHash, Block*>::const_iterator i = blocks_.constBegin(); i != blocks_.constEnd(); i++)
+    {
+        if(Ipfs::instance().refs.is_object_local(i.key()))
+        {
+            size_local += i.value()->size;
+        }
+    }
+    return size_local;
 }
 
 uint File::block_total() const
@@ -70,8 +77,15 @@ uint File::block_total() const
 
 uint File::block_local() const
 {
-    // TODO
-    return ((double) qrand() / RAND_MAX) * block_total();
+    uint block_local = 0;
+    for(QHash<IpfsHash, Block*>::const_iterator i = blocks_.constBegin(); i != blocks_.constEnd(); i++)
+    {
+        if(Ipfs::instance().refs.is_object_local(i.key()))
+        {
+            block_local++;
+        }
+    }
+    return block_local;
 }
 
 uint File::file_total() const
@@ -81,6 +95,5 @@ uint File::file_total() const
 
 uint File::file_local() const
 {
-    // TODO
-    return ((double) qrand() / RAND_MAX) * file_total();
+    return (block_total() == block_local());
 }

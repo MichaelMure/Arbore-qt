@@ -14,6 +14,7 @@ public:
     virtual ~IpfsSwarm() {}
 
     const QList<IpfsPeer> &peers() const;
+    uint peer_count() const;
 
 public:
     void init();

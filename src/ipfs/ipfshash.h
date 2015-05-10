@@ -17,7 +17,7 @@ public:
     virtual ~IpfsHash() {}
 
     IpfsHash& operator=(const IpfsHash& other);
-    const QString &ToString() const;
+    const QString& ToString() const;
 
 private:
     QString str_;

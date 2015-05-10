@@ -9,11 +9,18 @@
 const QString API_COMMAND = "refs";
 
 IpfsRefs::IpfsRefs(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      valid_data_(false),
+      local_objects_(),
+      refreshTimer_(this)
 {
+    connect(&refreshTimer_, SIGNAL(timeout()),
+            this, SLOT(refresh_objects()));
+
+    refreshTimer_.start(10 * 1000); // 10s
 }
 
-RefsReply *IpfsRefs::recursive_refs(const IpfsHash &hash)
+RefsReply *IpfsRefs::recursive_refs(const IpfsHash &hash) const
 {
     QUrl url = Ipfs::instance().api_url(API_COMMAND);
     QUrlQuery query;
@@ -54,6 +61,48 @@ RefsReply *IpfsRefs::recursive_refs(const IpfsHash &hash)
     return refs_reply;
 }
 
+bool IpfsRefs::is_object_local(const IpfsHash &hash) const
+{
+    return local_objects_.contains(hash);
+}
+
+void IpfsRefs::init()
+{
+    refresh_objects();
+}
+
+bool IpfsRefs::valid_data() const
+{
+    return valid_data_;
+}
+
+void IpfsRefs::refresh_objects()
+{
+    QUrl url = Ipfs::instance().api_url(API_COMMAND + "/local");
+    QNetworkReply *network_reply = Ipfs::instance().manual_query(url);
+
+    connect(network_reply, &QNetworkReply::finished,
+            this, [network_reply, this]()
+    {
+        if(network_reply->error())
+        {
+            qDebug() << "http error: " << network_reply->errorString() << endl;
+            qDebug() << "request: " << network_reply->request().url() << endl;
+            return;
+        }
+
+        QTextStream stream(network_reply->readAll());
+
+        this->local_objects_.clear();
+        while(!stream.atEnd())
+        {
+            this->local_objects_ << IpfsHash(stream.readLine());
+        }
+
+        valid_data_ = true;
+        network_reply->deleteLater();
+    });
+}
 
 RefsReply::~RefsReply()
 {
