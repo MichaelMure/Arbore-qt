@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QMap>
 #include <QProcess>
-#include <QTimer>
 #include "ipfs/ipfsget.h"
 #include "ipfs/ipfsid.h"
 #include "ipfs/ipfsls.h"
@@ -80,17 +79,20 @@ private slots:
     void daemon_started();
     void daemon_error(QProcess::ProcessError error);
     void daemon_finished(int exit_code, QProcess::ExitStatus exit_status);
-    void timer();
 
 private:
     enum IpfsState { PING_DAEMON, LAUNCH_DAEMON, RUNNING };
     IpfsState state_;
     QNetworkAccessManager *manager_;
     QProcess *daemon_process_;
-    QTimer refreshTimer_;
     QString api_ip_;
     QString api_port_;
     QMap<QNetworkReply*, IApiListener*> replies_listener;
+    int timer_id_;
+
+    // QObject interface
+protected:
+    void timerEvent(QTimerEvent *);
 };
 
 #endif // IPFS_H

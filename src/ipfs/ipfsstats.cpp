@@ -10,17 +10,13 @@ const QString API_COMMAND = "stats";
 
 IpfsStats::IpfsStats(QObject *parent)
     : QObject(parent),
-      refreshTimer_(this),
       valid_data_(false),
       total_in_(0),
       total_out_(0),
       rate_in_(0.0),
       rate_out_(0.0)
 {
-    connect(&refreshTimer_, SIGNAL(timeout()),
-            this, SLOT(refresh()));
-
-    refreshTimer_.start(1000); // 1s
+    startTimer(1000); // 1s
 }
 
 void IpfsStats::refresh()
@@ -82,6 +78,11 @@ void IpfsStats::init()
     refresh();
 }
 
+void IpfsStats::timerEvent(QTimerEvent *)
+{
+    refresh();
+}
+
 void IpfsStats::on_reply(const QJsonObject *json)
 {
     total_in_ = json->value("TotalIn").toDouble();
@@ -89,3 +90,4 @@ void IpfsStats::on_reply(const QJsonObject *json)
     rate_in_ = json->value("RateIn").toDouble();
     rate_out_ = json->value("RateOut").toDouble();
 }
+

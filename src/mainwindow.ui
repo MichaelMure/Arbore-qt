@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>700</width>
+    <height>473</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -41,6 +41,13 @@
      <widget class="QWidget" name="statusBar" native="true">
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
+        <widget class="QLabel" name="peerslabel">
+         <property name="text">
+          <string>65 peers</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="horizontalSpacer">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -56,14 +63,7 @@
        <item>
         <widget class="QLabel" name="statslabel">
          <property name="text">
-          <string>TextLabel</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="peerslabel">
-         <property name="text">
-          <string>TextLabel</string>
+          <string>Down: 313kB/s  Up: 27kb/s</string>
          </property>
         </widget>
        </item>

@@ -5,7 +5,6 @@
 #include "ipfs/ipfshash.h"
 
 #include <QSet>
-#include <QTimer>
 
 class RefsReply;
 
@@ -23,13 +22,13 @@ public:
     void init();
     bool valid_data() const;
 
-private slots:
-    void refresh_objects();
-
 private:
     bool valid_data_;
     QSet<IpfsHash> local_objects_;
-    QTimer refreshTimer_;
+
+private:
+    void timerEvent(QTimerEvent *);
+    void refresh_objects();
 };
 
 

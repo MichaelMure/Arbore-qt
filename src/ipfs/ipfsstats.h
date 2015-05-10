@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include "ipfs/iapilistener.h"
-#include <QTimer>
 
 class IpfsStats : public QObject, public IApiListener
 {
@@ -22,18 +21,18 @@ public:
     void on_reply(const QJsonObject *json);
     bool valid_data() const;
 
-private slots:
-    void refresh();
-
 private:
-    QTimer refreshTimer_;
     bool valid_data_;
     uint total_in_;
     uint total_out_;
     float rate_in_;
     float rate_out_;
 
+    void refresh();
     static QString format_rate(uint rate);
+
+protected:
+    void timerEvent(QTimerEvent *);
 };
 
 #endif // IPFSSTATS_H

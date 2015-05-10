@@ -11,13 +11,9 @@ const QString API_COMMAND = "refs";
 IpfsRefs::IpfsRefs(QObject *parent)
     : QObject(parent),
       valid_data_(false),
-      local_objects_(),
-      refreshTimer_(this)
+      local_objects_()
 {
-    connect(&refreshTimer_, SIGNAL(timeout()),
-            this, SLOT(refresh_objects()));
-
-    refreshTimer_.start(10 * 1000); // 10s
+    startTimer(10 * 1000); // 10s
 }
 
 RefsReply *IpfsRefs::recursive_refs(const IpfsHash &hash) const
@@ -76,6 +72,11 @@ bool IpfsRefs::valid_data() const
     return valid_data_;
 }
 
+void IpfsRefs::timerEvent(QTimerEvent *)
+{
+    refresh_objects();
+}
+
 void IpfsRefs::refresh_objects()
 {
     QUrl url = Ipfs::instance().api_url(API_COMMAND + "/local");
@@ -112,3 +113,5 @@ RefsReply::~RefsReply()
         delete refs[i];
     }
 }
+
+

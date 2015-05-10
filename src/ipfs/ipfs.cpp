@@ -18,7 +18,6 @@ Ipfs::Ipfs()
       state_(PING_DAEMON),
       manager_(NULL),
       daemon_process_(NULL),
-      refreshTimer_(this),
       api_ip_("127.0.0.1"),
       api_port_("5001")
 {
@@ -107,9 +106,7 @@ void Ipfs::launch_daemon()
     connect(daemon_process_, SIGNAL(finished(int,QProcess::ExitStatus)),
             this, SLOT(daemon_finished(int,QProcess::ExitStatus)));
 
-    connect(&refreshTimer_, SIGNAL(timeout()),
-            this, SLOT(timer()));
-    refreshTimer_.start(1000); // 1s
+    timer_id_ = startTimer(1000); // 1s
 
     // ipfs should be in the PATH
     QStringList args;
@@ -210,7 +207,7 @@ void Ipfs::daemon_finished(int exit_code, QProcess::ExitStatus exit_status)
              << "exit status: " << exit_status;
 }
 
-void Ipfs::timer()
+void Ipfs::timerEvent(QTimerEvent *)
 {
     if(state_ == LAUNCH_DAEMON)
     {
@@ -225,7 +222,7 @@ void Ipfs::timer()
             //QString transport = regex.cap(3);
             api_port_ = regex.cap(4);
 
-            refreshTimer_.stop();
+            killTimer(timer_id_);
             state_ = RUNNING;
             init_commands();
         }

@@ -9,15 +9,12 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    refreshTimer_(this),
     shareModel_(this),
     shareDelegate_(this)
 {
     ui->setupUi(this);
 
-    connect(&refreshTimer_, SIGNAL (timeout ()),
-            this, SLOT(refresh()));
-    refreshTimer_.start(1000);
+    startTimer(1000); // 1s
 
     ui->downloadListView->setModel(&shareModel_);
     ui->downloadListView->setItemDelegate(&shareDelegate_);
@@ -30,9 +27,14 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::refresh()
+void MainWindow::refresh() const
 {
     ui->peerslabel->setText(
         QString::number(Ipfs::instance().swarm.peer_count()) + " peers");
     ui->statslabel->setText(Ipfs::instance().stats.ToString());
+}
+
+void MainWindow::timerEvent(QTimerEvent *)
+{
+    refresh();
 }

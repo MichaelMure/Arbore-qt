@@ -12,13 +12,9 @@ const QString API_COMMAND = "swarm";
 IpfsSwarm::IpfsSwarm(QObject *parent)
     : QObject(parent),
       valid_data_(false),
-      peers_(),
-      refreshTimer_(this)
+      peers_()
 {
-    connect(&refreshTimer_, SIGNAL(timeout()),
-            this, SLOT(refresh_peers()));
-
-    refreshTimer_.start(10 * 1000); // 10s
+    startTimer(10 * 1000); // 10s
 }
 
 void IpfsSwarm::init()
@@ -56,4 +52,9 @@ const QList<IpfsPeer> &IpfsSwarm::peers() const
 uint IpfsSwarm::peer_count() const
 {
     return peers_.count();
+}
+
+void IpfsSwarm::timerEvent(QTimerEvent *)
+{
+    refresh_peers();
 }

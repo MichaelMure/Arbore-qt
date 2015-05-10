@@ -4,7 +4,6 @@
 #include <QObject>
 #include "ipfs/iapilistener.h"
 #include "ipfs/ipfspeer.h"
-#include <QTimer>
 
 class IpfsSwarm : public QObject, public IApiListener
 {
@@ -21,13 +20,15 @@ public:
     void on_reply(const QJsonObject *json);
     bool valid_data() const;
 
-private slots:
+private:
     void refresh_peers();
 
 private:
     bool valid_data_;
     QList<IpfsPeer> peers_;
-    QTimer refreshTimer_;
+
+protected:
+    void timerEvent(QTimerEvent *);
 };
 
 #endif // IPFSSWARM_H
