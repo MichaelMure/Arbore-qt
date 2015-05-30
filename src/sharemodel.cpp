@@ -12,6 +12,19 @@ ShareModel::ShareModel(QObject *parent) :
     shares_.append(new Share("Example 3", IpfsHash("QmX6gcmX2vy2gs5dWB45w8aUNynEiqGhLayXySGb7RF2TM"), this));
 }
 
+QHash<int, QByteArray> ShareModel::roleNames() const {
+    QHash<int, QByteArray> roles;
+    roles[NameRole] = "name";
+    roles[ProgressRole] = "progress";
+    roles[SizeTotalRole] = "sizeTotal";
+    roles[SizeLocalRole] = "sizeLocal";
+    roles[BlockTotalRole] = "blockTotal";
+    roles[BlockLocalRole] = "blockLocal";
+    roles[FileTotalRole] = "fileTotal";
+    roles[FileLocalRole] = "fileLocal";
+    return roles;
+}
+
 int ShareModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
@@ -20,22 +33,25 @@ int ShareModel::rowCount(const QModelIndex &parent) const
 
 QVariant ShareModel::data(const QModelIndex &index, int role) const
 {
-    QVariant var;
-
-    // Check that the index is valid and within the correct range first:
-    if (!index.isValid())
-        return var;
-    if (index.row() >= shares_.size())
-        return var;
-
     const Share *dl = shares_.value(index.row(), 0);
     switch(role)
     {
-    case Qt::UserRole: // complex gui display
-        var.setValue(dl); break;
-    case Qt::DisplayRole: // text display
-        var.setValue(dl->name()); break;
+    case NameRole:
+        return dl->name();
+    case ProgressRole:
+        return dl->progress();
+    case SizeTotalRole:
+        return dl->size_total();
+    case SizeLocalRole:
+        return dl->size_local();
+    case BlockTotalRole:
+        return dl->block_total();
+    case BlockLocalRole:
+        return dl->block_local();
+    case FileTotalRole:
+        return dl->file_total();
+    case FileLocalRole:
+        return dl->file_local();
     }
-
-    return var;
+    return QVariant();
 }

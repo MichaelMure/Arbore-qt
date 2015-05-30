@@ -4,9 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT       += core network qml quick
 
 CONFIG += c++11
 
@@ -15,7 +13,6 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
     ipfs/ipfs.cpp \
     ipfs/ipfsversion.cpp \
     ipfs/ipfspin.cpp \
@@ -24,7 +21,6 @@ SOURCES += main.cpp\
     ipfs/ipfspeer.cpp \
     ipfs/ipfsget.cpp \
     share.cpp \
-    sharedelegate.cpp \
     sharemodel.cpp \
     ipfs/ipfsls.cpp \
     ipfs/ipfshash.cpp \
@@ -34,7 +30,7 @@ SOURCES += main.cpp\
     ipfs/ipfsrefs.cpp \
     ipfs/ipfsstats.cpp
 
-HEADERS  += mainwindow.h \
+HEADERS  += \
     ipfs/ipfs.h \
     ipfs/ipfsversion.h \
     ipfs/ipfspin.h \
@@ -49,9 +45,8 @@ HEADERS  += mainwindow.h \
     file.h \
     object.h \
     share.h \
-    sharedelegate.h \
     sharemodel.h \
     ipfs/ipfsrefs.h \
     ipfs/ipfsstats.h
 
-FORMS    += mainwindow.ui
+RESOURCES += ui/resources.qrc

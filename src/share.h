@@ -21,11 +21,11 @@ enum ShareState {
 class Share : public QObject
 {
     Q_OBJECT
+
 public:
     explicit Share(QObject *parent = 0);
     explicit Share(QString name, const IpfsHash &hash, QObject *parent = 0);
     virtual ~Share() {}
-
 
     const QString& name() const;
 
@@ -67,8 +67,6 @@ private:
     QString name_;
     ShareState state_;
     QList<Object*> objects_;
-
 };
-Q_DECLARE_METATYPE(const Share*)
 
 #endif // SHARE_H
