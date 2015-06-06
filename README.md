@@ -7,9 +7,9 @@ Here shall appear a friend-to-friend filesharing app with the following caracter
 
 This application will be build on top of [IPFS](http://ipfs.io/).
 
+Here is what we envision currently ([link](https://raw.githubusercontent.com/MichaelMure/Arbore-qt/master/resources/mockups/arboreUImockups-june-w.png)):
+![Mockups](https://raw.githubusercontent.com/MichaelMure/Arbore-qt/master/resources/mockups/arboreUImockups-june-w.png)
+
 ## How to help
 
-The specification process is done in [the issues](https://github.com/MichaelMure/Arbore-qt/issues). Please review what is done and comment. If you know UX, you are very welcome here! 
-
-
-
+Every little help. Please contact us if you want to build something awesome, especially if you know UX or Qt/QML.
