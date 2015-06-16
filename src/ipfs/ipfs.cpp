@@ -211,10 +211,10 @@ void Ipfs::timerEvent(QTimerEvent *)
 {
     if(state_ == LAUNCH_DAEMON)
     {
-        QString stdout = daemon_process_->readAllStandardOutput();
+        QByteArray stdout_ = daemon_process_->readAllStandardOutput();
         QRegExp regex = QRegExp("API server listening on \\/([^\\/]+)\\/([^\\/]+)\\/([^\\/]+)\\/([^\\/]+)\\n");
 
-        int index = regex.indexIn(stdout);
+        int index = regex.indexIn(stdout_);
         if(index >= 0)
         {
             //QString network = regex.cap(1);
