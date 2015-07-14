@@ -2,12 +2,15 @@ import QtQuick 2.3
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
 import QtQuick.Controls.Styles 1.2
+import Arbore 1.0
 
 ApplicationWindow {
-    id: applicationWindow1
+    id: applicationWindow
     visible: true
     width: 1024
     height: 480
+
+    property Share share
 
     Rectangle {
         id: topBar
@@ -77,15 +80,14 @@ ApplicationWindow {
         anchors.fill: parent
         orientation: Qt.Horizontal
 
-        Loader {
+        MenuPanel {
             id: menu
-            source: "menu.qml"
             Layout.minimumWidth: 200
         }
 
-        Loader {
+        ShareList {
             id: second
-            source: "shareList.qml"
+            app: applicationWindow
             Layout.minimumWidth: 400
         }
 
@@ -93,6 +95,10 @@ ApplicationWindow {
             id: third
             color: "yellow"
             Layout.minimumWidth: 400
+
+            Text {
+                text: applicationWindow.share.name
+            }
         }
 
 

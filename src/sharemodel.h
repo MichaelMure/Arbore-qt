@@ -31,6 +31,9 @@ public:
     int rowCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
 
+    Q_INVOKABLE
+    Share* getShare(int index);
+
 private:
     QVector<Share*> shares_;
 };

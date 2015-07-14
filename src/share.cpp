@@ -28,6 +28,11 @@ ShareState Share::state() const
 
 float Share::progress() const
 {
+    uint total = size_total();
+
+    if(total == 0)
+        return 0;
+
     return size_local() / size_total();
 }
 

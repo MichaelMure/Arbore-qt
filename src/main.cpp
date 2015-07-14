@@ -1,14 +1,16 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-#include <QQmlContext>
+#include <QtQml>
 
 #include "sharemodel.h"
-
+#include "share.h"
 
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
+
+    qmlRegisterType<Share>("Arbore", 1, 0, "Share");
 
     QQmlApplicationEngine engine;
 

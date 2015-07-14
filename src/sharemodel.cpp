@@ -55,3 +55,8 @@ QVariant ShareModel::data(const QModelIndex &index, int role) const
     }
     return QVariant();
 }
+
+Share *ShareModel::getShare(int index)
+{
+    return shares_.at(index);
+}

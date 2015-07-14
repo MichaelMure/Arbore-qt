@@ -3,9 +3,8 @@ import QtQuick.Controls 1.2
 
 ListView {
     id: shareList
-    width: 400
-    height: 400
-    anchors.fill: parent
+
+    property ApplicationWindow app
 
     highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
     focus: true
@@ -19,6 +18,7 @@ ListView {
             anchors.fill: parent;
             onClicked: {
                 shareList.currentIndex = index;
+                app.share = shareList.model.getShare(index);
             }
         }
 

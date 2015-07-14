@@ -91,8 +91,6 @@ void Ipfs::init_commands()
     stats.init();
     swarm.init();
     version.init();
-
-    new Directory("QmXRQNG3FgWiSnv4mPkZcwVxwyozocWqySJcU2aEfRKdYG");
 }
 
 void Ipfs::launch_daemon()

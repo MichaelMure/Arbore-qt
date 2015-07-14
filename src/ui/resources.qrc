@@ -3,8 +3,8 @@
         <file>mainWindow.qml</file>
         <file>arbore.png</file>
         <file>plus.png</file>
-        <file>menu.qml</file>
-        <file>shareList.qml</file>
+        <file>MenuPanel.qml</file>
+        <file>ShareList.qml</file>
         <file>contactIcon.png</file>
     </qresource>
 </RCC>

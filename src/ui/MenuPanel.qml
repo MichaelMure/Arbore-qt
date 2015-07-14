@@ -2,10 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.0
 
-/*Rectangle {
-    width: 100
-    height: 62
-
+Rectangle {
     Text {
         id: text1
         x: 8
@@ -13,9 +10,9 @@ import QtQuick.Layouts 1.0
         text: qsTr("Text")
         font.pixelSize: 12
     }
-}*/
+}
 
-ListView {
+/*ListView {
     id: shareList
     width: 400
     height: 400
@@ -59,4 +56,4 @@ ListView {
         }
     }
 
-}
+}*/
