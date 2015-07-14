@@ -18,7 +18,7 @@ ListView {
             anchors.fill: parent;
             onClicked: {
                 shareList.currentIndex = index;
-                app.share = shareList.model.getShare(index);
+                app.details.share = shareList.model.getShare(index);
             }
         }
 

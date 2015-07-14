@@ -6,5 +6,6 @@
         <file>MenuPanel.qml</file>
         <file>ShareList.qml</file>
         <file>contactIcon.png</file>
+        <file>ShareDetails.qml</file>
     </qresource>
 </RCC>

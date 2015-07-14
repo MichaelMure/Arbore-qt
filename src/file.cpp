@@ -3,8 +3,6 @@
 #include "ipfs/ipfs.h"
 #include "ipfs/ipfsrefs.h"
 
-#include <QDebug>
-
 struct Block
 {
     IpfsHash hash;

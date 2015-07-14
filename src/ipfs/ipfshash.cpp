@@ -9,6 +9,8 @@ IpfsHash::IpfsHash()
 IpfsHash::IpfsHash(QString hash)
     : str_(hash)
 {
+    if(!hash.startsWith("Qm"))
+        throw;
 }
 
 IpfsHash::IpfsHash(const IpfsHash &hash)
@@ -22,13 +24,12 @@ IpfsHash &IpfsHash::operator=(const IpfsHash &other)
     return *this;
 }
 
+bool IpfsHash::operator==(const IpfsHash &other) const
+{
+    return str_ == other.str_;
+}
+
 const QString& IpfsHash::ToString() const
 {
     return str_;
 }
-
-
-
-
-
-

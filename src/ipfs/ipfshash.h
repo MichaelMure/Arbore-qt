@@ -17,6 +17,7 @@ public:
     virtual ~IpfsHash() {}
 
     IpfsHash& operator=(const IpfsHash& other);
+    bool operator==(const IpfsHash& other) const;
     const QString& ToString() const;
 
 private:
@@ -28,8 +29,4 @@ inline uint qHash(const IpfsHash &key, uint seed)
     return qHash(key.ToString(), seed);
 }
 
-inline bool operator==(const IpfsHash &hash1, const IpfsHash &hash2)
-{
-    return hash1.ToString() == hash2.ToString();
-}
 #endif // IPFSHASH_H

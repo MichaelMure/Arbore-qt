@@ -10,7 +10,8 @@ ApplicationWindow {
     width: 1024
     height: 480
 
-    property Share share
+    property ShareList list: list
+    property ShareDetails details: details
 
     Rectangle {
         id: topBar
@@ -54,7 +55,7 @@ ApplicationWindow {
             height: 20
             placeholderText: qsTr("Search")
             anchors.right: parent.right
-            anchors.rightMargin: third.width
+            anchors.rightMargin: details.width
             anchors.left: parent.left
             anchors.leftMargin: menu.width
             anchors.verticalCenter: parent.verticalCenter
@@ -86,19 +87,14 @@ ApplicationWindow {
         }
 
         ShareList {
-            id: second
+            id: list
             app: applicationWindow
             Layout.minimumWidth: 400
         }
 
-        Rectangle {
-            id: third
-            color: "yellow"
+        ShareDetails {
+            id: details
             Layout.minimumWidth: 400
-
-            Text {
-                text: applicationWindow.share.name
-            }
         }
 
 

@@ -21,7 +21,7 @@ enum ShareState {
 class Share : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString name READ name)
+    Q_PROPERTY(QString name READ name CONSTANT)
     Q_PROPERTY(float progress READ progress)
 
 public:

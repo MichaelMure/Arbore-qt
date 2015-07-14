@@ -5,6 +5,9 @@
 #include <QUrlQuery>
 #include <QNetworkReply>
 #include <QTextStream>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonValue>
 
 const QString API_COMMAND = "refs";
 
@@ -25,6 +28,7 @@ RefsReply *IpfsRefs::recursive_refs(const IpfsHash &hash) const
     query.addQueryItem("r", "true");
 
     // doesn't work as expected for now
+    // https://github.com/ipfs/go-ipfs/issues/1211
     //query.addQueryItem("u", "true");
 
     url.setQuery(query);
@@ -42,11 +46,33 @@ RefsReply *IpfsRefs::recursive_refs(const IpfsHash &hash) const
             return;
         }
 
-        QTextStream stream(network_reply->readAll());
+        QString str = network_reply->readAll();
 
-        while(!stream.atEnd())
+        // Split the concatenated JSON
+        // See https://en.wikipedia.org/wiki/JSON_Streaming
+
+        // This might need to be adapted, see https://github.com/ipfs/go-ipfs/issues/1477
+
+        int start = 0;
+        int stop = 0;
+
+        while(1)
         {
-            refs_reply->refs << new IpfsHash(stream.readLine());
+            start = str.indexOf('{', stop);
+            if(start == -1)
+                break;
+
+            stop = str.indexOf('}', start);
+            if(stop == -1)
+                break;
+
+            const QJsonDocument doc = QJsonDocument::fromJson(
+                str.midRef(start, stop - start + 1).toUtf8()
+            );
+
+            const QJsonObject json = doc.object();
+
+            refs_reply->refs << new IpfsHash(json.value("Ref").toString().trimmed());
         }
 
         emit refs_reply->finished();
