@@ -22,6 +22,10 @@ public:
     void init();
     bool valid_data() const;
 
+signals:
+    void objectAdded(const IpfsHash& hash);
+    void objectRemoved(const IpfsHash& hash);
+
 private:
     bool valid_data_;
     QSet<IpfsHash> local_objects_;

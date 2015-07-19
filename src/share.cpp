@@ -3,6 +3,8 @@
 #include "object.h"
 #include "directory.h"
 
+#include <QDebug>
+
 Share::Share(QObject *parent):
     QObject(parent)
 {
@@ -13,7 +15,11 @@ Share::Share(QString name, const IpfsHash &hash, QObject *parent):
     name_(name),
     state_(UNITIALIZED)
 {
-    objects_ << new Directory(hash);
+    Directory *dir = new Directory(hash);
+    objects_ << dir;
+
+    connect(dir, SIGNAL(localityChanged()),
+            this, SIGNAL(dataChanged()));
 }
 
 const QString& Share::name() const
@@ -28,12 +34,13 @@ ShareState Share::state() const
 
 float Share::progress() const
 {
-    uint total = size_total();
+    uint total = block_total();
+    qDebug() << "progress " << block_local() << "/" << total;
 
     if(total == 0)
         return 0.0;
 
-    return (float)size_local() / (float)size_total();
+    return (float)block_local() / (float)total;
 }
 
 uint Share::size_total() const

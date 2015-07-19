@@ -22,7 +22,7 @@ class Share : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString name READ name CONSTANT)
-    Q_PROPERTY(float progress READ progress)
+    Q_PROPERTY(float progress READ progress NOTIFY dataChanged)
 
 public:
     explicit Share(QObject *parent = 0);
@@ -64,6 +64,9 @@ public:
      * @return the number of files available locally
      */
     uint file_local() const;
+
+signals:
+    void dataChanged();
 
 private:
     QString name_;

@@ -47,7 +47,7 @@ void Ipfs::query(const QString &command, IApiListener *listener)
 
 void Ipfs::query(const QUrl &url, IApiListener *listener)
 {
-    qDebug() << "HTTP query: " << url << endl;
+//    qDebug() << "HTTP query: " << url;
     QNetworkRequest request = QNetworkRequest(url);
 
     QNetworkReply *reply = manager_->get(request);
@@ -68,7 +68,7 @@ QNetworkReply *Ipfs::manual_query(const QString &command)
 
 QNetworkReply *Ipfs::manual_query(const QUrl &url)
 {
-    qDebug() << "HTTP query: " << url << endl;
+//    qDebug() << "HTTP query: " << url;
     QNetworkRequest request = QNetworkRequest(url);
 
     return manager_->get(request);
@@ -169,8 +169,8 @@ void Ipfs::replyFinished()
 
     if(reply->error())
     {
-        qDebug() << "http error: " << reply->errorString() << endl;
-        qDebug() << "request: " << reply->request().url() << endl;
+        qDebug() << "http error: " << reply->errorString();
+        qDebug() << "request: " << reply->request().url();
         return;
     }
 

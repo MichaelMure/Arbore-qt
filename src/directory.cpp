@@ -33,9 +33,11 @@ Directory::Directory(const IpfsHash &hash)
             {
             case LsEntry::DIRECTORY:
                 child->object = new Directory(entry->hash());
+                qDebug() << "found dir " << entry->name();
                 break;
             case LsEntry::FILE:
-                child->object = new File(entry->hash());
+                child->object = new File(entry->hash(), entry->size());
+                qDebug() << "found file " << entry->name();
                 break;
             case LsEntry::RAW:
             case LsEntry::METADATA:
@@ -43,6 +45,9 @@ Directory::Directory(const IpfsHash &hash)
                 qDebug() << "Error: unsupported object type !";
                 continue;
             }
+
+            connect(child->object, SIGNAL(localityChanged()),
+                    this, SIGNAL(localityChanged()));
 
             this->child_hashes_[child->hash] = child;
             this->child_names_[child->name] = child;
@@ -103,7 +108,6 @@ uint Directory::block_local() const
     }
     return block_local;
 }
-
 
 uint Directory::file_total() const
 {

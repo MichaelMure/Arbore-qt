@@ -7,7 +7,7 @@ import Arbore 1.0
 ApplicationWindow {
     id: applicationWindow
     visible: true
-    width: 1024
+    width: 1047
     height: 480
 
     property ShareList list: list

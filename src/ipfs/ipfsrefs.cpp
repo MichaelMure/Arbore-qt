@@ -108,6 +108,8 @@ void IpfsRefs::refresh_objects()
     QUrl url = Ipfs::instance().api_url(API_COMMAND + "/local");
     QNetworkReply *network_reply = Ipfs::instance().manual_query(url);
 
+    qDebug() << "refresg obj";
+
     connect(network_reply, &QNetworkReply::finished,
             this, [network_reply, this]()
     {
@@ -120,11 +122,33 @@ void IpfsRefs::refresh_objects()
 
         QTextStream stream(network_reply->readAll());
 
-        this->local_objects_.clear();
+        QSet<IpfsHash> objects = QSet<IpfsHash>();
+
         while(!stream.atEnd())
         {
-            this->local_objects_ << IpfsHash(stream.readLine());
+            objects << IpfsHash(stream.readLine());
         }
+
+        qDebug() << objects.size() << " obj";
+
+        foreach (IpfsHash hash, objects)
+        {
+            if(this->local_objects_.contains(hash))
+            {
+                this->local_objects_.remove(hash);
+            }
+            else
+            {
+                emit objectAdded(hash);
+            }
+        }
+
+        foreach (IpfsHash hash, this->local_objects_)
+        {
+            emit objectRemoved(hash);
+        }
+
+        this->local_objects_ = objects;
 
         valid_data_ = true;
         network_reply->deleteLater();

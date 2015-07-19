@@ -50,7 +50,14 @@ public:
      */
     virtual uint file_local() const = 0;
 
-private:
+signals:
+    /**
+     * @brief Notify that the local disponibility of this object changed.
+     */
+    void localityChanged();
+
+
+protected:
     IpfsHash hash_;
 };
 

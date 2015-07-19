@@ -55,7 +55,7 @@ void LsReply::replyFinished()
     }
 
     QString str = reply->readAll();
-    qDebug() << "http reply : " << str;
+//    qDebug() << "http reply : " << str;
 
     const QJsonDocument doc = QJsonDocument::fromJson(str.toUtf8());
     const QJsonObject json = doc.object();
