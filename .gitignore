@@ -25,8 +25,10 @@
 moc_*.cpp
 qrc_*.cpp
 ui_*.h
-Makefile*
 *-build-*
+
+# Simple build directory for developers
+src/build
 
 # QtCreator
 
