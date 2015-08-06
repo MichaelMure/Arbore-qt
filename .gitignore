@@ -30,6 +30,8 @@ ui_*.h
 # Simple build directory for developers
 src/build
 
+README.html
+
 # QtCreator
 
 *.autosave
