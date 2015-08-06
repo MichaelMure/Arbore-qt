@@ -10,6 +10,29 @@ This application will be build on top of [IPFS](http://ipfs.io/).
 Here is what we envision currently ([link](https://raw.githubusercontent.com/MichaelMure/Arbore-qt/master/resources/mockups/arboreUImockups-june-w.png)):
 ![Mockups](https://raw.githubusercontent.com/MichaelMure/Arbore-qt/master/resources/mockups/arboreUImockups-june-w.png)
 
+## How to build
+
+### On Debian like
+
+#### Dependencies
+
+	# apt-get install libqt5declarative5 qml qml-module-qtquick-controls qt5-qmake
+
+#### Configure build and run
+
+	$ cd src
+	$ mkdir build
+	$ cd build
+	$ qmake ..
+	$ make -j $(nproc)
+	$ ./Arbore-qt
+
+Or, simply using the provided Makefile:
+
+	$ cd src
+	$ make -j $(proc) run
+
+
 ## How to help
 
 Every little help. Please contact us if you want to build something awesome, especially if you know UX or Qt/QML.
