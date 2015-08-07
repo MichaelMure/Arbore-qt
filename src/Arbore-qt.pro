@@ -7,6 +7,7 @@
 QT       += core network qml quick
 
 CONFIG += c++11
+CONFIG += debug_and_release
 
 TARGET = Arbore-qt
 TEMPLATE = app
