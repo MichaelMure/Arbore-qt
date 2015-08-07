@@ -32,6 +32,10 @@ Or, simply using the provided Makefile:
 	$ cd src
 	$ make -j $(proc) run
 
+In order to run in debug mode
+
+	$ cd src/build
+	$ make debug
 
 ## How to help
 
