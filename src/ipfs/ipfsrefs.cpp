@@ -91,7 +91,8 @@ bool IpfsRefs::valid_data() const
 
 void IpfsRefs::timerEvent(QTimerEvent *)
 {
-    refresh_objects();
+    if(Ipfs::instance().online())
+        refresh_objects();
 }
 
 void IpfsRefs::refresh_objects()

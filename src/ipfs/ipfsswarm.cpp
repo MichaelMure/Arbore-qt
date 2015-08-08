@@ -62,5 +62,6 @@ uint IpfsSwarm::peer_count() const
 
 void IpfsSwarm::timerEvent(QTimerEvent *)
 {
-    refresh_peers();
+    if(Ipfs::instance().online())
+        refresh_peers();
 }

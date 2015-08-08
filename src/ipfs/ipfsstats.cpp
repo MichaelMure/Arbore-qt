@@ -95,5 +95,6 @@ void IpfsStats::init()
 
 void IpfsStats::timerEvent(QTimerEvent *)
 {
-    refresh();
+    if(Ipfs::instance().online())
+        refresh();
 }

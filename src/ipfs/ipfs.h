@@ -59,6 +59,11 @@ public:
      */
     IpfsAccess * query(const QUrl &url);
 
+    /**
+     * @return true is the daemon is online and ready.
+     */
+    bool online() const;
+
 private:
     Ipfs();                      // hide constructor
     ~Ipfs();                     // hide destructor

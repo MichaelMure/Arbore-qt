@@ -66,6 +66,11 @@ IpfsAccess *Ipfs::query(const QUrl &url)
     return access;
 }
 
+bool Ipfs::online() const
+{
+    return state_ == RUNNING;
+}
+
 void Ipfs::init()
 {
     manager_ = new QNetworkAccessManager();
@@ -200,7 +205,6 @@ void Ipfs::timerEvent(QTimerEvent *)
         }
     }
 }
-
 
 IpfsAccess::~IpfsAccess()
 {
