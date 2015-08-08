@@ -2,7 +2,7 @@
 #define IPFS_H
 
 #include <QObject>
-#include <QMap>
+#include <QQueue>
 #include <QProcess>
 #include "ipfs/ipfsget.h"
 #include "ipfs/ipfsid.h"
@@ -73,6 +73,7 @@ private:
     void init();
     void init_commands();
     void launch_daemon();
+    void launch_access(IpfsAccess* access);
 
 private slots:
     void daemon_started();
@@ -87,6 +88,7 @@ private:
     QString api_ip_;
     QString api_port_;
     int timer_id_;
+    QQueue<IpfsAccess*> access_buffer_;
 
     // QObject interface
 protected:

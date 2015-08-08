@@ -46,22 +46,11 @@ IpfsAccess *Ipfs::query(const QUrl &url)
 //    qDebug() << "HTTP query: " << url;
     IpfsAccess *access = new IpfsAccess();
     access->request = new QNetworkRequest(url);
-    access->reply = manager_->get(*access->request);
 
-    connect(access->reply, &QNetworkReply::finished,
-            this, [access]()
-    {
-        if(access->reply->error())
-        {
-            qDebug() << "http error: " << access->reply->errorString() << endl;
-            qDebug() << "request: " << access->request->url() << endl;
-
-            // Todo: relaunch ?
-            return;
-        }
-
-        emit access->finished();
-    });
+    if(online())
+        launch_access((access));
+    else
+        access_buffer_ << access;
 
     return access;
 }
@@ -154,6 +143,26 @@ void Ipfs::launch_daemon()
     state_ = LAUNCH_DAEMON;
 }
 
+void Ipfs::launch_access(IpfsAccess *access)
+{
+    access->reply = manager_->get(*access->request);
+
+    connect(access->reply, &QNetworkReply::finished,
+            this, [access]()
+    {
+        if(access->reply->error())
+        {
+            qDebug() << "http error: " << access->reply->errorString() << endl;
+            qDebug() << "request: " << access->request->url() << endl;
+
+            // Todo: relaunch ?
+            return;
+        }
+
+        emit access->finished();
+    });
+}
+
 Ipfs::~Ipfs()
 {
     if(daemon_process_)
@@ -202,6 +211,11 @@ void Ipfs::timerEvent(QTimerEvent *)
             killTimer(timer_id_);
             state_ = RUNNING;
             init_commands();
+
+            while(!access_buffer_.empty())
+            {
+                launch_access(access_buffer_.dequeue());
+            }
         }
     }
 }
