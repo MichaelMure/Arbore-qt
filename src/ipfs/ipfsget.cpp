@@ -11,7 +11,7 @@ IpfsGet::IpfsGet(QObject *parent)
 {
 }
 
-void IpfsGet::write_on_disk(const IpfsHash &hash, const QString &path)
+/*void IpfsGet::write_on_disk(const IpfsHash &hash, const QString &path)
 {
     QUrl url = Ipfs::instance().api_url(API_COMMAND);
     QUrlQuery query;
@@ -21,4 +21,4 @@ void IpfsGet::write_on_disk(const IpfsHash &hash, const QString &path)
 
     url.setQuery(query);
     Ipfs::instance().query(url);
-}
+}*/

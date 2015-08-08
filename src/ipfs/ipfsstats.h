@@ -2,9 +2,8 @@
 #define IPFSSTATS_H
 
 #include <QObject>
-#include "ipfs/iapilistener.h"
 
-class IpfsStats : public QObject, public IApiListener
+class IpfsStats : public QObject
 {
     Q_OBJECT
 public:
@@ -18,7 +17,6 @@ public:
 
 public:
     void init();
-    void on_reply(const QJsonObject *json);
     bool valid_data() const;
 
 private:

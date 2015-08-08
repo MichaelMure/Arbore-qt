@@ -22,6 +22,7 @@ class IpfsAccess : public QObject
     Q_OBJECT
 public:
     virtual ~IpfsAccess();
+    const QJsonObject json();
 public:
     QNetworkRequest *request;
     QNetworkReply   *reply;
@@ -53,24 +54,10 @@ public:
     QUrl api_url(const QString &command);
 
     /**
-     * Query the API with only a command name
-     * @param command
-     * @param originator
-     */
-    void query(const QString &command, IApiListener *listener = NULL);
-
-    /**
-     * Query a specific API url, constructed from api_url()
-     * @param url
-     * @param originator
-     */
-    void query(const QUrl &url, IApiListener *listener = NULL);
-
-    /**
      * Query a specific API url, constructed from api_url()
      * @param url
      */
-    IpfsAccess * manual_query(const QUrl &url);
+    IpfsAccess * query(const QUrl &url);
 
 private:
     Ipfs();                      // hide constructor
@@ -83,7 +70,6 @@ private:
     void launch_daemon();
 
 private slots:
-    void replyFinished ();
     void daemon_started();
     void daemon_error(QProcess::ProcessError error);
     void daemon_finished(int exit_code, QProcess::ExitStatus exit_status);
@@ -95,7 +81,6 @@ private:
     QProcess *daemon_process_;
     QString api_ip_;
     QString api_port_;
-    QMap<QNetworkReply*, IApiListener*> replies_listener;
     int timer_id_;
 
     // QObject interface

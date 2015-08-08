@@ -24,7 +24,7 @@ LsReply * IpfsLs::ls(const IpfsHash &hash)
     query.addQueryItem("arg", hash.ToString());
 
     url.setQuery(query);
-    IpfsAccess *access = Ipfs::instance().manual_query(url);
+    IpfsAccess *access = Ipfs::instance().query(url);
 
     LsReply *ls_reply = new LsReply();
 

@@ -20,7 +20,6 @@ public:
 };
 
 
-
 class LsReply : public QObject
 {
     Q_OBJECT
@@ -32,7 +31,6 @@ signals:
 public:
     QList<const LsEntry*> entries;
 };
-
 
 
 class LsEntry : public QObject

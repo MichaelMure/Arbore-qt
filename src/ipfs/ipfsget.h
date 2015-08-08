@@ -12,7 +12,9 @@ public:
     virtual ~IpfsGet() {}
 
     /* Will not work, https://github.com/ipfs/go-ipfs/issues/1210 */
-    void write_on_disk(const IpfsHash &hash, const QString &path);
+    // Commented as it's likely to be in a different way
+    // See https://github.com/ipfs/go-ipfs/issues/875
+    //void write_on_disk(const IpfsHash &hash, const QString &path);
 };
 
 #endif // IPFSGET_H

@@ -24,19 +24,25 @@ void IpfsSwarm::init()
 
 void IpfsSwarm::refresh_peers()
 {
-    Ipfs::instance().query(API_COMMAND + "/peers", this);
+    QUrl url = Ipfs::instance().api_url(API_COMMAND + "/peers");
+    IpfsAccess *access = Ipfs::instance().query(url);
+
+    connect(access, &IpfsAccess::finished,
+            this, [this, access]()
+    {
+        const QJsonObject &json = access->json();
+
+        this->peers_.clear();
+        foreach (const QJsonValue &value, json.value("Strings").toArray())
+        {
+            this->peers_ << IpfsPeer(value.toString());
+        }
+        this->valid_data_ = true;
+
+        delete access;
+    });
 
     qDebug() << "refreshing peers";
-}
-
-void IpfsSwarm::on_reply(const QJsonObject *json)
-{
-    peers_.clear();
-    foreach (const QJsonValue &value, json->value("Strings").toArray())
-    {
-        peers_ << IpfsPeer(value.toString());
-    }
-    valid_data_ = true;
 }
 
 bool IpfsSwarm::valid_data() const

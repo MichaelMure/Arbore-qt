@@ -2,11 +2,10 @@
 #define IPFSID_H
 
 #include <QObject>
-#include "ipfs/iapilistener.h"
 #include "ipfs/ipfshash.h"
 
 
-class IpfsId : public QObject, public IApiListener
+class IpfsId : public QObject
 {
     Q_OBJECT
 public:
@@ -17,7 +16,6 @@ public:
 
 public:
     void init();
-    void on_reply(const QJsonObject *json);
     bool valid_data() const;
 
 private:

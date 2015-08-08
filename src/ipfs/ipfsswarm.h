@@ -2,10 +2,9 @@
 #define IPFSSWARM_H
 
 #include <QObject>
-#include "ipfs/iapilistener.h"
 #include "ipfs/ipfspeer.h"
 
-class IpfsSwarm : public QObject, public IApiListener
+class IpfsSwarm : public QObject
 {
     Q_OBJECT
 public:
@@ -17,7 +16,6 @@ public:
 
 public:
     void init();
-    void on_reply(const QJsonObject *json);
     bool valid_data() const;
 
 private:

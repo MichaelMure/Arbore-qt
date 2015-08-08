@@ -40,7 +40,6 @@ HEADERS  += \
     ipfs/ipfspeer.h \
     ipfs/ipfsid.h \
     ipfs/ipfsget.h \
-    ipfs/iapilistener.h \
     ipfs/ipfsls.h \
     directory.h \
     file.h \

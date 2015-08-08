@@ -22,6 +22,7 @@ void IpfsPin::add_pin(const IpfsHash &hash, bool recursive)
         query.addQueryItem("r", "true");
 
     url.setQuery(query);
+
     Ipfs::instance().query(url);
 }
 

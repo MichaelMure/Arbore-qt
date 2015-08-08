@@ -18,20 +18,26 @@ IpfsId::IpfsId(QObject *parent)
 
 void IpfsId::init()
 {
-    Ipfs::instance().query(API_COMMAND, this);
-}
+    QUrl url = Ipfs::instance().api_url(API_COMMAND);
+    IpfsAccess *access = Ipfs::instance().query(url);
 
-void IpfsId::on_reply(const QJsonObject *json)
-{
-    QJsonValue id_value = json->value("ID");
+    connect(access, &IpfsAccess::finished,
+            this, [this, access]()
+    {
+        const QJsonObject &json = access->json();
 
-    if(id_)
-        delete(id_);
+        QJsonValue id_value = json.value("ID");
 
-    id_ = new IpfsHash(id_value.toString());
+        if(this->id_)
+            delete(this->id_);
 
-    valid_data_ = true;
-    qDebug() << "Got local ID: " << id_->ToString();
+        this->id_ = new IpfsHash(id_value.toString());
+
+        valid_data_ = true;
+        qDebug() << "Got local ID: " << id_->ToString();
+
+        delete access;
+    });
 }
 
 bool IpfsId::valid_data() const

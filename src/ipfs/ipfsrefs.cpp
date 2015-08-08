@@ -30,7 +30,7 @@ RefsReply *IpfsRefs::recursive_refs(const IpfsHash &hash) const
 
     url.setQuery(query);
 
-    IpfsAccess *access = Ipfs::instance().manual_query(url);
+    IpfsAccess *access = Ipfs::instance().query(url);
 
     RefsReply *refs_reply = new RefsReply();
 
@@ -98,9 +98,9 @@ void IpfsRefs::refresh_objects()
 {
     QUrl url = Ipfs::instance().api_url(API_COMMAND + "/local");
 
-    IpfsAccess *access = Ipfs::instance().manual_query(url);
+    IpfsAccess *access = Ipfs::instance().query(url);
 
-    qDebug() << "refresg obj";
+    qDebug() << "refresh obj";
 
     connect(access, &IpfsAccess::finished,
             this, [this, access]()

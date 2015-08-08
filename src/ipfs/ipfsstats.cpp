@@ -1,6 +1,7 @@
 #include "ipfsstats.h"
 #include "ipfs.h"
 
+#include <QUrl>
 #include <QJsonObject>
 #include <QString>
 #include <QStringList>
@@ -21,7 +22,21 @@ IpfsStats::IpfsStats(QObject *parent)
 
 void IpfsStats::refresh()
 {
-    Ipfs::instance().query(API_COMMAND + "/bw", this);
+    QUrl url = Ipfs::instance().api_url(API_COMMAND + "/bw");
+    IpfsAccess *access = Ipfs::instance().query(url);
+
+    connect(access, &IpfsAccess::finished,
+            this, [this, access]()
+    {
+        const QJsonObject &json = access->json();
+
+        this->total_in_ = json.value("TotalIn").toDouble();
+        this->total_out_ = json.value("TotalOut").toDouble();
+        this->rate_in_ = json.value("RateIn").toDouble();
+        this->rate_out_ = json.value("RateOut").toDouble();
+
+        delete access;
+    });
 }
 
 QString IpfsStats::format_rate(uint rate)
@@ -82,12 +97,3 @@ void IpfsStats::timerEvent(QTimerEvent *)
 {
     refresh();
 }
-
-void IpfsStats::on_reply(const QJsonObject *json)
-{
-    total_in_ = json->value("TotalIn").toDouble();
-    total_out_ = json->value("TotalOut").toDouble();
-    rate_in_ = json->value("RateIn").toDouble();
-    rate_out_ = json->value("RateOut").toDouble();
-}
-

@@ -32,20 +32,26 @@ int IpfsVersion::micro() const
 
 void IpfsVersion::init()
 {
-    Ipfs::instance().query(API_COMMAND, this);
-}
+    QUrl url = Ipfs::instance().api_url(API_COMMAND);
+    IpfsAccess *access = Ipfs::instance().query(url);
 
-void IpfsVersion::on_reply(const QJsonObject *json)
-{
-    QJsonValue value = json->value("Version");
-    QString valueStr = value.toString();
-    QStringList numbers = valueStr.split(".");
+    connect(access, &IpfsAccess::finished,
+            this, [this, access]()
+    {
+        const QJsonObject &json = access->json();
 
-    major_ = numbers[0].toInt();
-    minor_ = numbers[1].toInt();
-    micro_ = numbers[2].toInt();
+        QJsonValue value = json.value("Version");
+        QString valueStr = value.toString();
+        QStringList numbers = valueStr.split(".");
 
-    qDebug() << "Got version: " << this->ToString();
+        this->major_ = numbers[0].toInt();
+        this->minor_ = numbers[1].toInt();
+        this->micro_ = numbers[2].toInt();
+
+        qDebug() << "Got version: " << this->ToString();
+
+        delete access;
+    });
 }
 
 bool IpfsVersion::valid_data() const

@@ -41,28 +41,7 @@ QUrl Ipfs::api_url(const QString &command)
                 .arg(api_ip_, api_port_, command));
 }
 
-void Ipfs::query(const QString &command, IApiListener *listener)
-{
-    query(api_url(command), listener);
-}
-
-void Ipfs::query(const QUrl &url, IApiListener *listener)
-{
-//    qDebug() << "HTTP query: " << url;
-    QNetworkRequest request = QNetworkRequest(url);
-
-    QNetworkReply *reply = manager_->get(request);
-
-    if(listener)
-    {
-        replies_listener[reply] = listener;
-    }
-
-    connect(reply, SIGNAL(finished()),
-            this, SLOT(replyFinished()));
-}
-
-IpfsAccess *Ipfs::manual_query(const QUrl &url)
+IpfsAccess *Ipfs::query(const QUrl &url)
 {
 //    qDebug() << "HTTP query: " << url;
     IpfsAccess *access = new IpfsAccess();
@@ -94,7 +73,49 @@ void Ipfs::init()
 
     // Ping the HTTP API to find out if a daemon is running
     state_ = PING_DAEMON;
-    query("version", NULL);
+
+    QUrl url = api_url("version");
+    QNetworkRequest request = QNetworkRequest(url);
+    QNetworkReply *reply = manager_->get(request);
+
+    connect(reply, &QNetworkReply::finished,
+            this, [this, reply]()
+    {
+        if(state_ == PING_DAEMON)
+        {
+            if(reply->error())
+            {
+                qDebug() << "Could not ping the API, lauching daemon manually";
+                launch_daemon();
+                return;
+            }
+
+            QString str = reply->readAll();
+            QJsonParseError error;
+            QJsonDocument doc = QJsonDocument::fromJson(str.toUtf8(), &error);
+
+            if(error.error != QJsonParseError::NoError)
+            {
+                qDebug() << "Error while pinging the API, lauching daemon manually";
+                launch_daemon();
+                return;
+            }
+
+            QJsonValue value = doc.object().value("Version");
+            if(value == QJsonValue::Undefined)
+            {
+                qDebug() << "Unparsable json from API pinging, lauching daemon manually";
+                launch_daemon();
+                return;
+            }
+
+            // Daemon API should be OK at this point !
+            state_ = RUNNING;
+            init_commands();
+        }
+
+        reply->deleteLater();
+    });
 }
 
 void Ipfs::init_commands()
@@ -142,66 +163,6 @@ Ipfs::~Ipfs()
     manager_->deleteLater();
 }
 
-void Ipfs::replyFinished()
-{
-    QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
-
-    if(state_ == PING_DAEMON)
-    {
-        if(reply->error())
-        {
-            qDebug() << "Could not ping the API, lauching daemon manually";
-            launch_daemon();
-            return;
-        }
-
-        QString str = reply->readAll();
-        QJsonParseError error;
-        QJsonDocument doc = QJsonDocument::fromJson(str.toUtf8(), &error);
-
-        if(error.error != QJsonParseError::NoError)
-        {
-            qDebug() << "Error while pinging the API, lauching daemon manually";
-            launch_daemon();
-            return;
-        }
-
-        QJsonValue value = doc.object().value("Version");
-        if(value == QJsonValue::Undefined)
-        {
-            qDebug() << "Unparsable json from API pinging, lauching daemon manually";
-            launch_daemon();
-            return;
-        }
-
-        // Daemon API should be OK at this point !
-        state_ = RUNNING;
-        init_commands();
-        return;
-    }
-
-    if(reply->error())
-    {
-        qDebug() << "http error: " << reply->errorString();
-        qDebug() << "request: " << reply->request().url();
-        return;
-    }
-
-    QString str = reply->readAll();
-    //qDebug() << "http reply : " << str;
-
-    QJsonDocument doc = QJsonDocument::fromJson(str.toUtf8());
-    QJsonObject json = doc.object();
-
-    if(replies_listener.contains(reply))
-    {
-        replies_listener[reply]->on_reply(&json);
-        replies_listener.remove(reply);
-    }
-
-    reply->deleteLater();
-}
-
 void Ipfs::daemon_started()
 {
     qDebug() << "daemon started";
@@ -245,4 +206,12 @@ IpfsAccess::~IpfsAccess()
 {
     delete this->request;
     this->reply->deleteLater();
+}
+
+const QJsonObject IpfsAccess::json()
+{
+    QString str = this->reply->readAll();
+
+    QJsonDocument doc = QJsonDocument::fromJson(str.toUtf8());
+    return doc.object();
 }
