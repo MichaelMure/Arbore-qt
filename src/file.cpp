@@ -11,8 +11,8 @@ struct Block
     uint size;
 };
 
-File::File(const IpfsHash &hash, uint size)
-    : Object(hash), size_(size)
+File::File(const IpfsHash &hash, uint size, const QString &name)
+    : Object(hash, name), size_(size)
 {
     connect(&(Ipfs::instance().refs), SIGNAL(objectAdded(IpfsHash)),
             this, SLOT(objectAdded(IpfsHash)));
@@ -39,8 +39,8 @@ File::File(const IpfsHash &hash, uint size)
     });
 }
 
-File::File(const QString &hash, uint size)
-    : File(IpfsHash(hash), size)
+File::File(const QString &hash, uint size, const QString &name)
+    : File(IpfsHash(hash), size, name)
 {
 }
 

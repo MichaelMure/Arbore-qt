@@ -11,9 +11,14 @@ class Object : public QObject
 {
     Q_OBJECT
 public:
-    Object(const IpfsHash &hash);
-    Object(QString hash);
+    Object(const IpfsHash &hash, const QString &name = "");
+    Object(const QString &hash, const QString &name = "");
     virtual ~Object() {}
+
+    /**
+     * @return the name of the object available, empty string otherwise.
+     */
+    const QString& name() const;
 
     /**
      * @return the hash of the object
@@ -58,7 +63,8 @@ signals:
 
 
 protected:
-    IpfsHash hash_;
+    const QString name_;
+    const IpfsHash hash_;
 };
 
 #endif // OBJECT_H

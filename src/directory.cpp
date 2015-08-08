@@ -6,16 +6,8 @@
 
 #include <QDebug>
 
-struct Child
-{
-    IpfsHash hash;
-    QString name;
-    uint size;
-    Object *object;
-};
-
-Directory::Directory(const IpfsHash &hash)
-    : Object(hash)
+Directory::Directory(const IpfsHash &hash, const QString &name)
+    : Object(hash, name)
 {
     LsReply *reply = Ipfs::instance().ls.ls(hash);
 
@@ -32,11 +24,11 @@ Directory::Directory(const IpfsHash &hash)
             switch(entry->type())
             {
             case LsEntry::DIRECTORY:
-                child->object = new Directory(entry->hash());
+                child->object = new Directory(entry->hash(), entry->name());
                 qDebug() << "found dir " << entry->name();
                 break;
             case LsEntry::FILE:
-                child->object = new File(entry->hash(), entry->size());
+                child->object = new File(entry->hash(), entry->size(), entry->name());
                 qDebug() << "found file " << entry->name();
                 break;
             case LsEntry::RAW:
@@ -55,8 +47,8 @@ Directory::Directory(const IpfsHash &hash)
     });
 }
 
-Directory::Directory(const QString &hash)
-    : Directory(IpfsHash(hash))
+Directory::Directory(const QString &hash, const QString &name)
+    : Directory(IpfsHash(hash), name)
 {
 }
 
@@ -127,4 +119,9 @@ uint Directory::file_local() const
         file_local += i.value()->object->file_local();
     }
     return file_local;
+}
+
+const QHash<QString, Child *> &Directory::getChilds() const
+{
+    return this->child_names_;
 }

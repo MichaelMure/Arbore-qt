@@ -5,16 +5,24 @@
 #include "ipfs/ipfshash.h"
 
 #include <QHash>
+#include <QList>
 
 class LsEntry;
-struct Child;
+
+struct Child
+{
+    IpfsHash hash;
+    QString name;
+    uint size;
+    Object *object;
+};
 
 class Directory : public Object
 {
     Q_OBJECT
 public:
-    Directory(const IpfsHash &hash);
-    Directory(const QString &hash);
+    Directory(const IpfsHash &hash, const QString &name = "");
+    Directory(const QString &hash, const QString &name = "");
     virtual ~Directory();
 
     // Object interface
@@ -25,6 +33,9 @@ public:
     uint block_local() const;
     uint file_total() const;
     uint file_local() const;
+
+public:
+    const QHash<QString, Child *>& getChilds() const;
 
 private:
     QHash<IpfsHash, Child *> child_hashes_;

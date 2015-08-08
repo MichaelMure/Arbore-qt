@@ -2,8 +2,10 @@
 
 #include "object.h"
 #include "directory.h"
+#include "objectiterator.h"
 
 #include <QDebug>
+#include <QStringBuilder>
 
 Share::Share(QObject *parent):
     QObject(parent)
@@ -25,6 +27,19 @@ Share::Share(QString name, const IpfsHash &hash, QObject *parent):
 const QString& Share::name() const
 {
     return name_;
+}
+
+QString Share::textual_arborescence() const
+{
+    QString result;
+    for(ObjectIterator it = ObjectIterator(this->objects_[0]); it != ObjectIterator(); it++)
+    {
+        result += QString("--").repeated(it.depth());
+        result += (*it).name();
+        result += "\n";
+    }
+
+    return result;
 }
 
 ShareState Share::state() const

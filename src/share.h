@@ -22,6 +22,7 @@ class Share : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString name READ name CONSTANT)
+    Q_PROPERTY(QString textual_arborescence READ textual_arborescence CONSTANT)
     Q_PROPERTY(float progress READ progress NOTIFY dataChanged)
 
 public:
@@ -30,6 +31,8 @@ public:
     virtual ~Share() {}
 
     const QString& name() const;
+
+    QString textual_arborescence() const;
 
     ShareState state() const;
 

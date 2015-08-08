@@ -29,7 +29,8 @@ SOURCES += main.cpp\
     file.cpp \
     object.cpp \
     ipfs/ipfsrefs.cpp \
-    ipfs/ipfsstats.cpp
+    ipfs/ipfsstats.cpp \
+    objectiterator.cpp
 
 HEADERS  += \
     ipfs/ipfs.h \
@@ -47,7 +48,8 @@ HEADERS  += \
     share.h \
     sharemodel.h \
     ipfs/ipfsrefs.h \
-    ipfs/ipfsstats.h
+    ipfs/ipfsstats.h \
+    objectiterator.h
 
 RESOURCES += ui/resources.qrc
 

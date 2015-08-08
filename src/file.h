@@ -12,8 +12,8 @@ class File : public Object
 {
     Q_OBJECT
 public:
-    File(const IpfsHash &hash, uint size);
-    File(const QString &hash, uint size);
+    File(const IpfsHash &hash, uint size, const QString &name = "");
+    File(const QString &hash, uint size, const QString &name = "");
     virtual ~File();
 
     // Object interface
