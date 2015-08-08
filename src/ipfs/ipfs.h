@@ -72,8 +72,10 @@ private:
 
     void init();
     void init_commands();
+    void ping_daemon();
     void launch_daemon();
     void launch_access(IpfsAccess* access);
+    void on_online();
 
 private slots:
     void daemon_started();
@@ -81,7 +83,7 @@ private slots:
     void daemon_finished(int exit_code, QProcess::ExitStatus exit_status);
 
 private:
-    enum IpfsState { PING_DAEMON, LAUNCH_DAEMON, RUNNING };
+    enum IpfsState { PING_DAEMON, LAUNCH_DAEMON, RUNNING_SYSTEM, RUNNING_EMBED };
     IpfsState state_;
     QNetworkAccessManager *manager_;
     QProcess *daemon_process_;

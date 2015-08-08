@@ -12,6 +12,22 @@
 
 #include "directory.h"
 
+/*
+ * PlanUML
+ * @startuml
+ *
+ * [*] --> PING_DAEMON
+ * PING_DAEMON --> LAUNCH_DAEMON : query nok
+ * PING_DAEMON --> RUNNING_SYSTEM : query ok
+ * LAUNCH_DAEMON --> RUNNING_EMBED : read stdin
+ * RUNNING_SYSTEM --> PING_DAEMON : unreachable
+ * RUNNING_EMBED --> PING_DAEMON : crash
+ * LAUNCH_DAEMON --> LAUNCH_DAEMON : timer
+ *
+ *
+ * @enduml
+ */
+
 static bool initialized = false;
 
 Ipfs::Ipfs()
@@ -57,7 +73,7 @@ IpfsAccess *Ipfs::query(const QUrl &url)
 
 bool Ipfs::online() const
 {
-    return state_ == RUNNING;
+    return state_ == RUNNING_EMBED || state_ == RUNNING_SYSTEM;
 }
 
 void Ipfs::init()
@@ -67,7 +83,20 @@ void Ipfs::init()
 
     // Ping the HTTP API to find out if a daemon is running
     state_ = PING_DAEMON;
+    ping_daemon();
+}
 
+void Ipfs::init_commands()
+{
+    id.init();
+    refs.init();
+    stats.init();
+    swarm.init();
+    version.init();
+}
+
+void Ipfs::ping_daemon()
+{
     QUrl url = api_url("version");
     QNetworkRequest request = QNetworkRequest(url);
     QNetworkReply *reply = manager_->get(request);
@@ -104,21 +133,12 @@ void Ipfs::init()
             }
 
             // Daemon API should be OK at this point !
-            state_ = RUNNING;
-            init_commands();
+            state_ = RUNNING_SYSTEM;
+            on_online();
         }
 
         reply->deleteLater();
     });
-}
-
-void Ipfs::init_commands()
-{
-    id.init();
-    refs.init();
-    stats.init();
-    swarm.init();
-    version.init();
 }
 
 void Ipfs::launch_daemon()
@@ -148,19 +168,34 @@ void Ipfs::launch_access(IpfsAccess *access)
     access->reply = manager_->get(*access->request);
 
     connect(access->reply, &QNetworkReply::finished,
-            this, [access]()
+            this, [this, access]()
     {
         if(access->reply->error())
         {
             qDebug() << "http error: " << access->reply->errorString() << endl;
             qDebug() << "request: " << access->request->url() << endl;
 
-            // Todo: relaunch ?
+            if(this->state_ == RUNNING_SYSTEM)
+            {
+                this->state_ = PING_DAEMON;
+                this->ping_daemon();
+            }
+
             return;
         }
 
         emit access->finished();
     });
+}
+
+void Ipfs::on_online()
+{
+    init_commands();
+
+    while(!access_buffer_.empty())
+    {
+        launch_access(access_buffer_.dequeue());
+    }
 }
 
 Ipfs::~Ipfs()
@@ -185,12 +220,23 @@ void Ipfs::daemon_started()
 void Ipfs::daemon_error(QProcess::ProcessError error)
 {
     qDebug() << "daemon error " << error;
+    if(state_ == RUNNING_EMBED && daemon_process_->state() == QProcess::NotRunning)
+    {
+        state_ = PING_DAEMON;
+        ping_daemon();
+    }
 }
 
 void Ipfs::daemon_finished(int exit_code, QProcess::ExitStatus exit_status)
 {
     qDebug() << "daemon finished exit code: " << exit_code
              << "exit status: " << exit_status;
+
+    if(state_ == RUNNING_EMBED && daemon_process_->state() == QProcess::NotRunning)
+    {
+        state_ = PING_DAEMON;
+        ping_daemon();
+    }
 }
 
 void Ipfs::timerEvent(QTimerEvent *)
@@ -209,13 +255,8 @@ void Ipfs::timerEvent(QTimerEvent *)
             api_port_ = regex.cap(4);
 
             killTimer(timer_id_);
-            state_ = RUNNING;
-            init_commands();
-
-            while(!access_buffer_.empty())
-            {
-                launch_access(access_buffer_.dequeue());
-            }
+            state_ = RUNNING_EMBED;
+            on_online();
         }
     }
 }
