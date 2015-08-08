@@ -26,27 +26,18 @@ RefsReply *IpfsRefs::recursive_refs(const IpfsHash &hash) const
 
     query.addQueryItem("arg", hash.ToString());
     query.addQueryItem("r", "true");
-
-    // doesn't work as expected for now
-    // https://github.com/ipfs/go-ipfs/issues/1211
-    //query.addQueryItem("u", "true");
+    query.addQueryItem("u", "true");
 
     url.setQuery(query);
-    QNetworkReply *network_reply = Ipfs::instance().manual_query(url);
+
+    IpfsAccess *access = Ipfs::instance().manual_query(url);
 
     RefsReply *refs_reply = new RefsReply();
 
-    connect(network_reply, &QNetworkReply::finished,
-            refs_reply, [network_reply, refs_reply]()
+    connect(access, &IpfsAccess::finished,
+            this, [access, refs_reply]()
     {
-        if(network_reply->error())
-        {
-            qDebug() << "http error: " << network_reply->errorString() << endl;
-            qDebug() << "request: " << network_reply->request().url() << endl;
-            return;
-        }
-
-        QString str = network_reply->readAll();
+        QString str = access->reply->readAll();
 
         // Split the concatenated JSON
         // See https://en.wikipedia.org/wiki/JSON_Streaming
@@ -77,7 +68,7 @@ RefsReply *IpfsRefs::recursive_refs(const IpfsHash &hash) const
 
         emit refs_reply->finished();
 
-        network_reply->deleteLater();
+        delete access;
     });
 
     return refs_reply;
@@ -106,21 +97,15 @@ void IpfsRefs::timerEvent(QTimerEvent *)
 void IpfsRefs::refresh_objects()
 {
     QUrl url = Ipfs::instance().api_url(API_COMMAND + "/local");
-    QNetworkReply *network_reply = Ipfs::instance().manual_query(url);
+
+    IpfsAccess *access = Ipfs::instance().manual_query(url);
 
     qDebug() << "refresg obj";
 
-    connect(network_reply, &QNetworkReply::finished,
-            this, [network_reply, this]()
+    connect(access, &IpfsAccess::finished,
+            this, [this, access]()
     {
-        if(network_reply->error())
-        {
-            qDebug() << "http error: " << network_reply->errorString() << endl;
-            qDebug() << "request: " << network_reply->request().url() << endl;
-            return;
-        }
-
-        QTextStream stream(network_reply->readAll());
+        QTextStream stream(access->reply->readAll());
 
         QSet<IpfsHash> objects = QSet<IpfsHash>();
 
@@ -151,7 +136,8 @@ void IpfsRefs::refresh_objects()
         this->local_objects_ = objects;
 
         valid_data_ = true;
-        network_reply->deleteLater();
+
+        delete access;
     });
 }
 

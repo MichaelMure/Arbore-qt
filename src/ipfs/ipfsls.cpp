@@ -24,12 +24,38 @@ LsReply * IpfsLs::ls(const IpfsHash &hash)
     query.addQueryItem("arg", hash.ToString());
 
     url.setQuery(query);
-    QNetworkReply *network_reply = Ipfs::instance().manual_query(url);
+    IpfsAccess *access = Ipfs::instance().manual_query(url);
 
     LsReply *ls_reply = new LsReply();
 
-    connect(network_reply, SIGNAL(finished()),
-            ls_reply, SLOT(replyFinished()));
+    connect(access, &IpfsAccess::finished,
+            this, [access, ls_reply]()
+    {
+        QString str = access->reply->readAll();
+
+        const QJsonDocument doc = QJsonDocument::fromJson(str.toUtf8());
+        const QJsonObject json = doc.object();
+
+        const QJsonValue links = json.value("Objects").toArray().first().toObject().value("Links");
+
+        foreach (const QJsonValue &link, links.toArray())
+        {
+            LsEntry *entry = new LsEntry(ls_reply);
+
+            QJsonObject link_obj = link.toObject();
+
+            entry->name_ = new QString(link_obj["Name"].toString());
+            entry->hash_ = new IpfsHash(link_obj["Hash"].toString());
+            entry->size_ = link_obj["Size"].toInt();
+            entry->type_ = (LsEntry::LsEntryType) link_obj["Type"].toInt();
+
+            ls_reply->entries << entry;
+        }
+
+        emit ls_reply->finished();
+
+        delete access;
+    });
 
     return ls_reply;
 }
@@ -42,45 +68,6 @@ LsReply::~LsReply()
         delete entries[i];
     }
 }
-
-void LsReply::replyFinished()
-{
-    QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
-
-    if(reply->error())
-    {
-        qDebug() << "http error: " << reply->errorString() << endl;
-        qDebug() << "request: " << reply->request().url() << endl;
-        return;
-    }
-
-    QString str = reply->readAll();
-//    qDebug() << "http reply : " << str;
-
-    const QJsonDocument doc = QJsonDocument::fromJson(str.toUtf8());
-    const QJsonObject json = doc.object();
-
-    const QJsonValue links = json.value("Objects").toArray().first().toObject().value("Links");
-
-    foreach (const QJsonValue &link, links.toArray())
-    {
-        LsEntry *entry = new LsEntry(this);
-
-        QJsonObject link_obj = link.toObject();
-
-        entry->name_ = new QString(link_obj["Name"].toString());
-        entry->hash_ = new IpfsHash(link_obj["Hash"].toString());
-        entry->size_ = link_obj["Size"].toInt();
-        entry->type_ = (LsEntry::LsEntryType) link_obj["Type"].toInt();
-
-        entries << entry;
-    }
-
-    emit finished();
-
-    reply->deleteLater();
-}
-
 
 LsEntry::LsEntry(QObject *parent)
     : QObject(parent)

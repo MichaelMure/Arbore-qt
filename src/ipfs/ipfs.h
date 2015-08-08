@@ -15,6 +15,20 @@
 
 class QNetworkAccessManager;
 class QNetworkReply;
+class QNetworkRequest;
+
+class IpfsAccess : public QObject
+{
+    Q_OBJECT
+public:
+    virtual ~IpfsAccess();
+public:
+    QNetworkRequest *request;
+    QNetworkReply   *reply;
+
+signals:
+    void finished();
+};
 
 class Ipfs : public QObject
 {
@@ -53,16 +67,10 @@ public:
     void query(const QUrl &url, IApiListener *listener = NULL);
 
     /**
-     * Query the API with only a command name
-     * @param command
-     */
-    QNetworkReply * manual_query(const QString &command);
-
-    /**
      * Query a specific API url, constructed from api_url()
      * @param url
      */
-    QNetworkReply * manual_query(const QUrl &url);
+    IpfsAccess * manual_query(const QUrl &url);
 
 private:
     Ipfs();                      // hide constructor

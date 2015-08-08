@@ -6,6 +6,7 @@
 
 class LsReply;
 class LsEntry;
+class IpfsAccess;
 
 class IpfsLs : public QObject
 {
@@ -25,9 +26,6 @@ class LsReply : public QObject
     Q_OBJECT
 public:
     virtual ~LsReply();
-public slots:
-    void replyFinished ();
-
 signals:
     void finished();
 

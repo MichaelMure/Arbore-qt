@@ -3,6 +3,7 @@
 #include <QJsonObject>
 #include <QJsonParseError>
 #include <QNetworkAccessManager>
+#include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QEventLoop>
 #include <QUrl>
@@ -61,17 +62,29 @@ void Ipfs::query(const QUrl &url, IApiListener *listener)
             this, SLOT(replyFinished()));
 }
 
-QNetworkReply *Ipfs::manual_query(const QString &command)
-{
-    return manual_query(api_url(command));
-}
-
-QNetworkReply *Ipfs::manual_query(const QUrl &url)
+IpfsAccess *Ipfs::manual_query(const QUrl &url)
 {
 //    qDebug() << "HTTP query: " << url;
-    QNetworkRequest request = QNetworkRequest(url);
+    IpfsAccess *access = new IpfsAccess();
+    access->request = new QNetworkRequest(url);
+    access->reply = manager_->get(*access->request);
 
-    return manager_->get(request);
+    connect(access->reply, &QNetworkReply::finished,
+            this, [access]()
+    {
+        if(access->reply->error())
+        {
+            qDebug() << "http error: " << access->reply->errorString() << endl;
+            qDebug() << "request: " << access->request->url() << endl;
+
+            // Todo: relaunch ?
+            return;
+        }
+
+        emit access->finished();
+    });
+
+    return access;
 }
 
 void Ipfs::init()
@@ -225,4 +238,11 @@ void Ipfs::timerEvent(QTimerEvent *)
             init_commands();
         }
     }
+}
+
+
+IpfsAccess::~IpfsAccess()
+{
+    delete this->request;
+    this->reply->deleteLater();
 }
