@@ -20,7 +20,7 @@ ObjectIterator::ObjectIterator(Object *obj)
 }
 
 ObjectIterator::ObjectIterator()
-    : current_(NULL)
+    : depth_(-1), current_(NULL)
 {
 }
 

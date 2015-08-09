@@ -70,7 +70,11 @@ LsReply::~LsReply()
 }
 
 LsEntry::LsEntry(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      name_(NULL),
+      hash_(NULL),
+      size_(-1),
+      type_(INVALID)
 {
 }
 

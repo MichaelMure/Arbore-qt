@@ -39,6 +39,7 @@ class LsEntry : public QObject
 public:
     enum LsEntryType
     {
+        INVALID = -1,
         RAW = 0,
         DIRECTORY = 1,
         FILE = 2,
