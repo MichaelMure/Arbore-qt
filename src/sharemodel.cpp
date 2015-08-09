@@ -6,10 +6,20 @@ ShareModel::ShareModel(QObject *parent) :
     QAbstractListModel(parent)
 {
     // FAKE DATA FOR NOW
-    shares_.append(new Share("WebUI", IpfsHash("QmXX7YRpU7nNBKfw75VG7Y1c3GwpSAGHRev67XVPgZFv9R"), this));
-    shares_.append(new Share("fake 2 with overly long name, like really long with a lot of letters and phrase and stuff",
-                                   IpfsHash("QmTkzDwWqPbnAh5YiV5VwcTLnGdwSNsNTn2aDxdXBFca7D"), this));
-    shares_.append(new Share("Example 3", IpfsHash("QmX6gcmX2vy2gs5dWB45w8aUNynEiqGhLayXySGb7RF2TM"), this));
+    Share *share = new Share(this);
+    share->set_title("WebUI");
+    share->add_hash(IpfsHash("QmXX7YRpU7nNBKfw75VG7Y1c3GwpSAGHRev67XVPgZFv9R"));
+    shares_.append(share);
+
+    share = new Share(this);
+    share->set_title("fake 2 with overly long name, like really long with a lot of letters and phrase and stuff");
+    share->add_hash(IpfsHash("QmTkzDwWqPbnAh5YiV5VwcTLnGdwSNsNTn2aDxdXBFca7D"));
+    shares_.append(share);
+
+    share = new Share(this);
+    share->set_title("Example 3");
+    share->add_hash(IpfsHash("QmX6gcmX2vy2gs5dWB45w8aUNynEiqGhLayXySGb7RF2TM"));
+    shares_.append(share);
 }
 
 QHash<int, QByteArray> ShareModel::roleNames() const {
@@ -37,7 +47,7 @@ QVariant ShareModel::data(const QModelIndex &index, int role) const
     switch(role)
     {
     case NameRole:
-        return dl->name();
+        return dl->title();
     case ProgressRole:
         return dl->progress();
     case SizeTotalRole:

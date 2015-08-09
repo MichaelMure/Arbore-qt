@@ -8,25 +8,63 @@
 #include <QStringBuilder>
 
 Share::Share(QObject *parent):
-    QObject(parent)
-{
-}
-
-Share::Share(QString name, const IpfsHash &hash, QObject *parent):
     QObject(parent),
-    name_(name),
+    starred_(false),
     state_(UNITIALIZED)
 {
-    Directory *dir = new Directory(hash);
-    objects_ << dir;
-
-    connect(dir, SIGNAL(localityChanged()),
-            this, SIGNAL(dataChanged()));
 }
 
-const QString& Share::name() const
+const QString& Share::title() const
 {
-    return name_;
+    return title_;
+}
+
+const QString Share::description() const
+{
+    if(!description_.isEmpty() || objects_.count() == 0)
+        return description_;
+
+    QString desc;
+    for(QList<Object*>::const_iterator i = objects_.constBegin(); i != objects_.constEnd(); i++)
+    {
+        for(ObjectIterator it = ObjectIterator(*i); it != ObjectIterator(); it++)
+        {
+            if(!(*it).name().isEmpty())
+            {
+                desc += (*it).name();
+                desc += ", ";
+            }
+            if(desc.count() > 100)
+            {
+                desc += "...";
+                return desc;
+            }
+        }
+    }
+
+    return desc;
+}
+
+const QDir &Share::path() const
+{
+    return path_;
+}
+
+const QDateTime &Share::date_creation() const
+{
+    return date_creation_;
+}
+
+bool Share::starred() const
+{
+    return starred_;
+}
+
+void Share::set_starred(const bool &starred)
+{
+    starred_ = starred;
+    emit shareChanged();
+    qDebug() << "STARRED " << starred;
 }
 
 QString Share::textual_arborescence() const
@@ -128,6 +166,39 @@ uint Share::file_local() const
         file_local += (*i)->file_local();
     }
     return file_local;
+}
+
+void Share::add_hash(const IpfsHash &hash)
+{
+    Directory *dir = new Directory(hash);
+    objects_ << dir;
+
+    connect(dir, SIGNAL(localityChanged()),
+            this, SIGNAL(dataChanged()));
+}
+
+void Share::set_title(const QString &title)
+{
+    title_ = title;
+    emit shareChanged();
+}
+
+void Share::set_description(const QString &description)
+{
+    description_ = description;
+    emit shareChanged();
+}
+
+void Share::set_path(const QDir &path)
+{
+    path_ = path;
+    emit shareChanged();
+}
+
+void Share::set_date_creation(const QDateTime &date)
+{
+    date_creation_ = date;
+    emit shareChanged();
 }
 
 

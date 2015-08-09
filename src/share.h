@@ -1,6 +1,8 @@
 #ifndef SHARE_H
 #define SHARE_H
 
+#include <QDateTime>
+#include <QDir>
 #include <QObject>
 #include <QString>
 
@@ -21,21 +23,59 @@ enum ShareState {
 class Share : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString name READ name CONSTANT)
-    Q_PROPERTY(QString textual_arborescence READ textual_arborescence CONSTANT)
+    Q_PROPERTY(QString title READ title NOTIFY shareChanged)
+    Q_PROPERTY(QString description READ description NOTIFY shareChanged)
+    Q_PROPERTY(QDir path READ path NOTIFY shareChanged)
+    Q_PROPERTY(QDateTime date_creation READ date_creation NOTIFY shareChanged)
+    Q_PROPERTY(bool starred READ starred WRITE set_starred NOTIFY shareChanged)
+    Q_PROPERTY(QString textual_arborescence READ textual_arborescence NOTIFY shareChanged)
     Q_PROPERTY(float progress READ progress NOTIFY dataChanged)
 
 public:
     explicit Share(QObject *parent = 0);
-    explicit Share(QString name, const IpfsHash &hash, QObject *parent = 0);
+    explicit Share(QString title, const IpfsHash &hash, QObject *parent = 0);
     virtual ~Share() {}
 
-    const QString& name() const;
+    /**
+     * @return the title of the share, as defined by the creator
+     */
+    const QString& title() const;
+    void set_title(const QString& title);
 
+    /**
+     * @return the description of the share, as defined by the creator
+     */
+    const QString description() const;
+
+    /**
+     * @return the path on disk where it is/will be located
+     */
+    const QDir& path() const;
+
+    /**
+     * @return that date of creation
+     */
+    const QDateTime& date_creation() const;
+
+    /**
+     * @return true if the share is starred by the user
+     */
+    bool starred() const;
+    void set_starred(const bool &starred);
+
+    /**
+     * @return a textual representation of the file arborescence shared
+     */
     QString textual_arborescence() const;
 
+    /**
+     * @return the current state of the share
+     */
     ShareState state() const;
 
+    /**
+     * @return it's progress [0-->1]
+     */
     float progress() const;
 
     /**
@@ -68,11 +108,23 @@ public:
      */
     uint file_local() const;
 
+    void add_hash(const IpfsHash &hash);
+
+private:
+    void set_description(const QString& description);
+    void set_path(const QDir& path);
+    void set_date_creation(const QDateTime &date);
+
 signals:
+    void shareChanged();
     void dataChanged();
 
 private:
-    QString name_;
+    QString title_;
+    QString description_;
+    QDir path_;
+    QDateTime date_creation_;
+    bool starred_;
     ShareState state_;
     QList<Object*> objects_;
 };

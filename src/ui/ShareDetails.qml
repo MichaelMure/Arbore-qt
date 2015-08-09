@@ -23,26 +23,51 @@ ScrollView {
 
             ProgressBar {
                 id: progressBar1
-                x: 8
-                y: 50
-                width: 284
                 height: 23
+                anchors.top: parent.top
+                anchors.topMargin: 82
+                anchors.right: parent.right
+                anchors.rightMargin: -292
+                anchors.left: parent.left
+                anchors.leftMargin: 8
                 value: share.progress
             }
 
             Text {
-                id: name
-                x: 0
-                y: 123
-                height: 24
-                text: share.name
+                id: title
+                height: 29
+                text: share.title
                 anchors.right: parent.right
-                anchors.rightMargin: 47
+                anchors.rightMargin: -292
                 anchors.left: parent.left
-                anchors.leftMargin: 47
-                anchors.top: header.bottom
-                anchors.topMargin: -103
-                font.pixelSize: 12
+                anchors.leftMargin: 8
+                anchors.top: parent.top
+                anchors.topMargin: 8
+            }
+
+            Text {
+                id: text1
+                height: 33
+                text: share.description
+                anchors.top: parent.top
+                anchors.topMargin: 43
+                anchors.right: parent.right
+                anchors.rightMargin: -292
+                anchors.left: parent.left
+                anchors.leftMargin: 8
+            }
+
+            CheckBox {
+                id: starred
+                x: 8
+                y: 108
+                text: qsTr("Starred")
+                onClicked: share.starred = checked
+                Component.onCompleted: checked = share.starred
+                Connections {
+                    target: share
+                    onShareChanged: starred.checked = share.starred
+                }
             }
         }
 
