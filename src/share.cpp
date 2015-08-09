@@ -4,11 +4,14 @@
 #include "directory.h"
 #include "objectiterator.h"
 
+#include <QDateTime>
 #include <QDebug>
 #include <QStringBuilder>
 
 Share::Share(QObject *parent):
     QObject(parent),
+    id_(-1),
+    creation_date_(QDateTime::currentDateTime()),
     starred_(false),
     state_(UNITIALIZED)
 {
@@ -52,7 +55,7 @@ const QDir &Share::path() const
 
 const QDateTime &Share::date_creation() const
 {
-    return date_creation_;
+    return creation_date_;
 }
 
 bool Share::starred() const
@@ -197,8 +200,6 @@ void Share::set_path(const QDir &path)
 
 void Share::set_date_creation(const QDateTime &date)
 {
-    date_creation_ = date;
+    creation_date_ = date;
     emit shareChanged();
 }
-
-

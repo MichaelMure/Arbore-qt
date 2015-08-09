@@ -1,10 +1,4 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2015-04-06T23:09:50
-#
-#-------------------------------------------------
-
-QT       += core network qml quick
+QT       += core network qml quick sql
 
 CONFIG += c++11
 CONFIG += debug_and_release
@@ -30,7 +24,9 @@ SOURCES += main.cpp\
     object.cpp \
     ipfs/ipfsrefs.cpp \
     ipfs/ipfsstats.cpp \
-    objectiterator.cpp
+    objectiterator.cpp \
+    persist/sharerepository.cpp \
+    persist/persist.cpp
 
 HEADERS  += \
     ipfs/ipfs.h \
@@ -49,7 +45,9 @@ HEADERS  += \
     sharemodel.h \
     ipfs/ipfsrefs.h \
     ipfs/ipfsstats.h \
-    objectiterator.h
+    objectiterator.h \
+    persist/sharerepository.h \
+    persist/persist.h
 
 RESOURCES += ui/resources.qrc
 

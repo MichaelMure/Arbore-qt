@@ -22,6 +22,8 @@ enum ShareState {
  */
 class Share : public QObject
 {
+    friend class ShareRepository;
+
     Q_OBJECT
     Q_PROPERTY(QString title READ title NOTIFY shareChanged)
     Q_PROPERTY(QString description READ description NOTIFY shareChanged)
@@ -114,16 +116,18 @@ private:
     void set_description(const QString& description);
     void set_path(const QDir& path);
     void set_date_creation(const QDateTime &date);
+    void set_state(const ShareState state);
 
 signals:
     void shareChanged();
     void dataChanged();
 
 private:
+    int id_;
     QString title_;
     QString description_;
     QDir path_;
-    QDateTime date_creation_;
+    QDateTime creation_date_;
     bool starred_;
     ShareState state_;
     QList<Object*> objects_;
