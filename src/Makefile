@@ -8,7 +8,7 @@ build/Makefile:Arbore-qt.pro Makefile
 	cd build && qtchooser -qt=5 -run-tool=qmake ..
 
 build/Arbore-qt:build/Makefile $(source_files)
-	cd build && $(MAKE)
+	cd build && $(MAKE) debug
 
 .PHONY: run
 run: build/Arbore-qt
