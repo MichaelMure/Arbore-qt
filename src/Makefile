@@ -10,8 +10,14 @@ build/Makefile:Arbore-qt.pro Makefile
 build/Arbore-qt:build/Makefile $(source_files)
 	cd build && $(MAKE) debug
 
+.PHONY: build
+build: build/Arbore-qt
+
+.PHONY: config
+config: build
+
 .PHONY: run
-run: build/Arbore-qt
+run: build
 	cd build && ./Arbore-qt
 
 .PHONY: clean
