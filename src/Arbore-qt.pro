@@ -6,6 +6,19 @@ CONFIG += debug_and_release
 TARGET = Arbore-qt
 TEMPLATE = app
 
+CXX = $$(CXX)
+if(!isEmpty(CXX)) {
+    QMAKE_CXX = $$CXX
+}
+
+CC = $$(CC)
+if(!isEmpty(CC)) {
+    QMAKE_CC = $$CC
+}
+
+QMAKE_CXXFLAGS += $$(CXXFLAGS)
+QMAKE_CFLAGS += $$(CFLAGS)
+QMAKE_LFLAGS += $$(LDFLAGS)
 
 SOURCES += main.cpp\
     ipfs/ipfs.cpp \
