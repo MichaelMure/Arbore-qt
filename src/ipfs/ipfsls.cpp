@@ -78,6 +78,12 @@ LsEntry::LsEntry(QObject *parent)
 {
 }
 
+LsEntry::~LsEntry()
+{
+    delete name_;
+    delete hash_;
+}
+
 QString &LsEntry::name() const
 {
     return *name_;
@@ -97,4 +103,3 @@ LsEntry::LsEntryType LsEntry::type() const
 {
     return type_;
 }
-

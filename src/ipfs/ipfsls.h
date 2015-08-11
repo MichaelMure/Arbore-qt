@@ -48,11 +48,7 @@ public:
 
 public:
     explicit LsEntry(QObject *parent = 0);
-    ~LsEntry()
-    {
-        delete name_;
-        delete hash_;
-    }
+    ~LsEntry();
 
     QString& name() const;
     IpfsHash& hash() const;
