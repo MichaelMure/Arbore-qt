@@ -2,6 +2,7 @@
 #define PERSIST_H
 
 #include <QObject>
+#include <QString>
 #include <QSqlDatabase>
 
 #include "sharerepository.h"
@@ -28,7 +29,7 @@ private:
     void open_database();
     void init_database();
 
-    QSqlDatabase db_;
+    QString db_type_;
 };
 
 #endif // PERSIST_H

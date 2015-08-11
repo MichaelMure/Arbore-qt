@@ -21,10 +21,12 @@ Persist &Persist::instance()
 
 QSqlQuery Persist::exec(const QString &query)
 {
-    return db_.exec(query);
+    QSqlDatabase db = QSqlDatabase::database();
+    return db.exec(query);
 }
 
 Persist::Persist()
+  :db_type_("QSQLITE")
 {
 }
 
@@ -39,7 +41,7 @@ void Persist::init()
 
 void Persist::open_database()
 {
-    db_ = QSqlDatabase::addDatabase("QSQLITE");
+    QSqlDatabase db = QSqlDatabase::addDatabase(db_type_);
 
     QDir dir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
     if(!dir.exists())
@@ -50,10 +52,10 @@ void Persist::open_database()
 
     qDebug() << "Database path: " << path;
 
-    db_.setDatabaseName(path);
+    db.setDatabaseName(path);
 
-    if(!db_.open())
-        qDebug() << db_.lastError();
+    if(!db.open())
+        qDebug() << db.lastError();
 
     QSqlQuery q;
 
@@ -72,11 +74,12 @@ void Persist::open_database()
 
 void Persist::init_database()
 {
-    db_.transaction();
+    QSqlDatabase db = QSqlDatabase::database();
+    db.transaction();
 
-    db_.exec("CREATE TABLE `Version` (`version`	INTEGER NOT NULL);");
+    db.exec("CREATE TABLE `Version` (`version`	INTEGER NOT NULL);");
 
-    db_.exec("CREATE TABLE `Share` ("
+    db.exec("CREATE TABLE `Share` ("
              "	`id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,"
              "	`title`	TEXT NOT NULL,"
              "	`description`	TEXT,"
@@ -86,17 +89,16 @@ void Persist::init_database()
              "	`state`	INTEGER NOT NULL"
              ");");
 
-    db_.exec("CREATE TABLE `Object` ("
+    db.exec("CREATE TABLE `Object` ("
              "	`id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,"
              "	`hash`	INTEGER NOT NULL,"
              "	`type`	INTEGER NOT NULL,"
              "	`share`	INTEGER NOT NULL,"
              "	FOREIGN KEY(`share`) REFERENCES Share(id)"
              ");");
-    db_.exec("CREATE INDEX `share_id` ON `Share` (`id` ASC);");
+    db.exec("CREATE INDEX `share_id` ON `Share` (`id` ASC);");
 
-    db_.exec("INSERT INTO `Version` VALUES (1);");
+    db.exec("INSERT INTO `Version` VALUES (1);");
 
-    db_.commit();
+    db.commit();
 }
-
