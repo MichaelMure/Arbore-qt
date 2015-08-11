@@ -5,6 +5,12 @@ source_files=$(shell find ../src -type f -name "*cpp" -print -or -name "*.h" -pr
 build/html/index.html:$(source_files) Makefile Doxyfile
 	doxygen
 
+.PHONY:html
 html:build/html/index.html
 
+.PHONY:doc
 doc:html
+
+.PHONY:open
+open:html
+	mimeopen build/html/index.html
