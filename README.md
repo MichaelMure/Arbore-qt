@@ -40,3 +40,7 @@ In order to run in debug mode
 ## How to help
 
 Every little help. Please contact us if you want to build something awesome, especially if you know UX or Qt/QML.
+
+## Want to talk ?
+
+You can drop by our IRC channel, #arbore on freenode.
