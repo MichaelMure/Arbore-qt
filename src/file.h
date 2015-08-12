@@ -32,7 +32,6 @@ private slots:
 
 private:
     QHash<IpfsHash, Block*> blocks_;
-    uint size_;
 };
 
 #endif // FILE_H
