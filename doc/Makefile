@@ -11,6 +11,10 @@ html:build/html/index.html
 .PHONY:doc
 doc:html
 
+.PHONY:clean
+clean:
+	rm -r build
+
 .PHONY:open
 open:html
 	mimeopen build/html/index.html
