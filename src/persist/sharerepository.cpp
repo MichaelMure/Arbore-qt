@@ -23,6 +23,30 @@ ShareRepository::~ShareRepository()
 
 }
 
+QVector<Share *> ShareRepository::get_all()
+{
+    QSqlQuery q;
+    QVector<Share*> list;
+
+    if(!q.exec("SELECT * FROM `Share`"))
+    {
+        qDebug() << "Sql error: " << q.lastError();
+        return list;
+    }
+
+    while(q.next())
+    {
+        list << build_share(&q);
+    }
+
+    foreach (Share *share, list)
+    {
+        build_objects(share);
+    }
+
+    return list;
+}
+
 Share *ShareRepository::get(int id)
 {
     assert(id >= 0);
@@ -43,35 +67,22 @@ Share *ShareRepository::get(int id)
         return NULL;
     }
 
-    Share *share = new Share();
-    share->id_            = id;
-    share->title_         = q.value("title").toString();
-    share->description_   = q.value("description").toString();
-    share->path_          = QDir(q.value("path").toString());
-    share->creation_date_.setTime_t(q.value("creation_date").toUInt());
-    share->starred_       = q.value("starred").toBool();
-    share->state_         = (ShareState) q.value("state").toInt();
-
-    q.prepare("SELECT * FROM `Object` WHERE share = :share");
-    q.bindValue(":share", share->id_);
-
-    if(!q.exec())
-    {
-        qDebug() << "Sql error: " << q.lastError();
-        return NULL;
-    }
-
-    while(q.next())
-    {
-        IpfsHash hash = q.value("hash").toString();
-
-        share->add_hash(
-            hash,
-            (Object::ObjectType) q.value("type").toInt()
-        );
-    }
+    Share *share = build_share(&q);
+    build_objects(share);
 
     return share;
+}
+
+void ShareRepository::persist(Share *entity)
+{
+    if(entity->id_ > 0)
+    {
+        update(entity);
+    }
+    else
+    {
+        insert(entity);
+    }
 }
 
 void ShareRepository::insert(Share *entity)
@@ -163,6 +174,43 @@ void ShareRepository::remove(Share *entity)
 
     q.finish();
     database.commit();
+}
+
+Share* ShareRepository::build_share(QSqlQuery *q)
+{
+    Share *share = new Share();
+    share->id_            = q->value("id").toInt();
+    share->title_         = q->value("title").toString();
+    share->description_   = q->value("description").toString();
+    share->path_          = QDir(q->value("path").toString());
+    share->creation_date_.setTime_t(q->value("creation_date").toUInt());
+    share->starred_       = q->value("starred").toBool();
+    share->state_         = (ShareState) q->value("state").toInt();
+
+    return share;
+}
+
+void ShareRepository::build_objects(Share *share)
+{
+    QSqlQuery q;
+    q.prepare("SELECT * FROM `Object` WHERE share = :share");
+    q.bindValue(":share", share->id_);
+
+    if(!q.exec())
+    {
+        qDebug() << "Sql error: " << q.lastError();
+        return;
+    }
+
+    while(q.next())
+    {
+        IpfsHash hash = q.value("hash").toString();
+
+        share->add_hash(
+            hash,
+            (Object::ObjectType) q.value("type").toInt()
+        );
+    }
 }
 
 void ShareRepository::clear_objects(Share *entity)

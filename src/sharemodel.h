@@ -24,7 +24,7 @@ public:
     };
 
     explicit ShareModel(QObject *parent = 0);
-    virtual ~ShareModel() {}
+    virtual ~ShareModel();
 
 
     QHash<int, QByteArray> roleNames() const;
