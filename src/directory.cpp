@@ -19,20 +19,19 @@ Directory::Directory(const IpfsHash &hash, const QString &name)
 
             child->hash = IpfsHash(entry->hash());
             child->name = entry->name();
-            child->size = entry->size();
 
             switch(entry->type())
             {
-            case LsEntry::DIRECTORY:
+            case ObjectType::DIRECTORY:
                 child->object = new Directory(entry->hash(), entry->name());
                 qDebug() << "found dir " << entry->name();
                 break;
-            case LsEntry::FILE:
-                child->object = new File(entry->hash(), entry->size(), entry->name());
+            case ObjectType::FILE:
+                child->object = new File(entry->hash(), entry->name());
                 qDebug() << "found file " << entry->name();
                 break;
-            case LsEntry::RAW:
-            case LsEntry::METADATA:
+            case ObjectType::RAW:
+            case ObjectType::METADATA:
             default:
                 qDebug() << "Error: unsupported object type !";
                 continue;
@@ -58,6 +57,11 @@ Directory::~Directory()
     {
         delete i.value();
     }
+}
+
+Object::ObjectType Directory::type() const
+{
+    return ObjectType::DIRECTORY;
 }
 
 uint Directory::size_total() const

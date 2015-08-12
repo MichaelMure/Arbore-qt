@@ -11,6 +11,15 @@ class Object : public QObject
 {
     Q_OBJECT
 public:
+    enum ObjectType
+    {
+        INVALID = -1,
+        RAW = 0,
+        DIRECTORY = 1,
+        FILE = 2,
+        METADATA = 3
+    };
+
     Object(const IpfsHash &hash, const QString &name = "");
     Object(const QString &hash, const QString &name = "");
     virtual ~Object() {}
@@ -24,6 +33,11 @@ public:
      * @return the hash of the object
      */
     const IpfsHash& hash() const;
+
+    /**
+     * @return the type of the object
+     */
+    virtual ObjectType type() const = 0;
 
     /**
      * @return the total size in octet of the object

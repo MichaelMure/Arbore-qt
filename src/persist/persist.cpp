@@ -59,6 +59,7 @@ void Persist::open_database()
 
     QSqlQuery q;
 
+    q.exec("PRAGMA foreign_keys = ON;");
     q.exec("SELECT count(*) FROM sqlite_master;");
 
     if(!q.next() || q.value(0).toInt() == 0)

@@ -6,8 +6,9 @@
 #include <QObject>
 #include <QString>
 
+#include "object.h"
+
 class IpfsHash;
-class Object;
 
 enum ShareState {
     UNITIALIZED,
@@ -37,6 +38,11 @@ public:
     explicit Share(QObject *parent = 0);
     explicit Share(QString title, const IpfsHash &hash, QObject *parent = 0);
     virtual ~Share() {}
+
+    /**
+     * @return the database Id of the Share
+     */
+    int id() const;
 
     /**
      * @return the title of the share, as defined by the creator
@@ -110,7 +116,7 @@ public:
      */
     uint file_local() const;
 
-    void add_hash(const IpfsHash &hash);
+    void add_hash(const IpfsHash &hash, Object::ObjectType type);
 
 private:
     void set_description(const QString& description);

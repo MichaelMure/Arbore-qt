@@ -27,6 +27,7 @@ public:
 
     // Object interface
 public:
+    ObjectType type() const;
     uint size_total() const;
     uint size_local() const;
     uint block_total() const;

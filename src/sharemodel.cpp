@@ -8,17 +8,17 @@ ShareModel::ShareModel(QObject *parent) :
     // FAKE DATA FOR NOW
     Share *share = new Share(this);
     share->set_title("WebUI");
-    share->add_hash(IpfsHash("QmXX7YRpU7nNBKfw75VG7Y1c3GwpSAGHRev67XVPgZFv9R"));
+    share->add_hash(IpfsHash("QmXX7YRpU7nNBKfw75VG7Y1c3GwpSAGHRev67XVPgZFv9R"), Object::DIRECTORY);
     shares_.append(share);
 
     share = new Share(this);
     share->set_title("fake 2 with overly long name, like really long with a lot of letters and phrase and stuff");
-    share->add_hash(IpfsHash("QmTkzDwWqPbnAh5YiV5VwcTLnGdwSNsNTn2aDxdXBFca7D"));
+    share->add_hash(IpfsHash("QmTkzDwWqPbnAh5YiV5VwcTLnGdwSNsNTn2aDxdXBFca7D"), Object::DIRECTORY);
     shares_.append(share);
 
     share = new Share(this);
     share->set_title("Example 3");
-    share->add_hash(IpfsHash("QmX6gcmX2vy2gs5dWB45w8aUNynEiqGhLayXySGb7RF2TM"));
+    share->add_hash(IpfsHash("QmX6gcmX2vy2gs5dWB45w8aUNynEiqGhLayXySGb7RF2TM"), Object::DIRECTORY);
     shares_.append(share);
 }
 

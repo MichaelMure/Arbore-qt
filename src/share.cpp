@@ -2,8 +2,10 @@
 
 #include "object.h"
 #include "directory.h"
+#include "file.h"
 #include "objectiterator.h"
 
+#include <cassert>
 #include <QDateTime>
 #include <QDebug>
 #include <QStringBuilder>
@@ -15,6 +17,11 @@ Share::Share(QObject *parent):
     starred_(false),
     state_(UNITIALIZED)
 {
+}
+
+int Share::id() const
+{
+    return id_;
 }
 
 const QString& Share::title() const
@@ -171,12 +178,25 @@ uint Share::file_local() const
     return file_local;
 }
 
-void Share::add_hash(const IpfsHash &hash)
+void Share::add_hash(const IpfsHash &hash, Object::ObjectType type)
 {
-    Directory *dir = new Directory(hash);
-    objects_ << dir;
+    Object *obj;
+    switch (type)
+    {
+    case Object::ObjectType::DIRECTORY:
+        obj = new Directory(hash);
+        break;
+    case Object::ObjectType::FILE:
+        obj = new File(hash);
+    default:
+        qDebug() << "Unknow object type retrieved from database.";
+        assert(false);
+        break;
+    }
 
-    connect(dir, SIGNAL(localityChanged()),
+    objects_ << obj;
+
+    connect(obj, SIGNAL(localityChanged()),
             this, SIGNAL(dataChanged()));
 }
 

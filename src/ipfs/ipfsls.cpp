@@ -47,7 +47,7 @@ LsReply * IpfsLs::ls(const IpfsHash &hash)
             entry->name_ = new QString(link_obj["Name"].toString());
             entry->hash_ = new IpfsHash(link_obj["Hash"].toString());
             entry->size_ = link_obj["Size"].toInt();
-            entry->type_ = (LsEntry::LsEntryType) link_obj["Type"].toInt();
+            entry->type_ = (Object::ObjectType) link_obj["Type"].toInt();
 
             ls_reply->entries << entry;
         }
@@ -74,7 +74,7 @@ LsEntry::LsEntry(QObject *parent)
       name_(NULL),
       hash_(NULL),
       size_(-1),
-      type_(INVALID)
+      type_(Object::INVALID)
 {
 }
 
@@ -99,7 +99,7 @@ uint LsEntry::size() const
     return size_;
 }
 
-LsEntry::LsEntryType LsEntry::type() const
+Object::ObjectType LsEntry::type() const
 {
     return type_;
 }

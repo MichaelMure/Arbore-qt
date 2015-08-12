@@ -12,12 +12,13 @@ class File : public Object
 {
     Q_OBJECT
 public:
-    File(const IpfsHash &hash, uint size, const QString &name = "");
-    File(const QString &hash, uint size, const QString &name = "");
+    File(const IpfsHash &hash, const QString &name = "");
+    File(const QString &hash, const QString &name = "");
     virtual ~File();
 
     // Object interface
 public:
+    ObjectType type() const;
     uint size_total() const;
     uint size_local() const;
     uint block_total() const;

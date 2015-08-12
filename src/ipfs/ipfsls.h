@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include "ipfs/ipfshash.h"
+#include "object.h"
 
 class LsReply;
 class LsEntry;
@@ -37,29 +38,19 @@ class LsEntry : public QObject
 {
     Q_OBJECT
 public:
-    enum LsEntryType
-    {
-        INVALID = -1,
-        RAW = 0,
-        DIRECTORY = 1,
-        FILE = 2,
-        METADATA = 3
-    };
-
-public:
     explicit LsEntry(QObject *parent = 0);
     ~LsEntry();
 
     QString& name() const;
     IpfsHash& hash() const;
     uint size() const;
-    LsEntryType type() const;
+    Object::ObjectType type() const;
 
 public:
     QString *name_;
     IpfsHash *hash_;
     uint size_;
-    LsEntryType type_;
+    Object::ObjectType type_;
 };
 
 #endif // IPFSLS_H

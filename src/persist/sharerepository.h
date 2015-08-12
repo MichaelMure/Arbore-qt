@@ -15,6 +15,10 @@ public:
     virtual void   insert(Share *entity);
     virtual void   update(Share *entity);
     virtual void   remove(Share *entity);
+
+private:
+    void clear_objects(Share *entity);
+    void insert_objects(Share *entity);
 };
 
 #endif // SHAREREPOSITORY_H

@@ -11,8 +11,8 @@ struct Block
     uint size;
 };
 
-File::File(const IpfsHash &hash, uint size, const QString &name)
-    : Object(hash, name), size_(size)
+File::File(const IpfsHash &hash, const QString &name)
+    : Object(hash, name), size_(-1)
 {
     connect(&(Ipfs::instance().refs), SIGNAL(objectAdded(IpfsHash)),
             this, SLOT(objectAdded(IpfsHash)));
@@ -35,12 +35,14 @@ File::File(const IpfsHash &hash, uint size, const QString &name)
             this->blocks_[block->hash] = block;
         }
 
+        // Todo: compute size of file and store in size_
+
         emit localityChanged();
     });
 }
 
-File::File(const QString &hash, uint size, const QString &name)
-    : File(IpfsHash(hash), size, name)
+File::File(const QString &hash, const QString &name)
+    : File(IpfsHash(hash), name)
 {
 }
 
@@ -50,6 +52,11 @@ File::~File()
     {
         delete i.value();
     }
+}
+
+Object::ObjectType File::type() const
+{
+    return ObjectType::FILE;
 }
 
 uint File::size_total() const

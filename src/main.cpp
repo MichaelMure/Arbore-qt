@@ -4,6 +4,7 @@
 
 #include "sharemodel.h"
 #include "share.h"
+#include "persist/persist.h"
 
 int main(int argc, char *argv[])
 {
