@@ -7,5 +7,7 @@
         <file>ShareList.qml</file>
         <file>contactIcon.png</file>
         <file>ShareDetails.qml</file>
+        <file>AddShare.qml</file>
+        <file>TextAreaPlaceholder.qml</file>
     </qresource>
 </RCC>
