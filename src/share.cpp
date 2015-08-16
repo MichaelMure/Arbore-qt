@@ -5,7 +5,6 @@
 #include "file.h"
 #include "objectiterator.h"
 
-#include <cassert>
 #include <QDateTime>
 #include <QDebug>
 #include <QStringBuilder>
@@ -190,7 +189,7 @@ void Share::add_hash(const IpfsHash &hash, Object::ObjectType type)
         obj = new File(hash);
     default:
         qDebug() << "Unknow object type retrieved from database.";
-        assert(false);
+        Q_ASSERT(false);
         break;
     }
 

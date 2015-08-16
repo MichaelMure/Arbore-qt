@@ -10,7 +10,6 @@
 #include <QDir>
 #include <QVariant>
 #include <QDebug>
-#include <cassert>
 
 ShareRepository::ShareRepository(QObject *parent)
     : QObject(parent)
@@ -49,7 +48,7 @@ QVector<Share *> ShareRepository::get_all()
 
 Share *ShareRepository::get(int id)
 {
-    assert(id >= 0);
+    Q_ASSERT(id >= 0);
 
     QSqlQuery q;
     q.prepare("SELECT * FROM `Share` WHERE id = :id");
@@ -108,7 +107,7 @@ void ShareRepository::insert(Share *entity)
 
     entity->id_ = q.lastInsertId().toInt();
 
-    assert(entity->id_ >= 0);
+    Q_ASSERT(entity->id_ >= 0);
 
     q.finish();
 
@@ -119,7 +118,7 @@ void ShareRepository::insert(Share *entity)
 
 void ShareRepository::update(Share *entity)
 {
-    assert(entity->id_ >= 0);
+    Q_ASSERT(entity->id_ >= 0);
 
     QSqlDatabase database = QSqlDatabase::database();
     database.transaction();
@@ -156,7 +155,7 @@ void ShareRepository::update(Share *entity)
 
 void ShareRepository::remove(Share *entity)
 {
-    assert(entity->id_ >= 0);
+    Q_ASSERT(entity->id_ >= 0);
 
     QSqlDatabase database = QSqlDatabase::database();
     database.transaction();
@@ -230,7 +229,7 @@ void ShareRepository::clear_objects(Share *entity)
 
 void ShareRepository::insert_objects(Share *entity)
 {
-    assert(entity->id_ >= 0);
+    Q_ASSERT(entity->id_ >= 0);
 
     QSqlQuery q;
 

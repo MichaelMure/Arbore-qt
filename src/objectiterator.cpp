@@ -1,5 +1,3 @@
-#include <cassert>
-
 #include "directory.h"
 #include "objectiterator.h"
 
@@ -64,7 +62,7 @@ int ObjectIterator::depth() const
 
 void ObjectIterator::advance()
 {
-    assert(!this->stack_.empty());
+    Q_ASSERT(!this->stack_.empty());
 
     Node next;
     do
