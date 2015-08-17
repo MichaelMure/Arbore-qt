@@ -32,6 +32,9 @@ public:
     QVariant data(const QModelIndex &index, int role) const;
 
     Q_INVOKABLE
+    void addShare(QString hash);
+
+    Q_INVOKABLE
     Share* getShare(int index);
 
 private:

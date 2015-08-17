@@ -177,6 +177,11 @@ uint Share::file_local() const
     return file_local;
 }
 
+void Share::add_hash(const IpfsHash &hash)
+{
+ // Todo
+}
+
 void Share::add_hash(const IpfsHash &hash, Object::ObjectType type)
 {
     Object *obj;

@@ -9,5 +9,6 @@
         <file>ShareDetails.qml</file>
         <file>AddShare.qml</file>
         <file>TextAreaPlaceholder.qml</file>
+        <file>DownloadFromHash.qml</file>
     </qresource>
 </RCC>

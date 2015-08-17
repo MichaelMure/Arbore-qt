@@ -1,7 +1,6 @@
 import QtQuick 2.3
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
-import QtQuick.Controls.Styles 1.2
 import Arbore 1.0
 
 ApplicationWindow {
@@ -25,15 +24,28 @@ ApplicationWindow {
         anchors.topMargin: 0
 
         Button {
-            id: newShare
-            text: qsTr("New share")
+            id: share
+            text: qsTr("Share")
             iconSource: "plus.png"
+            anchors.left: parent.left;
             anchors.leftMargin: 10
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 5
             anchors.top: parent.top
             anchors.topMargin: 5
-            anchors.left: parent.left;
+        }
+
+        Button {
+            id: download
+            text: qsTr("Download")
+            anchors.left: share.right;
+            anchors.leftMargin: 10
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 5
+            anchors.top: parent.top
+            anchors.topMargin: 5
+
+            onClicked: dlfromhash.visible = true
         }
 
         Image {
@@ -48,32 +60,7 @@ ApplicationWindow {
             anchors.rightMargin: 5
             source: "arbore.png"
         }
-
-        TextField {
-            id: textInput1
-            y: 12
-            height: 20
-            placeholderText: qsTr("Search")
-            anchors.right: parent.right
-            anchors.rightMargin: details.width
-            anchors.left: parent.left
-            anchors.leftMargin: menu.width
-            anchors.verticalCenter: parent.verticalCenter
-            horizontalAlignment: Text.AlignLeft
-            font.pixelSize: 12
-            style: TextFieldStyle {
-                    textColor: "black"
-                    background: Rectangle {
-                        radius: 10
-                        implicitWidth: 100
-                        implicitHeight: 24
-                        border.color: "#333"
-                        border.width: 2
-                    }
-                }
-        }
     }
-
 
     SplitView {
         id: splitView1
@@ -96,7 +83,12 @@ ApplicationWindow {
             id: details
             Layout.minimumWidth: 400
         }
+    }
 
-
+    DownloadFromHash {
+        id: dlfromhash
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.horizontalCenter: parent.horizontalCenter
+        visible: false
     }
 }

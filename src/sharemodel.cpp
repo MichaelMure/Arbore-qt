@@ -3,6 +3,8 @@
 #include "persist/persist.h"
 #include "ipfs/ipfshash.h"
 
+#include <QDebug>
+
 ShareModel::ShareModel(QObject *parent) :
     QAbstractListModel(parent)
 {
@@ -78,6 +80,25 @@ QVariant ShareModel::data(const QModelIndex &index, int role) const
         return dl->file_local();
     }
     return QVariant();
+}
+
+void ShareModel::addShare(QString hash)
+{
+    qDebug() << hash;
+
+    Share *share = new Share();
+    try
+    {
+        share->add_hash(IpfsHash(hash));
+    }
+    catch(...)
+    {
+        qDebug() << "Invalid hash, doing nothing";
+        return;
+    }
+
+    shares_.append(share);
+    emit dataChanged(index(0), index(shares_.length()));
 }
 
 Share *ShareModel::getShare(int index)

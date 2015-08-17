@@ -36,7 +36,6 @@ class Share : public QObject
 
 public:
     explicit Share(QObject *parent = 0);
-    explicit Share(QString title, const IpfsHash &hash, QObject *parent = 0);
     virtual ~Share() {}
 
     /**
@@ -116,6 +115,7 @@ public:
      */
     uint file_local() const;
 
+    void add_hash(const IpfsHash &hash);
     void add_hash(const IpfsHash &hash, Object::ObjectType type);
 
 private:
