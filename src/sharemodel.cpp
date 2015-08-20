@@ -87,6 +87,7 @@ void ShareModel::addShare(QString hash)
     qDebug() << hash;
 
     Share *share = new Share();
+    share->set_title(hash);
     try
     {
         share->add_hash(IpfsHash(hash));
