@@ -30,6 +30,7 @@ signals:
     void finished();
 
 public:
+    IpfsHash hash;
     QList<const LsEntry*> entries;
 };
 

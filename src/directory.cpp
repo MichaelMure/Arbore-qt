@@ -13,42 +13,19 @@ Directory::Directory(const IpfsHash &hash, const QString &name)
 
     connect(reply, &LsReply::finished, [reply, this]()
     {
-        foreach (const LsEntry* entry, reply->entries)
-        {
-            Child *child = new Child();
-
-            child->hash = IpfsHash(entry->hash());
-            child->name = entry->name();
-
-            switch(entry->type())
-            {
-            case ObjectType::DIRECTORY:
-                child->object = new Directory(entry->hash(), entry->name());
-                qDebug() << "found dir " << entry->name();
-                break;
-            case ObjectType::FILE:
-                child->object = new File(entry->hash(), entry->name());
-                qDebug() << "found file " << entry->name();
-                break;
-            case ObjectType::RAW:
-            case ObjectType::METADATA:
-            default:
-                qDebug() << "Error: unsupported object type !";
-                continue;
-            }
-
-            connect(child->object, SIGNAL(localityChanged()),
-                    this, SIGNAL(localityChanged()));
-
-            this->child_hashes_[child->hash] = child;
-            this->child_names_[child->name] = child;
-        }
+        this->parse_ls_reply(reply);
     });
 }
 
 Directory::Directory(const QString &hash, const QString &name)
     : Directory(IpfsHash(hash), name)
 {
+}
+
+Directory::Directory(const LsReply *reply, const QString &name)
+    : Object(reply->hash, name)
+{
+    this->parse_ls_reply(reply);
 }
 
 Directory::~Directory()
@@ -128,4 +105,38 @@ uint Directory::file_local() const
 const QHash<QString, Child *> &Directory::getChilds() const
 {
     return this->child_names_;
+}
+
+void Directory::parse_ls_reply(const LsReply *reply)
+{
+    foreach (const LsEntry* entry, reply->entries)
+    {
+        Child *child = new Child();
+
+        child->hash = IpfsHash(entry->hash());
+        child->name = entry->name();
+
+        switch(entry->type())
+        {
+        case ObjectType::DIRECTORY:
+            child->object = new Directory(entry->hash(), entry->name());
+            qDebug() << "found dir " << entry->name();
+            break;
+        case ObjectType::FILE:
+            child->object = new File(entry->hash(), entry->name());
+            qDebug() << "found file " << entry->name();
+            break;
+        case ObjectType::RAW:
+        case ObjectType::METADATA:
+        default:
+            qDebug() << "Error: unsupported object type !";
+            continue;
+        }
+
+        connect(child->object, SIGNAL(localityChanged()),
+                this, SIGNAL(localityChanged()));
+
+        this->child_hashes_[child->hash] = child;
+        this->child_names_[child->name] = child;
+    }
 }

@@ -7,7 +7,7 @@
 #include <QHash>
 #include <QList>
 
-class LsEntry;
+class LsReply;
 
 struct Child
 {
@@ -23,6 +23,7 @@ class Directory : public Object
 public:
     Directory(const IpfsHash &hash, const QString &name = "");
     Directory(const QString &hash, const QString &name = "");
+    Directory(const LsReply *reply, const QString &name = "");
     virtual ~Directory();
 
     // Object interface
@@ -37,6 +38,9 @@ public:
 
 public:
     const QHash<QString, Child *>& getChilds() const;
+
+private:
+    void parse_ls_reply(const LsReply *reply);
 
 private:
     QHash<IpfsHash, Child *> child_hashes_;

@@ -27,6 +27,7 @@ LsReply * IpfsLs::ls(const IpfsHash &hash)
     IpfsAccess *access = Ipfs::instance().query(url);
 
     LsReply *ls_reply = new LsReply();
+    ls_reply->hash = hash;
 
     connect(access, &IpfsAccess::finished,
             this, [access, ls_reply]()

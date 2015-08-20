@@ -23,6 +23,7 @@ enum ShareState {
  */
 class Share : public QObject
 {
+    // The repository can access the private member
     friend class ShareRepository;
 
     Q_OBJECT
@@ -115,7 +116,17 @@ public:
      */
     uint file_local() const;
 
+    /**
+     * Construct a Share from only a hash.
+     * @param hash
+     */
     void add_hash(const IpfsHash &hash);
+
+    /**
+     * Construct a Share from a hash that we already know the type of object
+     * @param hash
+     * @param type
+     */
     void add_hash(const IpfsHash &hash, Object::ObjectType type);
 
 private:

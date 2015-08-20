@@ -97,8 +97,9 @@ void ShareModel::addShare(QString hash)
         return;
     }
 
+    beginInsertRows(QModelIndex(), shares_.size(), shares_.size());
     shares_.append(share);
-    emit dataChanged(index(0), index(shares_.length()));
+    endInsertRows();
 }
 
 Share *ShareModel::getShare(int index)

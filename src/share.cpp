@@ -4,6 +4,7 @@
 #include "directory.h"
 #include "file.h"
 #include "objectiterator.h"
+#include "ipfs/ipfs.h"
 
 #include <QDateTime>
 #include <QDebug>
@@ -33,6 +34,7 @@ const QString Share::description() const
     if(!description_.isEmpty() || objects_.count() == 0)
         return description_;
 
+    // If no description is available, we build a list of the first files
     QString desc;
     for(QList<Object*>::const_iterator i = objects_.constBegin(); i != objects_.constEnd(); i++)
     {
@@ -179,7 +181,23 @@ uint Share::file_local() const
 
 void Share::add_hash(const IpfsHash &hash)
 {
- // Todo
+    LsReply *reply = Ipfs::instance().ls.ls(hash);
+
+    connect(reply, &LsReply::finished, [reply, hash, this]()
+    {
+        if(reply->entries.count() == 0)
+        {
+            // no child objet, we have a file
+            File *file = new File(hash);
+            this->objects_ << file;
+        }
+        else
+        {
+            // we have a directory
+            Directory *dir = new Directory(reply);
+            this->objects_ << dir;
+        }
+    });
 }
 
 void Share::add_hash(const IpfsHash &hash, Object::ObjectType type)
