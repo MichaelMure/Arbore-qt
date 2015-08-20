@@ -80,6 +80,9 @@ void Share::set_starred(const bool &starred)
 
 QString Share::textual_arborescence() const
 {
+    if(this->objects_.count() == 0)
+        return "";
+
     QString result;
     for(ObjectIterator it = ObjectIterator(this->objects_[0]); it != ObjectIterator(); it++)
     {
