@@ -180,4 +180,6 @@ private:
     QList<Object*> objects_;
 };
 
+Q_DECLARE_METATYPE(const Share*)
+
 #endif // SHARE_H

@@ -3,6 +3,7 @@
 #include <QtQml>
 
 #include "sharemodel.h"
+#include "sharefilter.h"
 #include "share.h"
 #include "persist/persist.h"
 
@@ -15,7 +16,9 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
     ShareModel shareModel;
-    engine.rootContext()->setContextProperty("shareModel", &shareModel);
+    ShareFilter *shareFilter = new ShareFilter(&app);
+    shareFilter->setSourceModel(&shareModel);
+    engine.rootContext()->setContextProperty("shareModel", shareFilter);
 
     engine.load(QUrl(QStringLiteral("qrc:/mainWindow.qml")));
 

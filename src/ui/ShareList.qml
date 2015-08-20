@@ -29,6 +29,7 @@ Item {
                     border.width: 2
                 }
             }
+        onTextChanged: shareModel.setFilterRegExp(text)
     }
 
     ListView {
