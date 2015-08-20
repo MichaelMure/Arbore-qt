@@ -41,6 +41,9 @@ In order to run in debug mode
 
 Every little help. Please contact us if you want to build something awesome, especially if you know UX or Qt/QML.
 
+We use [waffle.io](https://waffle.io/michaelmure/arbore-qt) to organize the work.
+[![Stories in Ready](https://badge.waffle.io/michaelmure/arbore-qt.svg?label=ready&title=Ready)](http://waffle.io/michaelmure/arbore-qt)
+
 ## Want to talk ?
 
 You can drop by our IRC channel, #arbore on freenode.
