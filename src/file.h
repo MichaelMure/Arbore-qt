@@ -25,12 +25,14 @@ public:
     uint block_local() const;
     uint file_total() const;
     uint file_local() const;
+    bool metadata_local() const;
 
 private slots:
     void objectAdded(const IpfsHash& hash);
     void objectRemoved(const IpfsHash& hash);
 
 private:
+    bool metadata_local_;
     QHash<IpfsHash, Block*> blocks_;
 };
 

@@ -8,7 +8,7 @@
 #include <QDebug>
 
 Directory::Directory(const IpfsHash &hash, const QString &name)
-    : Object(hash, name)
+    : Object(hash, name), metadata_local_(false)
 {
     LsReply *reply = Ipfs::instance()->ls.ls(hash);
 
@@ -103,6 +103,20 @@ uint Directory::file_local() const
     return file_local;
 }
 
+bool Directory::metadata_local() const
+{
+    if(!metadata_local_)
+        return false;
+
+    for(QHash<IpfsHash, Child*>::const_iterator i = child_hashes_.constBegin(); i != child_hashes_.constEnd(); i++)
+    {
+        if(!i.value()->object->metadata_local())
+            return false;
+    }
+
+    return true;
+}
+
 const QHash<QString, Child *> &Directory::getChilds() const
 {
     return this->child_names_;
@@ -142,4 +156,6 @@ void Directory::parse_ls_reply(const LsReply *reply)
         this->child_hashes_[child->hash] = child;
         this->child_names_[child->name] = child;
     }
+    emit localityChanged();
+    metadata_local_ = true;
 }

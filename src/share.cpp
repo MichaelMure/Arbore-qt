@@ -76,7 +76,6 @@ void Share::set_starred(const bool &starred)
 {
     starred_ = starred;
     emit shareChanged();
-    qDebug() << "STARRED " << starred;
 }
 
 QString Share::textual_arborescence() const
@@ -183,6 +182,20 @@ uint Share::file_local() const
     return file_local;
 }
 
+bool Share::metadata_local() const
+{
+    for(QList<Object*>::const_iterator i = objects_.constBegin();
+        i != objects_.constEnd();
+        i++)
+    {
+        if(!(*i)->metadata_local())
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 void Share::add_hash(const IpfsHash &hash)
 {
     Object *obj = ObjectCache::instance()->get(hash);
@@ -190,7 +203,7 @@ void Share::add_hash(const IpfsHash &hash)
     if(obj != NULL)
     {
         connect(obj, SIGNAL(localityChanged()),
-                this, SIGNAL(dataChanged()));
+                this, SLOT(objectChanged()));
 
         this->objects_ << obj;
         return;
@@ -213,7 +226,7 @@ void Share::add_hash(const IpfsHash &hash)
         }
 
         connect(obj, SIGNAL(localityChanged()),
-                this, SIGNAL(dataChanged()));
+                this, SLOT(objectChanged()));
 
         this->objects_ << obj;
     });
@@ -226,7 +239,7 @@ void Share::add_hash(const IpfsHash &hash, Object::ObjectType type)
     if(obj != NULL)
     {
         connect(obj, SIGNAL(localityChanged()),
-                this, SIGNAL(dataChanged()));
+                this, SLOT(objectChanged()));
 
         this->objects_ << obj;
         return;
@@ -248,7 +261,7 @@ void Share::add_hash(const IpfsHash &hash, Object::ObjectType type)
     objects_ << obj;
 
     connect(obj, SIGNAL(localityChanged()),
-            this, SIGNAL(dataChanged()));
+            this, SLOT(objectChanged()));
 }
 
 void Share::set_title(const QString &title)
@@ -257,20 +270,8 @@ void Share::set_title(const QString &title)
     emit shareChanged();
 }
 
-void Share::set_description(const QString &description)
+void Share::objectChanged()
 {
-    description_ = description;
-    emit shareChanged();
-}
-
-void Share::set_path(const QDir &path)
-{
-    path_ = path;
-    emit shareChanged();
-}
-
-void Share::set_date_creation(const QDateTime &date)
-{
-    creation_date_ = date;
+    emit dataChanged();
     emit shareChanged();
 }

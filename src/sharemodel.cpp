@@ -8,7 +8,10 @@
 ShareModel::ShareModel(QObject *parent) :
     QAbstractListModel(parent)
 {
-    shares_ = Persist::instance()->share.get_all();
+    foreach (Share *share, Persist::instance()->share.get_all())
+    {
+        addShare(share);
+    }
 
     // FAKE DATA FOR NOW
     if(shares_.count() > 0 )
@@ -17,17 +20,17 @@ ShareModel::ShareModel(QObject *parent) :
     Share *share = new Share(this);
     share->set_title("WebUI");
     share->add_hash(IpfsHash("QmXX7YRpU7nNBKfw75VG7Y1c3GwpSAGHRev67XVPgZFv9R"), Object::DIRECTORY);
-    shares_.append(share);
+    addShare(share);
 
     share = new Share(this);
     share->set_title("fake 2 with overly long name, like really long with a lot of letters and phrase and stuff");
     share->add_hash(IpfsHash("QmTkzDwWqPbnAh5YiV5VwcTLnGdwSNsNTn2aDxdXBFca7D"), Object::DIRECTORY);
-    shares_.append(share);
+    addShare(share);
 
     share = new Share(this);
     share->set_title("Example 3");
     share->add_hash(IpfsHash("QmX6gcmX2vy2gs5dWB45w8aUNynEiqGhLayXySGb7RF2TM"), Object::DIRECTORY);
-    shares_.append(share);
+    addShare(share);
 }
 
 ShareModel::~ShareModel()
@@ -82,10 +85,13 @@ QVariant ShareModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
+int ShareModel::count() const
+{
+    return shares_.size();
+}
+
 void ShareModel::addShare(QString hash)
 {
-    qDebug() << hash;
-
     Share *share = new Share();
     share->set_title(hash);
     try
@@ -98,12 +104,31 @@ void ShareModel::addShare(QString hash)
         return;
     }
 
-    beginInsertRows(QModelIndex(), shares_.size(), shares_.size());
-    shares_.append(share);
-    endInsertRows();
+    addShare(share);
 }
 
 Share *ShareModel::getShare(int index)
 {
     return shares_.at(index);
+}
+
+void ShareModel::addShare(Share *share)
+{
+    beginInsertRows(QModelIndex(), shares_.size(), shares_.size());
+    shares_.append(share);
+    endInsertRows();
+
+    connect(share, &Share::dataChanged, [this, share]()
+    {
+        qDebug("datachanged");
+        QModelIndex index = this->index(this->shares_.indexOf(share));
+        emit dataChanged(index, index);
+    });
+
+    connect(share, &Share::shareChanged, [this, share]()
+    {
+        qDebug("sharechanged");
+        QModelIndex index = this->index(this->shares_.indexOf(share));
+        emit dataChanged(index, index);
+    });
 }

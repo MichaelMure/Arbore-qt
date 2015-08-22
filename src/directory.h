@@ -35,6 +35,7 @@ public:
     uint block_local() const;
     uint file_total() const;
     uint file_local() const;
+    bool metadata_local() const;
 
 public:
     const QHash<QString, Child *>& getChilds() const;
@@ -43,6 +44,7 @@ private:
     void parse_ls_reply(const LsReply *reply);
 
 private:
+    bool metadata_local_;
     QHash<IpfsHash, Child *> child_hashes_;
     QHash<QString, Child *> child_names_;
 };

@@ -32,7 +32,7 @@ class Share : public QObject
     Q_PROPERTY(QDir path READ path NOTIFY shareChanged)
     Q_PROPERTY(QDateTime date_creation READ date_creation NOTIFY shareChanged)
     Q_PROPERTY(bool starred READ starred WRITE set_starred NOTIFY shareChanged)
-    Q_PROPERTY(QString textual_arborescence READ textual_arborescence NOTIFY shareChanged)
+    Q_PROPERTY(QString textual_arborescence READ textual_arborescence NOTIFY dataChanged)
     Q_PROPERTY(float progress READ progress NOTIFY dataChanged)
 
 public:
@@ -117,6 +117,11 @@ public:
     uint file_local() const;
 
     /**
+     * @return true if all metadata (size, childs, ..) are known
+     */
+    bool metadata_local() const;
+
+    /**
      * Construct a Share from only a hash.
      * @param hash
      */
@@ -129,15 +134,19 @@ public:
      */
     void add_hash(const IpfsHash &hash, Object::ObjectType type);
 
-private:
-    void set_description(const QString& description);
-    void set_path(const QDir& path);
-    void set_date_creation(const QDateTime &date);
-    void set_state(const ShareState state);
-
 signals:
+    /**
+     * Emited when the metadata (title, description, ...) change
+     */
     void shareChanged();
+
+    /**
+     * Emited when the knowledge about the data change or when the data locality change
+     */
     void dataChanged();
+
+private slots:
+    void objectChanged();
 
 private:
     int id_;

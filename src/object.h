@@ -69,6 +69,11 @@ public:
      */
     virtual uint file_local() const = 0;
 
+    /**
+     * @return true if all metadata (size, childs, ..) are known
+     */
+    virtual bool metadata_local() const = 0;
+
 signals:
     /**
      * @brief Notify that the local disponibility of this object changed.

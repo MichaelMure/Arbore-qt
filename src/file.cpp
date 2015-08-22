@@ -12,7 +12,7 @@ struct Block
 };
 
 File::File(const IpfsHash &hash, const QString &name)
-    : Object(hash, name)
+    : Object(hash, name), metadata_local_(false)
 {
     connect(&(Ipfs::instance()->refs), SIGNAL(objectAdded(IpfsHash)),
             this, SLOT(objectAdded(IpfsHash)));
@@ -34,6 +34,8 @@ File::File(const IpfsHash &hash, const QString &name)
 
             this->blocks_[block->hash] = block;
         }
+
+        metadata_local_ = true;
 
         emit localityChanged();
     });
@@ -112,6 +114,11 @@ uint File::file_total() const
 uint File::file_local() const
 {
     return (block_total() == block_local());
+}
+
+bool File::metadata_local() const
+{
+    return metadata_local_;
 }
 
 void File::objectAdded(const IpfsHash &hash)

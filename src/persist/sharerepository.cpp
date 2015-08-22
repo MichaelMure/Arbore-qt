@@ -14,12 +14,10 @@
 ShareRepository::ShareRepository(QObject *parent)
     : QObject(parent)
 {
-
 }
 
 ShareRepository::~ShareRepository()
 {
-
 }
 
 QVector<Share *> ShareRepository::get_all()

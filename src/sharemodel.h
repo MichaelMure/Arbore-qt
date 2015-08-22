@@ -38,6 +38,9 @@ public:
     Share* getShare(int index);
 
 private:
+    void addShare(Share *share);
+
+private:
     QVector<Share*> shares_;
 };
 
