@@ -11,8 +11,11 @@ class Persist : public QObject
 {
     Q_OBJECT
 public:
+    Persist();
+    virtual ~Persist();
+
     // Singleton
-    static Persist& instance();
+    static Persist *instance();
 
     // Repository access
     ShareRepository share;
@@ -20,12 +23,9 @@ public:
     QSqlQuery exec(const QString &query);
 
 private:
-    Persist();                      // hide constructor
-    ~Persist();                     // hide destructor
     Persist(Persist const&);        // hide copy constructor
     void operator=(Persist const&); // hide assign op
 
-    void init();
     void open_database();
     void init_database();
 

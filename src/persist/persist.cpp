@@ -6,37 +6,27 @@
 #include <QSqlError>
 #include <QSqlQuery>
 
-static bool initialized = false;
-
-Persist &Persist::instance()
-{
-    static Persist instance;
-    if(!initialized)
-    {
-        initialized = true;
-        instance.init();
-    }
-    return instance;
-}
-
-QSqlQuery Persist::exec(const QString &query)
-{
-    QSqlDatabase db = QSqlDatabase::database();
-    return db.exec(query);
-}
+Q_GLOBAL_STATIC(Persist, singleton)
 
 Persist::Persist()
   :db_type_("QSQLITE")
 {
+    open_database();
 }
 
 Persist::~Persist()
 {
 }
 
-void Persist::init()
+Persist *Persist::instance()
 {
-    open_database();
+    return singleton();
+}
+
+QSqlQuery Persist::exec(const QString &query)
+{
+    QSqlDatabase db = QSqlDatabase::database();
+    return db.exec(query);
 }
 
 void Persist::open_database()

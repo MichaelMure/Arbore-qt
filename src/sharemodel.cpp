@@ -8,7 +8,7 @@
 ShareModel::ShareModel(QObject *parent) :
     QAbstractListModel(parent)
 {
-    shares_ = Persist::instance().share.get_all();
+    shares_ = Persist::instance()->share.get_all();
 
     // FAKE DATA FOR NOW
     if(shares_.count() > 0 )
@@ -34,7 +34,7 @@ ShareModel::~ShareModel()
 {
     foreach (Share *share, shares_)
     {
-        Persist::instance().share.persist(share);
+        Persist::instance()->share.persist(share);
     }
 }
 
