@@ -6,9 +6,9 @@ ObjectIterator::ObjectIterator(Object *obj)
 {
     this->stack_.push({obj, 0});
 
-    Directory *dir = dynamic_cast<Directory*>(obj);
-    if(dir)
+    if(obj->type() == Object::DIRECTORY)
     {
+        Directory *dir = (Directory*)obj;
         const QHash<QString, Child*> childs = dir->getChilds();
         for(QHash<QString, Child*>::const_iterator i = childs.constBegin(); i != childs.constEnd(); i++)
         {
@@ -78,9 +78,9 @@ void ObjectIterator::advance()
         return;
     }
 
-    Directory *dir = dynamic_cast<Directory*>(next.object);
-    if(dir)
+    if(next.object->type() == Object::DIRECTORY)
     {
+        Directory *dir = (Directory*)next.object;
         const QHash<QString, Child*> childs = dir->getChilds();
         for(QHash<QString, Child*>::const_iterator i = childs.constBegin(); i != childs.constEnd(); i++)
         {
