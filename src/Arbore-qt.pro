@@ -39,7 +39,8 @@ SOURCES += main.cpp\
     ipfs/ipfsstats.cpp \
     objectiterator.cpp \
     persist/sharerepository.cpp \
-    persist/persist.cpp
+    persist/persist.cpp \
+    objectcache.cpp
 
 HEADERS  += \
     ipfs/ipfs.h \
@@ -60,7 +61,8 @@ HEADERS  += \
     ipfs/ipfsstats.h \
     objectiterator.h \
     persist/sharerepository.h \
-    persist/persist.h
+    persist/persist.h \
+    objectcache.h
 
 RESOURCES += ui/resources.qrc
 

@@ -3,6 +3,7 @@
 #include "ipfs/ipfs.h"
 #include "ipfs/ipfsls.h"
 #include "file.h"
+#include "objectcache.h"
 
 #include <QDebug>
 
@@ -116,21 +117,23 @@ void Directory::parse_ls_reply(const LsReply *reply)
         child->hash = IpfsHash(entry->hash());
         child->name = entry->name();
 
-        switch(entry->type())
+        child->object = ObjectCache::instance()->get(child->hash);
+
+        if(child->object == NULL)
         {
-        case ObjectType::DIRECTORY:
-            child->object = new Directory(entry->hash(), entry->name());
-            qDebug() << "found dir " << entry->name();
-            break;
-        case ObjectType::FILE:
-            child->object = new File(entry->hash(), entry->name());
-            qDebug() << "found file " << entry->name();
-            break;
-        case ObjectType::RAW:
-        case ObjectType::METADATA:
-        default:
-            qDebug() << "Error: unsupported object type !";
-            continue;
+            switch(entry->type())
+            {
+            case ObjectType::DIRECTORY:
+                child->object = new Directory(entry->hash(), entry->name());
+                break;
+            case ObjectType::FILE:
+                child->object = new File(entry->hash(), entry->name());
+                break;
+            case ObjectType::RAW:
+            case ObjectType::METADATA:
+            default:
+                Q_ASSERT(false);
+            }
         }
 
         connect(child->object, SIGNAL(localityChanged()),

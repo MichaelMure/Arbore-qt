@@ -4,6 +4,7 @@
 #include "directory.h"
 #include "file.h"
 #include "objectiterator.h"
+#include "objectcache.h"
 #include "ipfs/ipfs.h"
 
 #include <QDateTime>
@@ -184,28 +185,53 @@ uint Share::file_local() const
 
 void Share::add_hash(const IpfsHash &hash)
 {
+    Object *obj = ObjectCache::instance()->get(hash);
+
+    if(obj != NULL)
+    {
+        connect(obj, SIGNAL(localityChanged()),
+                this, SIGNAL(dataChanged()));
+
+        this->objects_ << obj;
+        return;
+    }
+
     LsReply *reply = Ipfs::instance().ls.ls(hash);
 
     connect(reply, &LsReply::finished, [reply, hash, this]()
     {
+        Object *obj;
         if(reply->entries.count() == 0)
         {
             // no child objet, we have a file
-            File *file = new File(hash);
-            this->objects_ << file;
+            obj = new File(hash);
         }
         else
         {
             // we have a directory
-            Directory *dir = new Directory(reply);
-            this->objects_ << dir;
+            obj = new Directory(reply);
         }
+
+        connect(obj, SIGNAL(localityChanged()),
+                this, SIGNAL(dataChanged()));
+
+        this->objects_ << obj;
     });
 }
 
 void Share::add_hash(const IpfsHash &hash, Object::ObjectType type)
 {
-    Object *obj;
+    Object *obj = ObjectCache::instance()->get(hash);
+
+    if(obj != NULL)
+    {
+        connect(obj, SIGNAL(localityChanged()),
+                this, SIGNAL(dataChanged()));
+
+        this->objects_ << obj;
+        return;
+    }
+
     switch (type)
     {
     case Object::ObjectType::DIRECTORY:
