@@ -16,6 +16,7 @@
 class QNetworkAccessManager;
 class QNetworkReply;
 class QNetworkRequest;
+enum IpfsState : short;
 
 class IpfsAccess : public QObject
 {
@@ -83,7 +84,6 @@ private slots:
     void daemon_finished(int exit_code, QProcess::ExitStatus exit_status);
 
 private:
-    enum IpfsState { PING_DAEMON, LAUNCH_DAEMON, RUNNING_SYSTEM, RUNNING_EMBED };
     IpfsState state_;
     QNetworkAccessManager *manager_;
     QProcess *daemon_process_;

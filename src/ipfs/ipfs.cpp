@@ -23,12 +23,24 @@
  * RUNNING_SYSTEM --> PING_DAEMON : unreachable
  * RUNNING_EMBED --> PING_DAEMON : crash
  * LAUNCH_DAEMON --> LAUNCH_DAEMON : timer
- *
+ * PING_DAEMON --> QUITTING
+ * LAUNCH_DAEMON --> QUITTING
+ * RUNNING_SYSTEM --> QUITTING
+ * RUNNING_EMBED --> QUITTING
  *
  * @enduml
  */
 
 static bool initialized = false;
+
+enum IpfsState : short
+{
+    PING_DAEMON,
+    LAUNCH_DAEMON,
+    RUNNING_SYSTEM,
+    RUNNING_EMBED,
+    QUITTING
+};
 
 Ipfs::Ipfs()
     : stats(),
@@ -200,6 +212,7 @@ void Ipfs::on_online()
 
 Ipfs::~Ipfs()
 {
+    this->state_ = QUITTING;
     if(daemon_process_)
     {
         daemon_process_->terminate();
