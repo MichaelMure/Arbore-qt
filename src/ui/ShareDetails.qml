@@ -79,5 +79,12 @@ ScrollView {
             anchors.bottom: parent.bottom
             anchors.left: parent.left
         }
+
+        Component.onCompleted: {
+            if(shareModel.count() > 0)
+            {
+                share = shareModel.getShare(0);
+            }
+        }
     }
 }

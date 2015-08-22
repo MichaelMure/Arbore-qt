@@ -54,7 +54,7 @@ Item {
                 anchors.fill: parent;
                 onClicked: {
                     shareList.currentIndex = index;
-                    root.app.details.share = shareList.model.getShare(index);
+                    root.app.details.share = shareModel.getShare(index);
                 }
             }
 
