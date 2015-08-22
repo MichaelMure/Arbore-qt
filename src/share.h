@@ -10,13 +10,6 @@
 
 class IpfsHash;
 
-enum ShareState {
-    UNITIALIZED,
-    DOWNLOADING,
-    PAUSED,
-    FINISHED,
-};
-
 /**
  * This class define a share (download or upload), ie, a collection of directories
  * and files that may be available somewhere.
@@ -34,6 +27,16 @@ class Share : public QObject
     Q_PROPERTY(bool starred READ starred WRITE set_starred NOTIFY shareChanged)
     Q_PROPERTY(QString textual_arborescence READ textual_arborescence NOTIFY dataChanged)
     Q_PROPERTY(float progress READ progress NOTIFY dataChanged)
+    Q_PROPERTY(ShareState state READ state NOTIFY dataChanged)
+    Q_ENUMS(ShareState)
+
+public:
+    enum ShareState {
+        UNITIALIZED,
+        DOWNLOADING,
+        PAUSED,
+        FINISHED,
+    };
 
 public:
     explicit Share(QObject *parent = 0);

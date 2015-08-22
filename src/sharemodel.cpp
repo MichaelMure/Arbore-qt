@@ -45,6 +45,7 @@ QHash<int, QByteArray> ShareModel::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[NameRole] = "name";
     roles[ProgressRole] = "progress";
+    roles[StateRole] = "state";
     roles[SizeTotalRole] = "sizeTotal";
     roles[SizeLocalRole] = "sizeLocal";
     roles[BlockTotalRole] = "blockTotal";
@@ -62,25 +63,27 @@ int ShareModel::rowCount(const QModelIndex &parent) const
 
 QVariant ShareModel::data(const QModelIndex &index, int role) const
 {
-    const Share *dl = shares_.value(index.row(), 0);
+    const Share *share = shares_.value(index.row(), 0);
     switch(role)
     {
     case NameRole:
-        return dl->title();
+        return share->title();
     case ProgressRole:
-        return dl->progress();
+        return share->progress();
+    case StateRole:
+        return share->state();
     case SizeTotalRole:
-        return dl->size_total();
+        return share->size_total();
     case SizeLocalRole:
-        return dl->size_local();
+        return share->size_local();
     case BlockTotalRole:
-        return dl->block_total();
+        return share->block_total();
     case BlockLocalRole:
-        return dl->block_local();
+        return share->block_local();
     case FileTotalRole:
-        return dl->file_total();
+        return share->file_total();
     case FileLocalRole:
-        return dl->file_local();
+        return share->file_local();
     }
     return QVariant();
 }

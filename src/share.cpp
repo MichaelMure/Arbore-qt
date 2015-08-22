@@ -94,7 +94,7 @@ QString Share::textual_arborescence() const
     return result;
 }
 
-ShareState Share::state() const
+Share::ShareState Share::state() const
 {
     return state_;
 }
