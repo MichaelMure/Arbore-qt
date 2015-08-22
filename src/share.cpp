@@ -196,7 +196,7 @@ void Share::add_hash(const IpfsHash &hash)
         return;
     }
 
-    LsReply *reply = Ipfs::instance().ls.ls(hash);
+    LsReply *reply = Ipfs::instance()->ls.ls(hash);
 
     connect(reply, &LsReply::finished, [reply, hash, this]()
     {

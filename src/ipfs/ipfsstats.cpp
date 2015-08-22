@@ -22,8 +22,8 @@ IpfsStats::IpfsStats(QObject *parent)
 
 void IpfsStats::refresh()
 {
-    QUrl url = Ipfs::instance().api_url(API_COMMAND + "/bw");
-    IpfsAccess *access = Ipfs::instance().query(url);
+    QUrl url = Ipfs::instance()->api_url(API_COMMAND + "/bw");
+    IpfsAccess *access = Ipfs::instance()->query(url);
 
     connect(access, &IpfsAccess::finished,
             this, [this, access]()
@@ -95,6 +95,6 @@ void IpfsStats::init()
 
 void IpfsStats::timerEvent(QTimerEvent *)
 {
-    if(Ipfs::instance().online())
+    if(Ipfs::instance()->online())
         refresh();
 }

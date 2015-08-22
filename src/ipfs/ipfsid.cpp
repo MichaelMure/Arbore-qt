@@ -18,8 +18,8 @@ IpfsId::IpfsId(QObject *parent)
 
 void IpfsId::init()
 {
-    QUrl url = Ipfs::instance().api_url(API_COMMAND);
-    IpfsAccess *access = Ipfs::instance().query(url);
+    QUrl url = Ipfs::instance()->api_url(API_COMMAND);
+    IpfsAccess *access = Ipfs::instance()->query(url);
 
     connect(access, &IpfsAccess::finished,
             this, [this, access]()

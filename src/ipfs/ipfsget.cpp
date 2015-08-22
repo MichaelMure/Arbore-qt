@@ -13,12 +13,12 @@ IpfsGet::IpfsGet(QObject *parent)
 
 /*void IpfsGet::write_on_disk(const IpfsHash &hash, const QString &path)
 {
-    QUrl url = Ipfs::instance().api_url(API_COMMAND);
+    QUrl url = Ipfs::instance()->api_url(API_COMMAND);
     QUrlQuery query;
 
     query.addQueryItem("arg", hash.ToString());
     query.addQueryItem("o", path);
 
     url.setQuery(query);
-    Ipfs::instance().query(url);
+    Ipfs::instance()->query(url);
 }*/

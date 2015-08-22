@@ -31,7 +31,7 @@
  * @enduml
  */
 
-static bool initialized = false;
+Q_GLOBAL_STATIC(Ipfs, singleton)
 
 enum IpfsState : short
 {
@@ -50,17 +50,32 @@ Ipfs::Ipfs()
       api_ip_("127.0.0.1"),
       api_port_("5001")
 {
+    manager_ = new QNetworkAccessManager();
+    daemon_process_ = NULL;
+
+    // Ping the HTTP API to find out if a daemon is running
+    state_ = PING_DAEMON;
+    ping_daemon();
 }
 
-Ipfs& Ipfs::instance()
+Ipfs::~Ipfs()
 {
-    static Ipfs instance;
-    if(!initialized)
+    this->state_ = QUITTING;
+    if(daemon_process_)
     {
-        initialized = true;
-        instance.init();
+        daemon_process_->terminate();
+        if(!daemon_process_->waitForFinished())
+        {
+            daemon_process_->kill();
+        }
+        daemon_process_->deleteLater();
     }
-    return instance;
+    manager_->deleteLater();
+}
+
+Ipfs *Ipfs::instance()
+{
+    return singleton();
 }
 
 QUrl Ipfs::api_url(const QString &command)
@@ -86,16 +101,6 @@ IpfsAccess *Ipfs::query(const QUrl &url)
 bool Ipfs::online() const
 {
     return state_ == RUNNING_EMBED || state_ == RUNNING_SYSTEM;
-}
-
-void Ipfs::init()
-{
-    manager_ = new QNetworkAccessManager();
-    daemon_process_ = NULL;
-
-    // Ping the HTTP API to find out if a daemon is running
-    state_ = PING_DAEMON;
-    ping_daemon();
 }
 
 void Ipfs::init_commands()
@@ -208,21 +213,6 @@ void Ipfs::on_online()
     {
         launch_access(access_buffer_.dequeue());
     }
-}
-
-Ipfs::~Ipfs()
-{
-    this->state_ = QUITTING;
-    if(daemon_process_)
-    {
-        daemon_process_->terminate();
-        if(!daemon_process_->waitForFinished())
-        {
-            daemon_process_->kill();
-        }
-        daemon_process_->deleteLater();
-    }
-    manager_->deleteLater();
 }
 
 void Ipfs::daemon_started()

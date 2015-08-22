@@ -36,8 +36,11 @@ class Ipfs : public QObject
 {
     Q_OBJECT
 public:
+    Ipfs();
+    virtual ~Ipfs();
+
     // Singleton
-    static Ipfs& instance();
+    static Ipfs *instance();
 
     // IPFS API access
     IpfsGet get;
@@ -66,12 +69,6 @@ public:
     bool online() const;
 
 private:
-    Ipfs();                      // hide constructor
-    ~Ipfs();                     // hide destructor
-    Ipfs(Ipfs const&);           // hide copy constructor
-    void operator=(Ipfs const&); // hide assign op
-
-    void init();
     void init_commands();
     void ping_daemon();
     void launch_daemon();

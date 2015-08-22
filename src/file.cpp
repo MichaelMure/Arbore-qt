@@ -14,12 +14,12 @@ struct Block
 File::File(const IpfsHash &hash, const QString &name)
     : Object(hash, name)
 {
-    connect(&(Ipfs::instance().refs), SIGNAL(objectAdded(IpfsHash)),
+    connect(&(Ipfs::instance()->refs), SIGNAL(objectAdded(IpfsHash)),
             this, SLOT(objectAdded(IpfsHash)));
-    connect(&(Ipfs::instance().refs), SIGNAL(objectRemoved(IpfsHash)),
+    connect(&(Ipfs::instance()->refs), SIGNAL(objectRemoved(IpfsHash)),
             this, SLOT(objectRemoved(IpfsHash)));
 
-    RefsReply *reply = Ipfs::instance().refs.recursive_refs(hash);
+    RefsReply *reply = Ipfs::instance()->refs.recursive_refs(hash);
 
     connect(reply, &RefsReply::finished, [reply, hash, this]()
     {
@@ -72,7 +72,7 @@ uint File::size_local() const
     uint size_local = 0;
     for(QHash<IpfsHash, Block*>::const_iterator i = blocks_.constBegin(); i != blocks_.constEnd(); i++)
     {
-        if(Ipfs::instance().refs.is_object_local(i.key()))
+        if(Ipfs::instance()->refs.is_object_local(i.key()))
         {
             size_local += i.value()->size;
         }
@@ -89,14 +89,14 @@ uint File::block_local() const
 {
     uint block_local = 0;
 
-    if(Ipfs::instance().refs.is_object_local(hash_))
+    if(Ipfs::instance()->refs.is_object_local(hash_))
     {
         block_local++;
     }
 
     for(QHash<IpfsHash, Block*>::const_iterator i = blocks_.constBegin(); i != blocks_.constEnd(); i++)
     {
-        if(Ipfs::instance().refs.is_object_local(i.key()))
+        if(Ipfs::instance()->refs.is_object_local(i.key()))
         {
             block_local++;
         }

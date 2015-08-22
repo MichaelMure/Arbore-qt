@@ -18,13 +18,13 @@ IpfsLs::IpfsLs(QObject *parent)
 
 LsReply * IpfsLs::ls(const IpfsHash &hash)
 {
-    QUrl url = Ipfs::instance().api_url(API_COMMAND);
+    QUrl url = Ipfs::instance()->api_url(API_COMMAND);
     QUrlQuery query;
 
     query.addQueryItem("arg", hash.ToString());
 
     url.setQuery(query);
-    IpfsAccess *access = Ipfs::instance().query(url);
+    IpfsAccess *access = Ipfs::instance()->query(url);
 
     LsReply *ls_reply = new LsReply();
     ls_reply->hash = hash;

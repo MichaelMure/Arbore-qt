@@ -13,7 +13,7 @@ IpfsPin::IpfsPin(QObject *parent)
 
 void IpfsPin::add_pin(const IpfsHash &hash, bool recursive)
 {
-    QUrl url = Ipfs::instance().api_url(API_COMMAND + "/add");
+    QUrl url = Ipfs::instance()->api_url(API_COMMAND + "/add");
     QUrlQuery query;
 
     query.addQueryItem("arg", hash.ToString());
@@ -23,12 +23,12 @@ void IpfsPin::add_pin(const IpfsHash &hash, bool recursive)
 
     url.setQuery(query);
 
-    Ipfs::instance().query(url);
+    Ipfs::instance()->query(url);
 }
 
 void IpfsPin::ls_pin(IpfsPinType pin_type)
 {
-    QUrl url = Ipfs::instance().api_url(API_COMMAND + "/ls");
+    QUrl url = Ipfs::instance()->api_url(API_COMMAND + "/ls");
     QUrlQuery query;
 
     QString type;
@@ -47,5 +47,5 @@ void IpfsPin::ls_pin(IpfsPinType pin_type)
     query.addQueryItem("type", type);
 
     url.setQuery(query);
-    Ipfs::instance().query(url);
+    Ipfs::instance()->query(url);
 }

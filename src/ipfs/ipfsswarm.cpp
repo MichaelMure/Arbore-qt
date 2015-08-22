@@ -24,8 +24,8 @@ void IpfsSwarm::init()
 
 void IpfsSwarm::refresh_peers()
 {
-    QUrl url = Ipfs::instance().api_url(API_COMMAND + "/peers");
-    IpfsAccess *access = Ipfs::instance().query(url);
+    QUrl url = Ipfs::instance()->api_url(API_COMMAND + "/peers");
+    IpfsAccess *access = Ipfs::instance()->query(url);
 
     connect(access, &IpfsAccess::finished,
             this, [this, access]()
@@ -62,6 +62,6 @@ uint IpfsSwarm::peer_count() const
 
 void IpfsSwarm::timerEvent(QTimerEvent *)
 {
-    if(Ipfs::instance().online())
+    if(Ipfs::instance()->online())
         refresh_peers();
 }

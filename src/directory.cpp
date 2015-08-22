@@ -10,7 +10,7 @@
 Directory::Directory(const IpfsHash &hash, const QString &name)
     : Object(hash, name)
 {
-    LsReply *reply = Ipfs::instance().ls.ls(hash);
+    LsReply *reply = Ipfs::instance()->ls.ls(hash);
 
     connect(reply, &LsReply::finished, [reply, this]()
     {

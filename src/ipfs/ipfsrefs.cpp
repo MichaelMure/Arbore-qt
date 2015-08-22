@@ -21,7 +21,7 @@ IpfsRefs::IpfsRefs(QObject *parent)
 
 RefsReply *IpfsRefs::recursive_refs(const IpfsHash &hash) const
 {
-    QUrl url = Ipfs::instance().api_url(API_COMMAND);
+    QUrl url = Ipfs::instance()->api_url(API_COMMAND);
     QUrlQuery query;
 
     query.addQueryItem("arg", hash.ToString());
@@ -30,7 +30,7 @@ RefsReply *IpfsRefs::recursive_refs(const IpfsHash &hash) const
 
     url.setQuery(query);
 
-    IpfsAccess *access = Ipfs::instance().query(url);
+    IpfsAccess *access = Ipfs::instance()->query(url);
 
     RefsReply *refs_reply = new RefsReply();
 
@@ -91,15 +91,15 @@ bool IpfsRefs::valid_data() const
 
 void IpfsRefs::timerEvent(QTimerEvent *)
 {
-    if(Ipfs::instance().online())
+    if(Ipfs::instance()->online())
         refresh_objects();
 }
 
 void IpfsRefs::refresh_objects()
 {
-    QUrl url = Ipfs::instance().api_url(API_COMMAND + "/local");
+    QUrl url = Ipfs::instance()->api_url(API_COMMAND + "/local");
 
-    IpfsAccess *access = Ipfs::instance().query(url);
+    IpfsAccess *access = Ipfs::instance()->query(url);
 
     qDebug() << "refresh obj";
 
