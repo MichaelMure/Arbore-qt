@@ -4,11 +4,19 @@
 #include <QObject>
 #include "ipfs/ipfshash.h"
 
-enum IpfsPinType { DIRECT, RECURSIVE, INDIRECT, ALL };
-
 class IpfsPin : public QObject
 {
     Q_OBJECT
+
+public:
+    enum IpfsPinType
+    {
+        DIRECT,
+        RECURSIVE,
+        INDIRECT,
+        ALL
+    };
+
 public:
     explicit IpfsPin(QObject *parent = 0);
     virtual ~IpfsPin() {}

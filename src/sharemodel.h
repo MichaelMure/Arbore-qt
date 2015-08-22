@@ -12,7 +12,7 @@ class ShareModel : public QAbstractListModel
     Q_OBJECT
 public:
     enum ShareRoles {
-        NameRole = Qt::UserRole + 1,
+        NameRole = Qt::UserRole,
         ProgressRole,
         StateRole,
         SizeTotalRole,

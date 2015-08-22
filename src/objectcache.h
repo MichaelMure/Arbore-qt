@@ -21,10 +21,20 @@ public:
     static ObjectCache* instance();
 
 public:
+    /**
+     * @return true if an Object with the given hash already exist
+     */
     bool contains(const IpfsHash &hash) const;
+
+    /**
+     * @return an Object from the cache
+     */
     Object* get(const IpfsHash &hash) const;
 
 private:
+    /**
+     * Insert an object in the cache. Automatically called by the object himself
+     */
     void insert(Object* obj);
 
 private:

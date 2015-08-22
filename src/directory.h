@@ -5,7 +5,6 @@
 #include "ipfs/ipfshash.h"
 
 #include <QHash>
-#include <QList>
 
 class LsReply;
 
