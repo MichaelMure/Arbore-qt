@@ -42,6 +42,7 @@ Item {
             onClicked: {
                 shareModel.addShare(hash.text)
                 root.visible = false
+                hash.text = ""
             }
         }
 

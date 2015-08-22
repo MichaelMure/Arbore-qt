@@ -23,12 +23,6 @@ Persist *Persist::instance()
     return singleton();
 }
 
-QSqlQuery Persist::exec(const QString &query)
-{
-    QSqlDatabase db = QSqlDatabase::database();
-    return db.exec(query);
-}
-
 void Persist::open_database()
 {
     QSqlDatabase db = QSqlDatabase::addDatabase(db_type_);

@@ -20,8 +20,6 @@ public:
     // Repository access
     ShareRepository share;
 
-    QSqlQuery exec(const QString &query);
-
 private:
     Persist(Persist const&);        // hide copy constructor
     void operator=(Persist const&); // hide assign op

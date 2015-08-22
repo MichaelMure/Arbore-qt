@@ -20,30 +20,6 @@ ShareRepository::~ShareRepository()
 {
 }
 
-QVector<Share *> ShareRepository::get_all()
-{
-    QSqlQuery q;
-    QVector<Share*> list;
-
-    if(!q.exec("SELECT * FROM `Share`"))
-    {
-        qDebug() << "Sql error: " << q.lastError();
-        return list;
-    }
-
-    while(q.next())
-    {
-        list << build_share(&q);
-    }
-
-    foreach (Share *share, list)
-    {
-        build_objects(share);
-    }
-
-    return list;
-}
-
 Share *ShareRepository::get(int id)
 {
     Q_ASSERT(id >= 0);
@@ -70,6 +46,30 @@ Share *ShareRepository::get(int id)
     return share;
 }
 
+QVector<Share *> ShareRepository::get_all()
+{
+    QSqlQuery q;
+    QVector<Share*> list;
+
+    if(!q.exec("SELECT * FROM `Share`"))
+    {
+        qDebug() << "Sql error: " << q.lastError();
+        return list;
+    }
+
+    while(q.next())
+    {
+        list << build_share(&q);
+    }
+
+    foreach (Share *share, list)
+    {
+        build_objects(share);
+    }
+
+    return list;
+}
+
 void ShareRepository::persist(Share *entity)
 {
     if(entity->id_ > 0)
@@ -84,6 +84,8 @@ void ShareRepository::persist(Share *entity)
 
 void ShareRepository::insert(Share *entity)
 {
+    Q_ASSERT(entity->id_ == -1);
+
     QSqlDatabase database = QSqlDatabase::database();
     database.transaction();
 
