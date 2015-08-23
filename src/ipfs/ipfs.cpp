@@ -89,7 +89,6 @@ IpfsAccess *Ipfs::query(const QUrl &url)
 {
     IpfsAccess *access = new IpfsAccess();
     access->timer = new QElapsedTimer();
-    access->timer->start();
     access->request = new QNetworkRequest(url);
 
     if(online())
@@ -184,6 +183,7 @@ void Ipfs::launch_daemon()
 
 void Ipfs::launch_access(IpfsAccess *access)
 {
+    access->timer->start();
     access->reply = manager_->get(*access->request);
 
     connect(access->reply, &QNetworkReply::finished,
@@ -204,7 +204,7 @@ void Ipfs::launch_access(IpfsAccess *access)
         }
 
         QString url = access->request->url().toString().remove(QRegExp("^.*/v0/"));
-        qDebug() << url << " " << access->timer->elapsed() << " ms";
+        qDebug() << url << access->timer->elapsed() << "ms";
 
         emit access->finished();
     });
