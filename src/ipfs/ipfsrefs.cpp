@@ -101,8 +101,6 @@ void IpfsRefs::refresh_objects()
 
     IpfsAccess *access = Ipfs::instance()->query(url);
 
-    qDebug() << "refresh obj";
-
     connect(access, &IpfsAccess::finished,
             this, [this, access]()
     {

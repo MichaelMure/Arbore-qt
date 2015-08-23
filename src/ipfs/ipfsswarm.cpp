@@ -41,8 +41,6 @@ void IpfsSwarm::refresh_peers()
 
         delete access;
     });
-
-    qDebug() << "refreshing peers";
 }
 
 bool IpfsSwarm::valid_data() const

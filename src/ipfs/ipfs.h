@@ -16,6 +16,7 @@
 class QNetworkAccessManager;
 class QNetworkReply;
 class QNetworkRequest;
+class QElapsedTimer;
 enum IpfsState : short;
 
 class IpfsAccess : public QObject
@@ -27,6 +28,7 @@ public:
 public:
     QNetworkRequest *request;
     QNetworkReply   *reply;
+    QElapsedTimer   *timer;
 
 signals:
     void finished();

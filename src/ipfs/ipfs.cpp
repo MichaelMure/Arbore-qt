@@ -5,6 +5,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QElapsedTimer>
 #include <QEventLoop>
 #include <QUrl>
 #include <QProcess>
@@ -86,8 +87,9 @@ QUrl Ipfs::api_url(const QString &command)
 
 IpfsAccess *Ipfs::query(const QUrl &url)
 {
-//    qDebug() << "HTTP query: " << url;
     IpfsAccess *access = new IpfsAccess();
+    access->timer = new QElapsedTimer();
+    access->timer->start();
     access->request = new QNetworkRequest(url);
 
     if(online())
@@ -201,6 +203,9 @@ void Ipfs::launch_access(IpfsAccess *access)
             return;
         }
 
+        QString url = access->request->url().toString().remove(QRegExp("^.*/v0/"));
+        qDebug() << url << " " << access->timer->elapsed() << " ms";
+
         emit access->finished();
     });
 }
@@ -268,6 +273,7 @@ IpfsAccess::~IpfsAccess()
 {
     delete this->request;
     this->reply->deleteLater();
+    delete this->timer;
 }
 
 const QJsonObject IpfsAccess::json()

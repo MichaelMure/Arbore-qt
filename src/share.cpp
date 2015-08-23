@@ -102,7 +102,6 @@ Share::ShareState Share::state() const
 float Share::progress() const
 {
     uint total = block_total();
-    qDebug() << "progress " << block_local() << "/" << total;
 
     if(total == 0)
         return 0.0;

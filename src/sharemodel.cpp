@@ -123,14 +123,12 @@ void ShareModel::addShare(Share *share)
 
     connect(share, &Share::dataChanged, [this, share]()
     {
-        qDebug("datachanged");
         QModelIndex index = this->index(this->shares_.indexOf(share));
         emit dataChanged(index, index);
     });
 
     connect(share, &Share::shareChanged, [this, share]()
     {
-        qDebug("sharechanged");
         QModelIndex index = this->index(this->shares_.indexOf(share));
         emit dataChanged(index, index);
     });

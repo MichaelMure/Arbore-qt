@@ -24,7 +24,7 @@ Directory::Directory(const QString &hash, const QString &name)
 }
 
 Directory::Directory(const LsReply *reply, const QString &name)
-    : Object(reply->hash, name)
+    : Object(reply->hash, name), metadata_local_(false)
 {
     this->parse_ls_reply(reply);
 }

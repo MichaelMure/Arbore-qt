@@ -23,8 +23,6 @@ File::File(const IpfsHash &hash, const QString &name)
 
     connect(reply, &RefsReply::finished, [reply, hash, this]()
     {
-        qDebug() << hash.ToString() << "  " << reply->refs.size();
-
         foreach (const IpfsHash* block_hash, reply->refs)
         {
             Block *block = new Block();
