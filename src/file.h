@@ -16,6 +16,9 @@ public:
     File(const QString &hash, const QString &name = "");
     virtual ~File();
 
+private:
+    Q_DISABLE_COPY(File)
+
     // Object interface
 public:
     ObjectType type() const;

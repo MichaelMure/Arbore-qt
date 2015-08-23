@@ -20,6 +20,9 @@ public:
     // Singleton
     static ObjectCache* instance();
 
+private:
+    Q_DISABLE_COPY(ObjectCache)
+
 public:
     /**
      * @return true if an Object with the given hash already exist

@@ -42,6 +42,10 @@ public:
     explicit Share(QObject *parent = 0);
     virtual ~Share() {}
 
+private:
+    Q_DISABLE_COPY(Share)
+
+public:
     /**
      * @return the database Id of the Share
      */

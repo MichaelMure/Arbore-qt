@@ -24,6 +24,10 @@ public:
     Object(const QString &hash, const QString &name = "");
     virtual ~Object() {}
 
+private:
+    Q_DISABLE_COPY(Object)
+
+public:
     /**
      * @return the name of the object available, empty string otherwise.
      */

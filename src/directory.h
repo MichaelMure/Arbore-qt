@@ -25,6 +25,9 @@ public:
     Directory(const LsReply *reply, const QString &name = "");
     virtual ~Directory();
 
+private:
+    Q_DISABLE_COPY(Directory)
+
     // Object interface
 public:
     ObjectType type() const;
