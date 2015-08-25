@@ -31,7 +31,6 @@ RefsReply *IpfsRefs::recursive_refs(const IpfsHash &hash) const
     url.setQuery(query);
 
     IpfsAccess *access = Ipfs::instance()->query(url);
-
     RefsReply *refs_reply = new RefsReply();
 
     connect(access, &IpfsAccess::finished,

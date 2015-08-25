@@ -128,6 +128,7 @@ void Ipfs::ping_daemon()
             {
                 qDebug() << "Could not ping the API, lauching daemon manually";
                 launch_daemon();
+                reply->deleteLater();
                 return;
             }
 
@@ -199,6 +200,8 @@ void Ipfs::launch_access(IpfsAccess *access)
                 this->state_ = PING_DAEMON;
                 this->ping_daemon();
             }
+
+            delete access;
 
             return;
         }
