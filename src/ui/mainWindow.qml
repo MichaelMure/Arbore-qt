@@ -33,6 +33,8 @@ ApplicationWindow {
             anchors.bottomMargin: 5
             anchors.top: parent.top
             anchors.topMargin: 5
+
+            onClicked: addShare.visible = true
         }
 
         Button {
@@ -83,6 +85,13 @@ ApplicationWindow {
             id: details
             Layout.minimumWidth: 400
         }
+    }
+
+    AddShare {
+        id: addShare
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.horizontalCenter: parent.horizontalCenter
+        visible: false
     }
 
     DownloadFromHash {

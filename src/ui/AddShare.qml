@@ -3,6 +3,8 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.3
 
 Item {
+    width: 300
+    height: 400
 
     Rectangle {
         color: "#ffffff"
