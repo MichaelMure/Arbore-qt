@@ -272,6 +272,7 @@ void Share::add_hash(const IpfsHash &hash, Object::ObjectType type)
         break;
     case Object::ObjectType::FILE:
         obj = new File(hash);
+        break;
     default:
         qDebug() << "Unknow object type retrieved from database.";
         Q_ASSERT(false);
