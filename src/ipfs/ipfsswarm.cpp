@@ -35,7 +35,17 @@ void IpfsSwarm::refresh_peers()
         this->peers_.clear();
         foreach (const QJsonValue &value, json.value("Strings").toArray())
         {
-            this->peers_ << IpfsPeer(value.toString());
+            try
+            {
+                // weird reply can happen
+                // See https://github.com/ipfs/go-ipfs/issues/1560
+                this->peers_ << IpfsPeer(value.toString());
+            }
+            catch(std::exception& e)
+            {
+                qDebug() << e.what() << value.toString();
+            }
+
         }
         this->valid_data_ = true;
 

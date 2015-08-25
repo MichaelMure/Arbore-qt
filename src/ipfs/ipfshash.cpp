@@ -1,4 +1,5 @@
 #include "ipfs/ipfshash.h"
+#include <stdexcept>
 
 IpfsHash::IpfsHash()
     : str_("invalid hash")
@@ -10,7 +11,7 @@ IpfsHash::IpfsHash(QString hash)
 {
     // Todo: a better hash validation and exception would be nice
     if(!hash.startsWith("Qm"))
-        throw;
+        throw std::runtime_error("Invalid hash");
 }
 
 IpfsHash::IpfsHash(const IpfsHash &hash)
