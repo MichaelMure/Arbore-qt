@@ -11,12 +11,30 @@
 #include <QDebug>
 #include <QStringBuilder>
 
+/*
+ * PlanUML
+ * @startuml
+ *
+ * [*] -> CREATING
+ * CREATING -> CREATING : add file/dir
+ * CREATING -> DOWNLOAD_METADATA : download
+ * DOWNLOAD_METADATA -> READY : dl metadata done
+ * READY -> DOWNLOAD : start
+ * PAUSED -> DOWNLOAD : start
+ * DOWNLOAD -> SHARING : ended
+ * DOWNLOAD -> PAUSED : pause
+ *
+ * [*] -> SHARING : share
+ *
+ * @enduml
+ */
+
 Share::Share(QObject *parent):
     QObject(parent),
     id_(-1),
     creation_date_(QDateTime::currentDateTime()),
     starred_(false),
-    state_(UNITIALIZED)
+    state_(CREATING)
 {
 }
 
@@ -101,6 +119,9 @@ Share::ShareState Share::state() const
 
 float Share::progress() const
 {
+    if(state_ == CREATING)
+        return 0.0;
+
     uint total = block_total();
 
     if(total == 0)
@@ -261,6 +282,16 @@ void Share::add_hash(const IpfsHash &hash, Object::ObjectType type)
 
     connect(obj, SIGNAL(localityChanged()),
             this, SLOT(objectChanged()));
+}
+
+void Share::download()
+{
+    // Todo
+}
+
+void Share::pause()
+{
+    // Todo
 }
 
 void Share::set_title(const QString &title)

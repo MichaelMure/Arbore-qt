@@ -32,10 +32,12 @@ class Share : public QObject
 
 public:
     enum ShareState {
-        UNITIALIZED,
+        CREATING, // adding objects
+        DL_METADATA,
+        READY, // all metadata known
         DOWNLOADING,
         PAUSED,
-        FINISHED,
+        SHARING,
     };
 
 public:
@@ -140,6 +142,18 @@ public:
      * @param type
      */
     void add_hash(const IpfsHash &hash, Object::ObjectType type);
+
+    /**
+     * Trigger the full download
+     */
+    Q_INVOKABLE
+    void download();
+
+    /**
+     * Pause the download (invalid call when not in state DOWNLOADING)
+     */
+    Q_INVOKABLE
+    void pause();
 
 signals:
     /**
