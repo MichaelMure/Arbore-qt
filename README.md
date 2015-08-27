@@ -16,7 +16,8 @@ Here is what we envision currently ([link](https://raw.githubusercontent.com/Mic
 
 #### Dependencies
 
-	# apt-get install libqt5declarative5 qml qml-module-qtquick-controls qt5-qmake qtdeclarative5-dev
+	# apt-get install libqt5declarative5 qml qml-module-qtquick-controls \
+	  qt5-qmake qtdeclarative5-dev
 
 #### Configure build and run
 
