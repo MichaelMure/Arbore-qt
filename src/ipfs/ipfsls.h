@@ -36,6 +36,7 @@ public:
 class LsEntry : public QObject
 {
     friend class IpfsLs;
+    friend class IpfsFile;
     Q_OBJECT
 public:
     explicit LsEntry(QObject *parent = 0);

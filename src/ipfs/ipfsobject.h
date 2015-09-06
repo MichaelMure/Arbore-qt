@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include "ipfs/ipfshash.h"
-#include "object.h"
 
 class ObjectLinkReply;
 class ObjectLinkEntry;

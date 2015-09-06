@@ -42,7 +42,8 @@ SOURCES += main.cpp\
     persist/persist.cpp \
     objectcache.cpp \
     sharefilter.cpp \
-    ipfs/ipfsobject.cpp
+    ipfs/ipfsobject.cpp \
+    ipfs/ipfsfile.cpp
 
 HEADERS  += \
     ipfs/ipfs.h \
@@ -66,7 +67,8 @@ HEADERS  += \
     persist/persist.h \
     objectcache.h \
     sharefilter.h \
-    ipfs/ipfsobject.h
+    ipfs/ipfsobject.h \
+    ipfs/ipfsfile.h
 
 RESOURCES += ui/resources.qrc
 

@@ -5,6 +5,7 @@
 #include <QQueue>
 #include <QProcess>
 #include "ipfs/ipfsget.h"
+#include "ipfs/ipfsfile.h"
 #include "ipfs/ipfsid.h"
 #include "ipfs/ipfsls.h"
 #include "ipfs/ipfsobject.h"
@@ -46,6 +47,7 @@ public:
     static Ipfs *instance();
 
     // IPFS API access
+    IpfsFile file;
     IpfsGet get;
     IpfsId id;
     IpfsLs ls;

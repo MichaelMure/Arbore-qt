@@ -19,6 +19,7 @@ public:
         FILE = 2,
         METADATA = 3
     };
+    static ObjectType decode_type(const QString &str);
 
     Object(const IpfsHash &hash, const QString &name = "");
     Object(const QString &hash, const QString &name = "");
