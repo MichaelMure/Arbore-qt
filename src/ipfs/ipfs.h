@@ -7,6 +7,7 @@
 #include "ipfs/ipfsget.h"
 #include "ipfs/ipfsid.h"
 #include "ipfs/ipfsls.h"
+#include "ipfs/ipfsobject.h"
 #include "ipfs/ipfspin.h"
 #include "ipfs/ipfsrefs.h"
 #include "ipfs/ipfsstats.h"
@@ -48,6 +49,7 @@ public:
     IpfsGet get;
     IpfsId id;
     IpfsLs ls;
+    IpfsObject object;
     IpfsPin pin;
     IpfsRefs refs;
     IpfsStats stats;

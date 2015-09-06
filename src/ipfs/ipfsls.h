@@ -7,7 +7,6 @@
 
 class LsReply;
 class LsEntry;
-class IpfsAccess;
 
 class IpfsLs : public QObject
 {
@@ -28,7 +27,6 @@ public:
     virtual ~LsReply();
 signals:
     void finished();
-
 public:
     IpfsHash hash;
     QList<const LsEntry*> entries;
@@ -37,17 +35,19 @@ public:
 
 class LsEntry : public QObject
 {
+    friend class IpfsLs;
     Q_OBJECT
 public:
     explicit LsEntry(QObject *parent = 0);
     ~LsEntry();
 
+public:
     QString& name() const;
     IpfsHash& hash() const;
     uint size() const;
     Object::ObjectType type() const;
 
-public:
+private:
     QString *name_;
     IpfsHash *hash_;
     uint size_;
