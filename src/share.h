@@ -35,7 +35,6 @@ class Share : public QObject
 public:
     enum ShareState {
         CREATING, // adding objects
-        DL_METADATA,
         READY, // all metadata known
         WAITING_FOR_DL,
         DOWNLOADING,

@@ -15,18 +15,19 @@
  * PlanUML
  * @startuml
  *
- * [*] -> CREATING
- * CREATING -> CREATING : add file/dir
- * CREATING -> DL_METADATA : download
- * DL_METADATA -> READY : dl metadata done
- * DL_METADATA -> WAITING_FOR_DL : start
- * READY -> DOWNLOAD : start
- * PAUSED -> DOWNLOAD : start
- * DOWNLOAD -> SHARING : ended
- * DOWNLOAD -> PAUSED : pause
+ * @startuml
+ * [*] --> CREATING
+ * CREATING --> CREATING : add file/dir
+ * CREATING  --> READY : dl metadata done
+ * READY --> CREATING : add file/dir
+ * CREATING  --> WAITING_FOR_DL : start
+ * WAITING_FOR_DL --> DOWNLOAD : dl metadata done
+ * READY --> DOWNLOAD : start
+ * PAUSED --> DOWNLOAD : start
+ * DOWNLOAD --> SHARING : ended
+ * DOWNLOAD --> PAUSED : pause
  *
- * [*] -> SHARING : share
- *
+ * [*] --> SHARING : share
  * @enduml
  */
 
@@ -219,6 +220,8 @@ bool Share::metadata_local() const
 
 void Share::add_hash(const IpfsHash &hash)
 {
+    Q_ASSERT(state_ == CREATING || state_ == READY);
+
     Object *obj = ObjectCache::instance()->get(hash);
 
     if(obj != NULL)
@@ -230,8 +233,9 @@ void Share::add_hash(const IpfsHash &hash)
         return;
     }
 
-    ObjectReply *reply = Object::from_hash(hash);
+    state_ = CREATING;
     waiting_for_hash_ << hash;
+    ObjectReply *reply = Object::from_hash(hash);
 
     connect(reply, &ObjectReply::finished, [reply, hash, this]()
     {
@@ -253,6 +257,8 @@ void Share::add_hash(const IpfsHash &hash)
 
 void Share::add_hash(const IpfsHash &hash, Object::ObjectType type)
 {
+    Q_ASSERT(state_ == CREATING || state_ == READY);
+
     Object *obj = ObjectCache::instance()->get(hash);
 
     if(obj != NULL)
@@ -263,6 +269,9 @@ void Share::add_hash(const IpfsHash &hash, Object::ObjectType type)
         this->objects_ << obj;
         return;
     }
+
+    state_ = CREATING;
+    waiting_for_hash_ << hash;
 
     switch (type)
     {
@@ -288,7 +297,7 @@ void Share::start()
 {
     switch (state_)
     {
-    case DL_METADATA:
+    case CREATING:
         state_ = WAITING_FOR_DL;
         break;
     case READY:
@@ -296,12 +305,14 @@ void Share::start()
         trigger_download();
         break;
     default:
+        Q_ASSERT(false);
         break;
     }
 }
 
 void Share::pause()
 {
+    Q_ASSERT(state_ == DOWNLOADING);
     // Todo
 }
 
@@ -313,6 +324,24 @@ void Share::set_title(const QString &title)
 
 void Share::objectChanged()
 {
+    if(state_ == DOWNLOADING && block_local() == block_total())
+    {
+        state_ = SHARING;
+    }
+
+    if(metadata_local())
+    {
+        if(state_ == CREATING)
+        {
+            state_ = READY;
+        }
+
+        if(state_ == WAITING_FOR_DL)
+        {
+            trigger_download();
+        }
+    }
+
     emit dataChanged();
     emit shareChanged();
 }

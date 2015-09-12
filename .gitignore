@@ -40,4 +40,7 @@ README.html
 *.qmlproject.user
 *.qmlproject.user.*
 
+# Intellij
+.idea/
+
 /build*/
