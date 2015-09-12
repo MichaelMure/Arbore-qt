@@ -15,6 +15,7 @@ Directory::Directory(const IpfsHash &hash, const QString &name)
     connect(reply, FileReply::finished, [reply, this]()
     {
         this->parse_file_reply(reply);
+        delete reply;
     });
 }
 

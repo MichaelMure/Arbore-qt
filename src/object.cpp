@@ -43,6 +43,7 @@ ObjectReply *Object::from_hash(const IpfsHash &hash)
         }
 
         emit result->finished();
+        delete reply;
     });
 
     return result;
