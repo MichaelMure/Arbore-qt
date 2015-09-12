@@ -181,6 +181,12 @@ Share* ShareRepository::build_share(QSqlQuery *q)
     share->state_         = (Share::ShareState) q->value("state").toInt();
 
     build_objects(share);
+
+    if(share->state_ == Share::DOWNLOADING)
+    {
+        share->trigger_download();
+    }
+
     return share;
 }
 
