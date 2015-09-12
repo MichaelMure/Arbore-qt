@@ -123,12 +123,12 @@ float Share::progress() const
     if(state_ == CREATING)
         return 0.0;
 
-    uint total = block_total();
+    uint total = size_total();
 
     if(total == 0)
         return 0.0;
 
-    return (float)block_local() / (float)total;
+    return (float)size_local() / (float)total;
 }
 
 uint Share::size_total() const
