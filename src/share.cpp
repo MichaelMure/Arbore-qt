@@ -17,8 +17,9 @@
  *
  * [*] -> CREATING
  * CREATING -> CREATING : add file/dir
- * CREATING -> DOWNLOAD_METADATA : download
- * DOWNLOAD_METADATA -> READY : dl metadata done
+ * CREATING -> DL_METADATA : download
+ * DL_METADATA -> READY : dl metadata done
+ * DL_METADATA -> WAITING_FOR_DL : start
  * READY -> DOWNLOAD : start
  * PAUSED -> DOWNLOAD : start
  * DOWNLOAD -> SHARING : ended
@@ -229,26 +230,24 @@ void Share::add_hash(const IpfsHash &hash)
         return;
     }
 
-    LsReply *reply = Ipfs::instance()->ls.ls(hash);
+    ObjectReply *reply = Object::from_hash(hash);
+    waiting_for_hash_ << hash;
 
-    connect(reply, &LsReply::finished, [reply, hash, this]()
+    connect(reply, &ObjectReply::finished, [reply, hash, this]()
     {
-        Object *obj;
-        if(reply->entries.count() == 0)
-        {
-            // no child objet, we have a file
-            obj = new File(hash);
-        }
-        else
-        {
-            // we have a directory
-            obj = new Directory(reply);
-        }
-
-        connect(obj, SIGNAL(localityChanged()),
+        connect(reply->object, SIGNAL(localityChanged()),
                 this, SLOT(objectChanged()));
 
-        this->objects_ << obj;
+        this->objects_ << reply->object;
+
+        waiting_for_hash_.remove(hash);
+
+        if(state_ == WAITING_FOR_DL && waiting_for_hash_.count() == 0)
+        {
+            trigger_download();
+        }
+
+        delete reply;
     });
 }
 
@@ -285,9 +284,20 @@ void Share::add_hash(const IpfsHash &hash, Object::ObjectType type)
             this, SLOT(objectChanged()));
 }
 
-void Share::download()
+void Share::start()
 {
-    // Todo
+    switch (state_)
+    {
+    case DL_METADATA:
+        state_ = WAITING_FOR_DL;
+        break;
+    case READY:
+    case PAUSED:
+        trigger_download();
+        break;
+    default:
+        break;
+    }
 }
 
 void Share::pause()
@@ -305,4 +315,10 @@ void Share::objectChanged()
 {
     emit dataChanged();
     emit shareChanged();
+}
+
+void Share::trigger_download()
+{
+    // Todo
+    state_ = DOWNLOADING;
 }

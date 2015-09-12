@@ -41,7 +41,6 @@ Share *ShareRepository::get(int id)
     }
 
     Share *share = build_share(&q);
-    build_objects(share);
 
     return share;
 }
@@ -60,11 +59,6 @@ QVector<Share *> ShareRepository::get_all()
     while(q.next())
     {
         list << build_share(&q);
-    }
-
-    foreach (Share *share, list)
-    {
-        build_objects(share);
     }
 
     return list;
@@ -186,6 +180,7 @@ Share* ShareRepository::build_share(QSqlQuery *q)
     share->starred_       = q->value("starred").toBool();
     share->state_         = (Share::ShareState) q->value("state").toInt();
 
+    build_objects(share);
     return share;
 }
 

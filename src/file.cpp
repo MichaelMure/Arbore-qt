@@ -1,7 +1,7 @@
 #include "file.h"
 
 #include "ipfs/ipfs.h"
-#include "ipfs/ipfsrefs.h"
+#include "ipfs/ipfsobject.h"
 
 #include <QDebug>
 
@@ -14,21 +14,21 @@ struct Block
 File::File(const IpfsHash &hash, const QString &name)
     : Object(hash, name), metadata_local_(false)
 {
+    // listen to ipfs refs signal to update the locality of blocks
     connect(&(Ipfs::instance()->refs), SIGNAL(objectAdded(IpfsHash)),
             this, SLOT(objectAdded(IpfsHash)));
     connect(&(Ipfs::instance()->refs), SIGNAL(objectRemoved(IpfsHash)),
             this, SLOT(objectRemoved(IpfsHash)));
 
-    RefsReply *reply = Ipfs::instance()->refs.recursive_refs(hash);
+    ObjectLinkReply *reply = Ipfs::instance()->object.links(hash);
 
-    connect(reply, &RefsReply::finished, [reply, hash, this]()
+    connect(reply, &ObjectLinkReply::finished, [reply, hash, this]()
     {
-        foreach (const IpfsHash* block_hash, reply->refs)
-        {
+        foreach (const ObjectLinkEntry* entry, reply->entries) {
             Block *block = new Block();
 
-            block->hash = *block_hash;
-            block->size = 1000; // TODO
+            block->hash = entry->hash();
+            block->size = entry->size();
 
             this->blocks_[block->hash] = block;
         }

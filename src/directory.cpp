@@ -1,7 +1,7 @@
 #include "directory.h"
 
 #include "ipfs/ipfs.h"
-#include "ipfs/ipfsls.h"
+#include "ipfs/ipfsfile.h"
 #include "file.h"
 #include "objectcache.h"
 
@@ -10,11 +10,11 @@
 Directory::Directory(const IpfsHash &hash, const QString &name)
     : Object(hash, name), metadata_local_(false)
 {
-    LsReply *reply = Ipfs::instance()->ls.ls(hash);
+    FileReply *reply = Ipfs::instance()->file.ls(hash);
 
-    connect(reply, &LsReply::finished, [reply, this]()
+    connect(reply, FileReply::finished, [reply, this]()
     {
-        this->parse_ls_reply(reply);
+        this->parse_file_reply(reply);
     });
 }
 
@@ -23,11 +23,12 @@ Directory::Directory(const QString &hash, const QString &name)
 {
 }
 
-Directory::Directory(const LsReply *reply, const QString &name)
-    : Object(reply->hash, name), metadata_local_(false)
+Directory::Directory(const FileReply *reply)
+    : Object(reply->hash), metadata_local_(false)
 {
-    this->parse_ls_reply(reply);
+    this->parse_file_reply(reply);
 }
+
 
 Directory::~Directory()
 {
@@ -47,8 +48,7 @@ uint Directory::size_total() const
     uint size = 0;
     for(QHash<IpfsHash, Child*>::const_iterator i = child_hashes_.constBegin(); i != child_hashes_.constEnd(); i++)
     {
-        // Not relying on children file/block size()
-        size += i.value()->size;
+        size += i.value()->object->size_total();
     }
     return size;
 }
@@ -122,14 +122,17 @@ const QHash<QString, Child *> &Directory::getChilds() const
     return this->child_names_;
 }
 
-void Directory::parse_ls_reply(const LsReply *reply)
+void Directory::parse_file_reply(const FileReply *reply)
 {
+    Q_ASSERT(reply->type == ObjectType::DIRECTORY);
+
     foreach (const LsEntry* entry, reply->entries)
     {
         Child *child = new Child();
 
-        child->hash = IpfsHash(entry->hash());
+        child->hash = entry->hash();
         child->name = entry->name();
+        child->size = entry->size();
 
         child->object = ObjectCache::instance()->get(child->hash);
 
@@ -156,6 +159,7 @@ void Directory::parse_ls_reply(const LsReply *reply)
         this->child_hashes_[child->hash] = child;
         this->child_names_[child->name] = child;
     }
+
     emit localityChanged();
     metadata_local_ = true;
 }

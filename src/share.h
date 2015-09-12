@@ -5,6 +5,8 @@
 #include <QDir>
 #include <QObject>
 #include <QString>
+#include <QSet>
+#include <QList>
 
 #include "object.h"
 
@@ -35,6 +37,7 @@ public:
         CREATING, // adding objects
         DL_METADATA,
         READY, // all metadata known
+        WAITING_FOR_DL,
         DOWNLOADING,
         PAUSED,
         SHARING,
@@ -147,7 +150,7 @@ public:
      * Trigger the full download
      */
     Q_INVOKABLE
-    void download();
+    void start();
 
     /**
      * Pause the download (invalid call when not in state DOWNLOADING)
@@ -170,6 +173,9 @@ private slots:
     void objectChanged();
 
 private:
+    void trigger_download();
+
+private:
     int id_;
     QString title_;
     QString description_;
@@ -177,6 +183,7 @@ private:
     QDateTime creation_date_;
     bool starred_;
     ShareState state_;
+    QSet<const IpfsHash> waiting_for_hash_;
     QList<Object*> objects_;
 };
 

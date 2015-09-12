@@ -6,7 +6,7 @@
 
 #include <QHash>
 
-class LsReply;
+class FileReply;
 
 struct Child
 {
@@ -22,7 +22,7 @@ class Directory : public Object
 public:
     Directory(const IpfsHash &hash, const QString &name = "");
     Directory(const QString &hash, const QString &name = "");
-    Directory(const LsReply *reply, const QString &name = "");
+    Directory(const FileReply *reply);
     virtual ~Directory();
 
 private:
@@ -43,7 +43,7 @@ public:
     const QHash<QString, Child *>& getChilds() const;
 
 private:
-    void parse_ls_reply(const LsReply *reply);
+    void parse_file_reply(const FileReply *reply);
 
 private:
     bool metadata_local_;

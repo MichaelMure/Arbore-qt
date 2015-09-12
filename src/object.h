@@ -4,6 +4,8 @@
 #include <QObject>
 #include "ipfs/ipfshash.h"
 
+class ObjectReply;
+
 /**
  * This class define an object (file/directory) in a Ipfs Dag.
  */
@@ -21,6 +23,16 @@ public:
     };
     static ObjectType decode_type(const QString &str);
 
+    /*
+     * Static constructor from a hash,
+     * request IPFS for data to instantiate the good concrete
+     * Object instance.
+     */
+    static ObjectReply* from_hash(const IpfsHash &hash);
+
+    /*
+     * Base constructor that implement automatic caching in ObjectCache.
+     */
     Object(const IpfsHash &hash, const QString &name = "");
     Object(const QString &hash, const QString &name = "");
     virtual ~Object() {}
@@ -89,6 +101,15 @@ signals:
 protected:
     const QString name_;
     const IpfsHash hash_;
+};
+
+class ObjectReply : public QObject
+{
+    Q_OBJECT
+signals:
+    void finished();
+public:
+    Object *object;
 };
 
 #endif // OBJECT_H

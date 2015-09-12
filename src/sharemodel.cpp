@@ -108,6 +108,7 @@ void ShareModel::addShare(QString hash)
     }
 
     addShare(share);
+    share->start();
 }
 
 Share *ShareModel::getShare(int index)
