@@ -36,6 +36,7 @@ private slots:
 
 private:
     bool metadata_local_;
+    uint root_block_size_;
     QHash<IpfsHash, Block*> blocks_;
 };
 

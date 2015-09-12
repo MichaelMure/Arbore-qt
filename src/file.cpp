@@ -12,7 +12,9 @@ struct Block
 };
 
 File::File(const IpfsHash &hash, const QString &name)
-    : Object(hash, name), metadata_local_(false)
+    : Object(hash, name),
+      metadata_local_(false),
+      root_block_size_(0)
 {
     // listen to ipfs refs signal to update the locality of blocks
     connect(&(Ipfs::instance()->refs), SIGNAL(objectAdded(IpfsHash)),
@@ -20,11 +22,18 @@ File::File(const IpfsHash &hash, const QString &name)
     connect(&(Ipfs::instance()->refs), SIGNAL(objectRemoved(IpfsHash)),
             this, SLOT(objectRemoved(IpfsHash)));
 
-    ObjectLinkReply *reply = Ipfs::instance()->object.links(hash);
-
-    connect(reply, &ObjectLinkReply::finished, [reply, hash, this]()
+    FileReply *flreply = Ipfs::instance()->file.ls(hash);
+    connect(flreply, &FileReply::finished, [flreply, this]()
     {
-        foreach (const ObjectLinkEntry* entry, reply->entries) {
+        this->root_block_size_ = flreply->size;
+
+        delete flreply;
+    });
+
+    ObjectLinkReply *olreply = Ipfs::instance()->object.links(hash);
+    connect(olreply, &ObjectLinkReply::finished, [olreply, hash, this]()
+    {
+        foreach (const ObjectLinkEntry* entry, olreply->entries) {
             Block *block = new Block();
 
             block->hash = entry->hash();
@@ -36,6 +45,8 @@ File::File(const IpfsHash &hash, const QString &name)
         metadata_local_ = true;
 
         emit localityChanged();
+
+        delete olreply;
     });
 }
 
@@ -59,7 +70,7 @@ Object::ObjectType File::type() const
 
 uint File::size_total() const
 {
-    uint size_total = 0;
+    uint size_total = root_block_size_;
     for(QHash<IpfsHash, Block*>::const_iterator i = blocks_.constBegin(); i != blocks_.constEnd(); i++)
     {
         size_total += i.value()->size;
@@ -69,7 +80,7 @@ uint File::size_total() const
 
 uint File::size_local() const
 {
-    uint size_local = 0;
+    uint size_local = root_block_size_;
     for(QHash<IpfsHash, Block*>::const_iterator i = blocks_.constBegin(); i != blocks_.constEnd(); i++)
     {
         if(Ipfs::instance()->refs.is_object_local(i.key()))
