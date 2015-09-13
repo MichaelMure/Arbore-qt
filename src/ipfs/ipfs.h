@@ -11,6 +11,7 @@
 #include "ipfs/ipfsobject.h"
 #include "ipfs/ipfspin.h"
 #include "ipfs/ipfsrefs.h"
+#include "ipfs/ipfsrepo.h"
 #include "ipfs/ipfsstats.h"
 #include "ipfs/ipfsswarm.h"
 #include "ipfs/ipfsversion.h"
@@ -54,6 +55,7 @@ public:
     IpfsObject object;
     IpfsPin pin;
     IpfsRefs refs;
+    IpfsRepo repo;
     IpfsStats stats;
     IpfsSwarm swarm;
     IpfsVersion version;

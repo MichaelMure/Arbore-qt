@@ -23,6 +23,7 @@ public:
 
     void add_pin(const IpfsHash &hash, bool recursive = false);
     void ls_pin(IpfsPinType pin_type = DIRECT);
+    void rm_pin(const IpfsHash &hash, bool recursive = false);
 };
 
 #endif // IPFSPIN_H

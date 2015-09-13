@@ -157,6 +157,11 @@ public:
     Q_INVOKABLE
     void pause();
 
+    /**
+     * Stop the download if any, remove the pin and clean the disk.
+     */
+    void remove();
+
 signals:
     /**
      * Emited when the metadata (title, description, ...) change

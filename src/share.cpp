@@ -13,7 +13,6 @@
 
 /*
  * PlanUML
- * @startuml
  *
  * @startuml
  * [*] --> CREATING
@@ -28,6 +27,7 @@
  * DOWNLOAD --> PAUSED : pause
  *
  * [*] --> SHARING : share
+ *
  * @enduml
  */
 
@@ -316,6 +316,23 @@ void Share::pause()
     // Todo
 }
 
+void Share::remove()
+{
+    if(state_ == DOWNLOADING)
+    {
+        pause();
+    }
+
+    for(QList<Object*>::const_iterator i = objects_.constBegin();
+        i != objects_.constEnd();
+        i++)
+    {
+        Ipfs::instance()->pin.rm_pin((*i)->hash(), true);
+    }
+
+    Ipfs::instance()->repo.gc();
+}
+
 void Share::set_title(const QString &title)
 {
     title_ = title;
@@ -348,6 +365,12 @@ void Share::objectChanged()
 
 void Share::trigger_download()
 {
-    // Todo
+    for(QList<Object*>::const_iterator i = objects_.constBegin();
+        i != objects_.constEnd();
+        i++)
+    {
+        Ipfs::instance()->pin.add_pin((*i)->hash(), true);
+    }
+
     state_ = DOWNLOADING;
 }

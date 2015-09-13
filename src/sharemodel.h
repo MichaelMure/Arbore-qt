@@ -43,6 +43,9 @@ public:
     Q_INVOKABLE
     Share* getShare(int index);
 
+    Q_INVOKABLE
+    void removeShare(int index);
+
 private:
     void addShare(Share *share);
 

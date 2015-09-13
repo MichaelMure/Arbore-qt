@@ -116,6 +116,12 @@ Share *ShareModel::getShare(int index)
     return shares_.at(index);
 }
 
+void ShareModel::removeShare(int index)
+{
+    Share *share = shares_.takeAt(index);
+    share->remove();
+}
+
 void ShareModel::addShare(Share *share)
 {
     beginInsertRows(QModelIndex(), shares_.size(), shares_.size());

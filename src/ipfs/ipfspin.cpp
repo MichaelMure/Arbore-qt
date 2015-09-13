@@ -49,3 +49,18 @@ void IpfsPin::ls_pin(IpfsPinType pin_type)
     url.setQuery(query);
     Ipfs::instance()->query(url);
 }
+
+void IpfsPin::rm_pin(const IpfsHash &hash, bool recursive)
+{
+    QUrl url = Ipfs::instance()->api_url(API_COMMAND + "/rm");
+    QUrlQuery query;
+
+    query.addQueryItem("arg", hash.ToString());
+
+    if(recursive)
+        query.addQueryItem("r", "true");
+
+    url.setQuery(query);
+
+    Ipfs::instance()->query(url);
+}
