@@ -12,7 +12,7 @@
 #include <QStringBuilder>
 
 /*
- * PlanUML
+ * PlantUML
  *
  * @startuml
  * [*] --> CREATING

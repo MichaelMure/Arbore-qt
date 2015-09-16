@@ -2,6 +2,7 @@
     <qresource prefix="/">
         <file>mainWindow.qml</file>
         <file>arbore.png</file>
+	<file>arboreTray.png</file>
         <file>plus.png</file>
         <file>MenuPanel.qml</file>
         <file>ShareList.qml</file>
