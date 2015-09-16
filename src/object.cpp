@@ -27,7 +27,7 @@ ObjectReply *Object::from_hash(const IpfsHash &hash)
 
     FileReply *reply = Ipfs::instance()->file.ls(hash);
 
-    connect(reply, FileReply::finished, [reply, result]()
+    connect(reply, &FileReply::finished, [reply, result]()
     {
         switch (reply->type) {
         case ObjectType::DIRECTORY:

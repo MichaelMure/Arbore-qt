@@ -12,7 +12,7 @@ Directory::Directory(const IpfsHash &hash, const QString &name)
 {
     FileReply *reply = Ipfs::instance()->file.ls(hash);
 
-    connect(reply, FileReply::finished, [reply, this]()
+    connect(reply, &FileReply::finished, [reply, this]()
     {
         this->parse_file_reply(reply);
         delete reply;

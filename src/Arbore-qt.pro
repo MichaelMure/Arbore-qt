@@ -1,10 +1,10 @@
-QT       += core network qml quick sql
+TEMPLATE += app
+QT       += core gui network qml quick sql widgets
 
 CONFIG += c++11
 CONFIG += debug_and_release
 
 TARGET = Arbore-qt
-TEMPLATE = app
 
 CXX = $$(CXX)
 if(!isEmpty(CXX)) {
