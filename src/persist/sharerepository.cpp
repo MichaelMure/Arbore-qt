@@ -178,9 +178,10 @@ Share* ShareRepository::build_share(QSqlQuery *q)
     share->path_          = QDir(q->value("path").toString());
     share->creation_date_.setTime_t(q->value("creation_date").toUInt());
     share->starred_       = q->value("starred").toBool();
-    share->state_         = (Share::ShareState) q->value("state").toInt();
 
     build_objects(share);
+
+    share->state_         = (Share::ShareState) q->value("state").toInt();
 
     if(share->state_ == Share::DOWNLOADING)
     {
