@@ -1,7 +1,9 @@
 ![Arbore](https://raw.githubusercontent.com/MichaelMure/Arbore-qt/master/resources/logo/arbore-prelogo.png)
 
 Here shall appear a friend-to-friend filesharing app with the following caracteristics:
-- targeted for private/low diffusion data between people that know each-others. Main use case: friends want to share between each-others their holidays pictures.
+- targeted for private/low diffusion data between people that know
+  each-others. Main use case: friends want to share between
+  each-others their holidays pictures.
 - low friction: it should be as easy as possible
 - encryption should be used to maintain privacy and to control the diffusion of the data
 
@@ -37,6 +39,22 @@ In order to run in debug mode
 
 	$ cd src/build
 	$ make debug
+
+## Doxygen & UML diagrams
+
+### On Debian like
+
+#### Dependencies
+    # apt-get install doxygen plantuml
+
+#### Build the documentation
+
+     $ cd doc
+     $ make
+
+#### See the doxygen documentation
+
+     $ make open
 
 ## How to help
 

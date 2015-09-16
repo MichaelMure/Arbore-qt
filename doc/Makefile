@@ -9,8 +9,11 @@ build/html/index.html:$(source_files) Makefile Doxyfile
 html:build/html/index.html
 
 .PHONY:doc
-doc:html
+doc:html uml
 
+.PHONY:uml
+uml:
+	plantuml $(source_files) -o ../doc/build/uml/
 .PHONY:clean
 clean:
 	rm -r build
