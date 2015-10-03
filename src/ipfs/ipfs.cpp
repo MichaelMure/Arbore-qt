@@ -10,6 +10,8 @@
 #include <QUrl>
 #include <QProcess>
 #include <QRegExp>
+#include <QStandardPaths>
+#include <QDir>
 
 #include "directory.h"
 
@@ -17,17 +19,10 @@
  * PlanUML
  * @startuml
  *
- * [*] --> PING_DAEMON
- * PING_DAEMON --> LAUNCH_DAEMON : query nok
- * PING_DAEMON --> RUNNING_SYSTEM : query ok
- * LAUNCH_DAEMON --> RUNNING_EMBED : read stdin
- * RUNNING_SYSTEM --> PING_DAEMON : unreachable
- * RUNNING_EMBED --> PING_DAEMON : crash
- * LAUNCH_DAEMON --> LAUNCH_DAEMON : timer
- * PING_DAEMON --> QUITTING
- * LAUNCH_DAEMON --> QUITTING
- * RUNNING_SYSTEM --> QUITTING
- * RUNNING_EMBED --> QUITTING
+ * [*] --> LAUNCH_DAEMON
+ * LAUNCH_DAEMON --> RUNNING : read stdin
+ * RUNNING --> LAUNCH_DAEMON : crash
+ * RUNNING --> QUITTING
  *
  * @enduml
  */
@@ -36,27 +31,19 @@ Q_GLOBAL_STATIC(Ipfs, singleton)
 
 enum IpfsState : short
 {
-    PING_DAEMON,
     LAUNCH_DAEMON,
-    RUNNING_SYSTEM,
-    RUNNING_EMBED,
+    RUNNING,
     QUITTING
 };
 
 Ipfs::Ipfs()
-    : stats(),
-      state_(PING_DAEMON),
-      manager_(NULL),
+    : state_(LAUNCH_DAEMON),
+      manager_(new QNetworkAccessManager()),
       daemon_process_(NULL),
       api_ip_("127.0.0.1"),
       api_port_("5001")
 {
-    manager_ = new QNetworkAccessManager();
-    daemon_process_ = NULL;
-
-    // Ping the HTTP API to find out if a daemon is running
-    state_ = PING_DAEMON;
-    ping_daemon();
+    launch_daemon();
 }
 
 Ipfs::~Ipfs()
@@ -101,7 +88,7 @@ IpfsAccess *Ipfs::query(const QUrl &url)
 
 bool Ipfs::online() const
 {
-    return state_ == RUNNING_EMBED || state_ == RUNNING_SYSTEM;
+    return state_ == RUNNING;
 }
 
 void Ipfs::init_commands()
@@ -113,55 +100,38 @@ void Ipfs::init_commands()
     version.init();
 }
 
-void Ipfs::ping_daemon()
-{
-    QUrl url = api_url("version");
-    QNetworkRequest request = QNetworkRequest(url);
-    QNetworkReply *reply = manager_->get(request);
-
-    connect(reply, &QNetworkReply::finished,
-            this, [this, reply]()
-    {
-        if(state_ == PING_DAEMON)
-        {
-            if(reply->error())
-            {
-                qDebug() << "Could not ping the API, lauching daemon manually";
-                launch_daemon();
-                reply->deleteLater();
-                return;
-            }
-
-            QString str = reply->readAll();
-            QJsonParseError error;
-            QJsonDocument doc = QJsonDocument::fromJson(str.toUtf8(), &error);
-
-            if(error.error != QJsonParseError::NoError)
-            {
-                qDebug() << "Error while pinging the API, lauching daemon manually";
-                launch_daemon();
-                return;
-            }
-
-            QJsonValue value = doc.object().value("Version");
-            if(value == QJsonValue::Undefined)
-            {
-                qDebug() << "Unparsable json from API pinging, lauching daemon manually";
-                launch_daemon();
-                return;
-            }
-
-            // Daemon API should be OK at this point !
-            state_ = RUNNING_SYSTEM;
-            on_online();
-        }
-
-        reply->deleteLater();
-    });
-}
-
 void Ipfs::launch_daemon()
 {
+    state_ = LAUNCH_DAEMON;
+
+    // Add a custom repo location
+    QDir dir(QStandardPaths::writableLocation(QStandardPaths::DataLocation) + "/repo");
+
+    qDebug() << "Repo path: " << dir.absolutePath();
+
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    env.insert("IPFS_PATH", dir.absolutePath());
+
+    if(!dir.exists())
+    {
+        dir.mkpath(".");
+
+        // ipfs should be in the PATH
+        QProcess process;
+        process.setProcessEnvironment(env);
+        process.start("ipfs", QStringList() << "init");
+        process.waitForFinished();
+
+        qDebug() << "Repo initialized";
+    }
+
+    QProcess process;
+    process.setProcessEnvironment(env);
+    process.start("ipfs", QStringList() << "config" << "Addresses.API" << "/ip4/127.0.0.1/tcp/4280");
+    process.waitForFinished();
+    api_port_ = "4280";
+    qDebug() << "Http API set to /ip4/127.0.0.1/tcp/4280";
+
     daemon_process_ = new QProcess(this);
 
     connect(daemon_process_, SIGNAL(started()),
@@ -170,16 +140,12 @@ void Ipfs::launch_daemon()
             this, SLOT(daemon_error(QProcess::ProcessError)));
     connect(daemon_process_, SIGNAL(finished(int,QProcess::ExitStatus)),
             this, SLOT(daemon_finished(int,QProcess::ExitStatus)));
-
-    timer_id_ = startTimer(1000); // 1s
+    connect(daemon_process_, SIGNAL(readyRead()),
+            this, SLOT(daemon_stdout()));
 
     // ipfs should be in the PATH
-    QStringList args;
-    args << "daemon";
-    args << "--init";
-    daemon_process_->start(QString("ipfs"), args);
-
-    state_ = LAUNCH_DAEMON;
+    daemon_process_->setProcessEnvironment(env);
+    daemon_process_->start("ipfs", QStringList() << "daemon");
 }
 
 void Ipfs::launch_access(IpfsAccess *access)
@@ -195,10 +161,9 @@ void Ipfs::launch_access(IpfsAccess *access)
             qDebug() << "http error: " << access->reply->errorString() << endl;
             qDebug() << "request: " << access->request->url() << endl;
 
-            if(this->state_ == RUNNING_SYSTEM)
+            if(this->state_ == RUNNING)
             {
-                this->state_ = PING_DAEMON;
-                this->ping_daemon();
+                // TODO: restart process
             }
 
             delete access;
@@ -231,10 +196,9 @@ void Ipfs::daemon_started()
 void Ipfs::daemon_error(QProcess::ProcessError error)
 {
     qDebug() << "daemon error " << error;
-    if(state_ == RUNNING_EMBED && daemon_process_->state() == QProcess::NotRunning)
+    if(state_ == RUNNING && daemon_process_->state() == QProcess::NotRunning)
     {
-        state_ = PING_DAEMON;
-        ping_daemon();
+        // TODO: restart process
     }
 }
 
@@ -243,33 +207,27 @@ void Ipfs::daemon_finished(int exit_code, QProcess::ExitStatus exit_status)
     qDebug() << "daemon finished exit code: " << exit_code
              << "exit status: " << exit_status;
 
-    if(state_ == RUNNING_EMBED && daemon_process_->state() == QProcess::NotRunning)
+    if(state_ == RUNNING && daemon_process_->state() == QProcess::NotRunning)
     {
-        state_ = PING_DAEMON;
-        ping_daemon();
+        // TODO: restart process
     }
 }
 
-void Ipfs::timerEvent(QTimerEvent *)
+void Ipfs::daemon_stdout()
 {
+    QByteArray stdout_ = daemon_process_->readAllStandardOutput();
+
     if(state_ == LAUNCH_DAEMON)
     {
-        QByteArray stdout_ = daemon_process_->readAllStandardOutput();
-        QRegExp regex = QRegExp("API server listening on \\/([^\\/]+)\\/([^\\/]+)\\/([^\\/]+)\\/([^\\/]+)\\n");
-
-        int index = regex.indexIn(stdout_);
-        if(index >= 0)
+        QRegExp regex("Daemon is ready");
+        if(regex.indexIn(stdout_) >= 0)
         {
-            //QString network = regex.cap(1);
-            api_ip_ = regex.cap(2);
-            //QString transport = regex.cap(3);
-            api_port_ = regex.cap(4);
-
-            killTimer(timer_id_);
-            state_ = RUNNING_EMBED;
+            state_ = RUNNING;
             on_online();
         }
     }
+
+    qDebug() << stdout_;
 }
 
 IpfsAccess::~IpfsAccess()

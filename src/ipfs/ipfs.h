@@ -78,7 +78,6 @@ public:
 
 private:
     void init_commands();
-    void ping_daemon();
     void launch_daemon();
     void launch_access(IpfsAccess* access);
     void on_online();
@@ -87,6 +86,7 @@ private slots:
     void daemon_started();
     void daemon_error(QProcess::ProcessError error);
     void daemon_finished(int exit_code, QProcess::ExitStatus exit_status);
+    void daemon_stdout();
 
 private:
     IpfsState state_;
@@ -94,12 +94,7 @@ private:
     QProcess *daemon_process_;
     QString api_ip_;
     QString api_port_;
-    int timer_id_;
     QQueue<IpfsAccess*> access_buffer_;
-
-    // QObject interface
-protected:
-    void timerEvent(QTimerEvent *);
 };
 
 #endif // IPFS_H
