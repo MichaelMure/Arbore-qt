@@ -7,6 +7,7 @@
 #include "ipfs/ipfsget.h"
 #include "ipfs/ipfsfile.h"
 #include "ipfs/ipfsid.h"
+#include "ipfs/ipfslog.h"
 #include "ipfs/ipfsls.h"
 #include "ipfs/ipfsobject.h"
 #include "ipfs/ipfspin.h"
@@ -51,6 +52,7 @@ public:
     IpfsFile file;
     IpfsGet get;
     IpfsId id;
+    IpfsLog log;
     IpfsLs ls;
     IpfsObject object;
     IpfsPin pin;

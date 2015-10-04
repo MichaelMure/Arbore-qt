@@ -44,7 +44,8 @@ SOURCES += main.cpp\
     sharefilter.cpp \
     ipfs/ipfsobject.cpp \
     ipfs/ipfsfile.cpp \
-    ipfs/ipfsrepo.cpp
+    ipfs/ipfsrepo.cpp \
+    ipfs/ipfslog.cpp
 
 HEADERS  += \
     ipfs/ipfs.h \
@@ -70,7 +71,8 @@ HEADERS  += \
     sharefilter.h \
     ipfs/ipfsobject.h \
     ipfs/ipfsfile.h \
-    ipfs/ipfsrepo.h
+    ipfs/ipfsrepo.h \
+    ipfs/ipfslog.h
 
 RESOURCES += ui/resources.qrc
 
