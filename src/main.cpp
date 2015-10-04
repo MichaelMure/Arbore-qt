@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
   
     // We don't want to close the program when the main window is
     // closed
-    app.setQuitOnLastWindowClosed(false);
+    //app.setQuitOnLastWindowClosed(false);
       
     qmlRegisterType<Share>("Arbore", 1, 0, "Share");
   
@@ -28,15 +28,15 @@ int main(int argc, char *argv[])
     engine.load(QUrl(QStringLiteral("qrc:/mainWindow.qml")));
     QObject *root = 0;
     if (engine.rootObjects().size() > 0)
-      {
-          root = engine.rootObjects().at(0);
-          if (QSystemTrayIcon::isSystemTrayAvailable())
-	    {
-	        QSystemTrayIcon *trayIcon = new QSystemTrayIcon(root);
-	        trayIcon->setIcon(QIcon(":/arboreTray.png"));
-	        trayIcon->show();
-	    }
-      }
+    {
+        root = engine.rootObjects().at(0);
+        if (QSystemTrayIcon::isSystemTrayAvailable())
+        {
+//            QSystemTrayIcon *trayIcon = new QSystemTrayIcon(root);
+//            trayIcon->setIcon(QIcon(":/arboreTray.png"));
+//            trayIcon->show();
+        }
+    }
       
     return app.exec();
 }
