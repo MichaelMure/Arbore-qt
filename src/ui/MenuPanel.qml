@@ -2,28 +2,38 @@ import QtQuick 2.0
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.0
 
-Item {
+Rectangle {
+    color: "#7b7c7e"
+
     ListView {
-        id: shareList
-        width: 400
-        height: 400
-        anchors.rightMargin: 0
-        anchors.bottomMargin: 0
-        anchors.leftMargin: 0
-        anchors.topMargin: 0
-        spacing: 10
+        id: menuList
+        interactive: false
         anchors.fill: parent
 
         highlight: Rectangle {
-            color: "lightsteelblue";
-            radius: 5
-            anchors.leftMargin: 30
+            color: "#7b7c7e"
+
+            Rectangle {
+                id: rectangle1
+                color: "#4b4b4d"
+                anchors.fill: parent
+                anchors.leftMargin: 40
+
+                Rectangle {
+                    width: parent.height
+                    height: parent.height
+                    color: "#4b4b4d"
+                    radius: 25
+                    z: -1
+                    anchors.horizontalCenter: parent.left
+                }
+            }
         }
         focus: true
 
         model: ListModel {
             ListElement {
-                name: "News"
+                name: "Share list"
                 element: 3
                 filter: "blah"
             }
@@ -34,51 +44,67 @@ Item {
             }
             ListElement {
                 name: "My shares"
+                element: 3
+                filter: "blah"
+            }
+            ListElement {
+                name: "Active shares"
+                element: 4
+                filter: "bluh"
+            }
+            ListElement {
+                name: "Starred"
                 element: 4
                 filter: "bluh"
             }
         }
 
         delegate: Text {
-                id: menuLabel
-                text: name
-                font.pointSize: 15
-                anchors.left: parent.left
-                anchors.leftMargin: 30
-                horizontalAlignment: Text.AlignLeft
-                verticalAlignment: Text.AlignVCenter
+            id: menuLabel
+            width: parent.width
+            height: 36
+            font.pointSize: 15
+            horizontalAlignment: Text.AlignLeft
+            verticalAlignment: Text.AlignVCenter
 
-                MouseArea {
-                    anchors.fill: parent;
-                    onClicked: {
-                        // Todo something with filter
-                    }
+            MouseArea {
+                anchors.fill: parent;
+                onClicked: {
+                    menuList.currentIndex = index;
+                    // Todo something with filter
                 }
+            }
 
+            Row {
+                id: row1
+                spacing: 5
                 Image {
+                    id: icon
                     fillMode: Image.PreserveAspectFit
                     source: "plus.png"
-                    anchors.left: parent.left
-                    anchors.leftMargin: -30
-                    anchors.top: parent.top
-                    anchors.bottom: parent.bottom
                 }
 
                 Text {
-                    anchors.left: parent.right
-                    anchors.leftMargin: 5
-                    text: element
+                    id: text
+                    text: name
+                    anchors.verticalCenter: parent.verticalCenter
+                    font.family: "Courier"
                     font.pointSize: 15
-                    horizontalAlignment: Text.AlignLeft
-                    verticalAlignment: Text.AlignVCenter
+
+                }
+
+                Text {
+                    text: element
+                    anchors.verticalCenter: parent.verticalCenter
 
                     Rectangle {
+                        color: '#fa4f00'
+                        radius: 12
                         anchors.fill: parent
-                        color: "blue"
-                        radius: 9
                         z: -1
                     }
                 }
+            }
         }
     }
 }

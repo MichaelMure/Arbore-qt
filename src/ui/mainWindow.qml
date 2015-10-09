@@ -8,6 +8,7 @@ ApplicationWindow {
     visible: true
     width: 1047
     height: 480
+    color: "#4b4b4d"
 
     property ShareList list: list
     property ShareDetails details: details
@@ -15,7 +16,7 @@ ApplicationWindow {
     Rectangle {
         id: topBar
         height: 40
-        color: "#a51e9e"
+        color: "#4b4b4d"
         anchors.right: parent.right
         anchors.rightMargin: 0
         anchors.left: parent.left

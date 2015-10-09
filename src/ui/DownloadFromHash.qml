@@ -23,7 +23,7 @@ Item {
             anchors.right: parent.right
             anchors.rightMargin: 20
             anchors.left: parent.left
-            anchors.leftMargin: 20
+            anchors.leftMargin: 13
             anchors.top: parent.top
             anchors.topMargin: 20
             placeholderText: qsTr("hash")
