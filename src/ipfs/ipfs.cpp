@@ -112,6 +112,7 @@ void Ipfs::launch_daemon()
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("IPFS_PATH", dir.absolutePath());
 
+    // Initialize the repo if needed
     if(!dir.exists())
     {
         dir.mkpath(".");
@@ -125,12 +126,25 @@ void Ipfs::launch_daemon()
         qDebug() << "Repo initialized";
     }
 
+    // Configure the HTTP API addresse
     QProcess process;
     process.setProcessEnvironment(env);
     process.start("ipfs", QStringList() << "config" << "Addresses.API" << "/ip4/127.0.0.1/tcp/4280");
     process.waitForFinished();
     api_port_ = "4280";
-    qDebug() << "Http API set to /ip4/127.0.0.1/tcp/4280";
+    qDebug() << "HTTP API set to /ip4/127.0.0.1/tcp/4280";
+
+    // Configure the various log level we need
+    process.start("ipfs", QStringList() << "log" << "level" << "all" << "panic");
+    process.waitForFinished();
+
+    process.start("ipfs", QStringList() << "log" << "level" << "all" << "panic");
+    process.waitForFinished();
+
+    process.start("ipfs", QStringList() << "log" << "level" << "all" << "panic");
+    process.waitForFinished();
+
+
 
     daemon_process_ = new QProcess(this);
 

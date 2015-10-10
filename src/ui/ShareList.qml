@@ -34,23 +34,21 @@ Item {
 
     ListView {
         id: shareList
-        anchors.right: parent.right
-        anchors.rightMargin: 0
-        anchors.left: parent.left
-        anchors.leftMargin: 0
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0
         anchors.top: search.bottom
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
         anchors.topMargin: 5
 
-        highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
         focus: true
 
         model: shareModel
 
         delegate: Item {
-            height: 81
+            id: item1
             width: parent.width
+            height: 90
+
             MouseArea {
                 anchors.fill: parent;
                 onClicked: {
@@ -59,30 +57,61 @@ Item {
                 }
             }
 
+            Rectangle {
+                anchors.fill: parent
+                anchors.leftMargin: 8
+                anchors.rightMargin: 8
+                anchors.topMargin: 2
+                anchors.bottomMargin: 2
+                z: -1
+                color: shareList.currentIndex == index ? "white" : "#7b7c7e"
+                radius: 5
+            }
+
             Image {
-                id: image1
-                width: 65
-                height: 65
+                id: contactIcon
+                width: 35
+                height: 35
                 anchors.left: parent.left
                 anchors.leftMargin: 8
                 anchors.top: parent.top
                 anchors.topMargin: 8
                 fillMode: Image.PreserveAspectFit
-                source: "contactIcon.png"
+                source: "images/contactIcon.png"
             }
 
             Text {
-                id: text1
-                height: 36
+                id: contactName
+                height: 18
                 text: name
+                color: shareList.currentIndex == index ? "#7b7c7e" : "white"
                 wrapMode: Text.WordWrap
                 anchors.right: parent.right
                 anchors.rightMargin: 8
                 anchors.top: parent.top
                 anchors.topMargin: 8
-                anchors.left: image1.right
+                anchors.left: contactIcon.right
                 anchors.leftMargin: 8
                 font.pixelSize: 12
+            }
+
+            ProgressBar {
+                y: 73
+                height: 5
+                anchors.right: parent.right
+                anchors.rightMargin: 5
+                anchors.left: parent.left
+                anchors.leftMargin: 5
+                style: ProgressBarStyle {
+                    background: Rectangle {
+                        radius: 5
+                        color: "#b0b2b3"
+                    }
+                    progress: Rectangle {
+                        radius: 5
+                        color: "#fa4c00"
+                    }
+                }
             }
         }
     }

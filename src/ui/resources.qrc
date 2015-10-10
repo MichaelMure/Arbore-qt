@@ -1,15 +1,23 @@
 <RCC>
     <qresource prefix="/">
         <file>mainWindow.qml</file>
-        <file>arbore.png</file>
-        <file>arboreTray.png</file>
-        <file>plus.png</file>
         <file>MenuPanel.qml</file>
         <file>ShareList.qml</file>
-        <file>contactIcon.png</file>
         <file>ShareDetails.qml</file>
         <file>AddShare.qml</file>
         <file>TextAreaPlaceholder.qml</file>
         <file>DownloadFromHash.qml</file>
+    </qresource>
+    <qresource prefix="/fonts">
+        <file alias="Raleway-Black-Italic.ttf">fonts/Raleway-Black-Italic.ttf</file>
+        <file alias="Raleway-Black.ttf">fonts/Raleway-Black.ttf</file>
+        <file alias="Raleway-Regular-Italic.ttf">fonts/Raleway-Regular-Italic.ttf</file>
+        <file alias="Raleway-Regular.ttf">fonts/Raleway-Regular.ttf</file>
+    </qresource>
+    <qresource prefix="/images">
+        <file alias="arbore.png">arbore.png</file>
+        <file alias="arboreTray.png">arboreTray.png</file>
+        <file alias="plus.png">plus.png</file>
+        <file alias="contactIcon.png">contactIcon.png</file>
     </qresource>
 </RCC>

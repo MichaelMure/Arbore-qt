@@ -27,7 +27,7 @@ ApplicationWindow {
         Button {
             id: share
             text: qsTr("Share")
-            iconSource: "plus.png"
+            iconSource: "images/plus.png"
             anchors.left: parent.left;
             anchors.leftMargin: 10
             anchors.bottom: parent.bottom
@@ -61,7 +61,7 @@ ApplicationWindow {
             anchors.bottomMargin: 5
             anchors.right: parent.right
             anchors.rightMargin: 5
-            source: "arbore.png"
+            source: "images/arbore.png"
         }
     }
 
@@ -100,5 +100,25 @@ ApplicationWindow {
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
         visible: false
+    }
+
+    FontLoader {
+        id: ralewayblack
+        source: "qrc:/fonts/Raleway-Black.ttf"
+    }
+
+    FontLoader {
+        id: ralewayblackitalic
+        source: "qrc:/fonts/Raleway-Black-Italic.ttf"
+    }
+
+    FontLoader {
+        id: ralewayregular
+        source: "qrc:/fonts/Raleway-Regular.ttf"
+    }
+
+    FontLoader {
+        id: ralewayregularitalic
+        source: "qrc:/fonts/Raleway-Regular-Italic.ttf"
     }
 }

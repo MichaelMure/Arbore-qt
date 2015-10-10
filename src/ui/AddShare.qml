@@ -31,7 +31,7 @@ Item {
                     anchors.leftMargin: 8
                     sourceSize.height: 24
                     sourceSize.width: 24
-                    source: "contactIcon.png"
+                    source: "images/contactIcon.png"
                     Layout.alignment: Qt.AlignLeft
                 }
 
