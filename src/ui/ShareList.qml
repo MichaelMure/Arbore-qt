@@ -98,6 +98,7 @@ Item {
             ProgressBar {
                 y: 73
                 height: 5
+                value: progress
                 anchors.right: parent.right
                 anchors.rightMargin: 5
                 anchors.left: parent.left
