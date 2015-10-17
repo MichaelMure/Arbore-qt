@@ -7,7 +7,6 @@
         <file>AddShare.qml</file>
         <file>TextAreaPlaceholder.qml</file>
         <file>DownloadFromHash.qml</file>
-        <file>ScaledImage.qml</file>
     </qresource>
     <qresource prefix="/fonts">
         <file alias="Raleway-Black-Italic.ttf">fonts/Raleway-Black-Italic.ttf</file>
