@@ -77,7 +77,7 @@ Item {
                 anchors.top: parent.top
                 anchors.topMargin: 8
                 fillMode: Image.PreserveAspectFit
-                source: "images/contactIcon.png"
+                source: "images/bonhomme"
             }
 
             Text {

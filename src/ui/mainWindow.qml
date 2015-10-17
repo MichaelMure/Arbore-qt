@@ -27,7 +27,7 @@ ApplicationWindow {
         Button {
             id: share
             text: qsTr("Share")
-            iconSource: "images/plus.png"
+            iconSource: "images/plus"
             anchors.left: parent.left;
             anchors.leftMargin: 10
             anchors.bottom: parent.bottom
@@ -61,7 +61,7 @@ ApplicationWindow {
             anchors.bottomMargin: 5
             anchors.right: parent.right
             anchors.rightMargin: 5
-            source: "images/arbore.png"
+            source: "images/arbore"
         }
     }
 

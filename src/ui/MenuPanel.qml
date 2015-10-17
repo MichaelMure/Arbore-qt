@@ -35,25 +35,30 @@ Rectangle {
         model: ListModel {
             ListElement {
                 name: "Share list"
+                image: "qrc:/images/dl"
                 element: 3
                 filter: "blah"
             }
             ListElement {
                 name: "Inbox"
+                image: "qrc:/images/inbox"
                 element: 8
                 filter: "bloh"
             }
             ListElement {
                 name: "My shares"
+                image: "qrc:/images/ul"
                 element: 3
                 filter: "blah"
             }
             ListElement {
                 name: "Active shares"
+                image: "qrc:/images/infos"
                 filter: "bluh"
             }
             ListElement {
                 name: "Starred"
+                image: "qrc:/images/fav"
                 filter: "bluh"
             }
         }
@@ -78,20 +83,21 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.leftMargin: 20
                 spacing: 10
+
                 Image {
                     id: icon
-                    fillMode: Image.PreserveAspectFit
-                    source: "images/plus.png"
+                    width: 30
+                    height: 30
+                    source: image
                 }
 
                 Text {
                     text: name
-                    font.bold: true
+                    font.weight: Font.Normal
                     font.family: ralewayblack.name
                     font.pointSize: 12
                     anchors.verticalCenter: parent.verticalCenter
                 }
-
 
                 Text {
                     color: "#ffffff"

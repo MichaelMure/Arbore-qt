@@ -7,6 +7,7 @@
         <file>AddShare.qml</file>
         <file>TextAreaPlaceholder.qml</file>
         <file>DownloadFromHash.qml</file>
+        <file>ScaledImage.qml</file>
     </qresource>
     <qresource prefix="/fonts">
         <file alias="Raleway-Black-Italic.ttf">fonts/Raleway-Black-Italic.ttf</file>
@@ -15,9 +16,20 @@
         <file alias="Raleway-Regular.ttf">fonts/Raleway-Regular.ttf</file>
     </qresource>
     <qresource prefix="/images">
-        <file alias="arbore.png">arbore.png</file>
-        <file alias="arboreTray.png">arboreTray.png</file>
-        <file alias="plus.png">plus.png</file>
-        <file alias="contactIcon.png">contactIcon.png</file>
+        <file alias="arbore">images/arbore.png</file>
+        <file alias="arboreTray">images/arboreTray.png</file>
+        <file alias="plus">images/plus.png</file>
+        <file alias="dl">images/apicto-dl.svg</file>
+        <file alias="dled">images/apicto-dled.svg</file>
+        <file alias="dling">images/apicto-dling.svg</file>
+        <file alias="dlit">images/apicto-dlit.svg</file>
+        <file alias="dlul">images/apicto-dlul.svg</file>
+        <file alias="fav">images/apicto-fav.svg</file>
+        <file alias="inbox">images/apicto-inbox.svg</file>
+        <file alias="infos">images/apicto-infos.svg</file>
+        <file alias="ul">images/apicto-ul.svg</file>
+        <file alias="uling">images/apicto-uling.svg</file>
+        <file alias="virtualfolder">images/apicto-virtualfolder.svg</file>
+        <file alias="bonhomme">images/apicto-bonhomme.svg</file>
     </qresource>
 </RCC>
