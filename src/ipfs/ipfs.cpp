@@ -40,6 +40,8 @@ Ipfs::Ipfs()
     : state_(LAUNCH_DAEMON),
       manager_(new QNetworkAccessManager()),
       daemon_process_(NULL),
+      cli_process_(NULL),
+      stdout_(NULL),
       api_ip_("127.0.0.1"),
       api_port_("5001")
 {
@@ -106,35 +108,34 @@ void Ipfs::launch_daemon()
 
     // Add a custom repo location
     QDir dir(QStandardPaths::writableLocation(QStandardPaths::DataLocation) + "/repo");
-
     qDebug() << "Repo path: " << dir.absolutePath();
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("IPFS_PATH", dir.absolutePath());
 
-    // ipfs should be in the PATH
-    QProcess process;
-    process.setProcessEnvironment(env);
+    if(cli_process_ == NULL)
+    {
+        cli_process_ = new QProcess();
+        cli_process_->setProcessEnvironment(env);
+    }
 
     // Initialize the repo if needed
     if(!dir.exists())
     {
         dir.mkpath(".");
-        process.start("ipfs", QStringList() << "init");
-        process.waitForFinished(-1);
+
+        // ipfs should be in the PATH
+        cli_process_->start("ipfs", QStringList() << "init");
+        cli_process_->waitForFinished();
 
         qDebug() << "Repo initialized";
     }
 
     // Configure the HTTP API addresse
-    process.start("ipfs", QStringList() << "config" << "Addresses.API" << "/ip4/127.0.0.1/tcp/4280");
-    process.waitForFinished();
+    cli_process_->start("ipfs", QStringList() << "config" << "Addresses.API" << "/ip4/127.0.0.1/tcp/4280");
+    cli_process_->waitForFinished();
     api_port_ = "4280";
     qDebug() << "HTTP API set to /ip4/127.0.0.1/tcp/4280";
-
-    // Configure the various log level we need
-    process.start("ipfs", QStringList() << "log" << "level" << "all" << "info");
-    process.waitForFinished();
 
     daemon_process_ = new QProcess(this);
 
@@ -150,6 +151,7 @@ void Ipfs::launch_daemon()
     // ipfs should be in the PATH
     daemon_process_->setProcessEnvironment(env);
     daemon_process_->start("ipfs", QStringList() << "daemon");
+    stdout_ = new QTextStream(daemon_process_);
 }
 
 void Ipfs::launch_access(IpfsAccess *access)
@@ -184,6 +186,10 @@ void Ipfs::launch_access(IpfsAccess *access)
 
 void Ipfs::on_online()
 {
+    // Configure the various log level we need
+    cli_process_->start("ipfs", QStringList() << "log" << "level" << "all" << "debug");
+    cli_process_->waitForFinished();
+
     init_commands();
 
     while(!access_buffer_.empty())
@@ -219,19 +225,38 @@ void Ipfs::daemon_finished(int exit_code, QProcess::ExitStatus exit_status)
 
 void Ipfs::daemon_stdout()
 {
-    QByteArray stdout_ = daemon_process_->readAllStandardOutput();
-
-    if(state_ == LAUNCH_DAEMON)
+    while (!stdout_->atEnd())
     {
-        QRegExp regex("Daemon is ready");
-        if(regex.indexIn(stdout_) >= 0)
+        QString line = stdout_->readLine();
+
+        qDebug() << line;
+
+        if(state_ == LAUNCH_DAEMON)
         {
-            state_ = RUNNING;
-            on_online();
+            QRegExp regex("^Daemon is ready$");
+            if(regex.indexIn(line) >= 0)
+            {
+                state_ = RUNNING;
+                on_online();
+            }
+        }
+
+        // INFO[21:32:55:000] Added block QmR4e8BQXd18GeN5SRUCLByH6DYhEw7xfRtEGHhJqJQtvb  module=blockstore
+        QRegExp added("^.*Added block ([a-zA-Z0-9]*)  module=blockstore$");
+        if(added.indexIn(line) >= 0)
+        {
+            QString hash = added.cap(0);
+            qDebug() << hash;
+        }
+
+        // INFO[21:32:51:000] Removed block QmWogaMJxc7wKjT28W6GvgQC3zGDyiLoADuV2BXWDvkt3W  module=blockstore
+        QRegExp removed("^.*Removed block ([a-zA-Z0-9]*)  module=blockstore$");
+        if(removed.indexIn(line) >= 0)
+        {
+            QString hash = removed.cap(0);
+            qDebug() << hash;
         }
     }
-
-    qDebug() << stdout_;
 }
 
 IpfsAccess::~IpfsAccess()
