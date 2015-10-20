@@ -15,10 +15,12 @@ bool ShareFilter::filterAcceptsRow(int sourceRow, const QModelIndex& sourceParen
 {
     QModelIndex childIndex = sourceModel()->index(sourceRow, 0, sourceParent);
     QString shareName = childIndex.model()->data(childIndex, ShareModel::NameRole).value<QString>();
+    Share::ShareState state = childIndex.model()->data(childIndex, ShareModel::StateRole).value<Share::ShareState>();
 
     QRegExp regExp = filterRegExp();
     regExp.setCaseSensitivity(Qt::CaseInsensitive);
-    return shareName.contains(regExp);
+
+    return shareName.contains(regExp) && (state != Share::ShareState::CREATING);
 }
 
 Share *ShareFilter::getShare(int index)

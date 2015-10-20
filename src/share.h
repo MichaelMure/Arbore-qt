@@ -192,5 +192,6 @@ private:
 };
 
 Q_DECLARE_METATYPE(const Share*)
+Q_DECLARE_METATYPE(Share::ShareState)
 
 #endif // SHARE_H
