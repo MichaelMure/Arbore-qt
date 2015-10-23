@@ -21,7 +21,6 @@ class QNetworkAccessManager;
 class QNetworkReply;
 class QNetworkRequest;
 class QElapsedTimer;
-class QTextStream;
 enum IpfsState : short;
 
 class IpfsAccess : public QObject
@@ -90,13 +89,13 @@ private slots:
     void daemon_error(QProcess::ProcessError error);
     void daemon_finished(int exit_code, QProcess::ExitStatus exit_status);
     void daemon_stdout();
+    void daemon_stderr();
 
 private:
     IpfsState state_;
     QNetworkAccessManager *manager_;
     QProcess *daemon_process_;
     QProcess *cli_process_;
-    QTextStream *stdout_;
     QString api_ip_;
     QString api_port_;
     QQueue<IpfsAccess*> access_buffer_;

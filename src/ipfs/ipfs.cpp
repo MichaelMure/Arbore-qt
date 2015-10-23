@@ -41,7 +41,6 @@ Ipfs::Ipfs()
       manager_(new QNetworkAccessManager()),
       daemon_process_(NULL),
       cli_process_(NULL),
-      stdout_(NULL),
       api_ip_("127.0.0.1"),
       api_port_("5001")
 {
@@ -145,13 +144,14 @@ void Ipfs::launch_daemon()
             this, SLOT(daemon_error(QProcess::ProcessError)));
     connect(daemon_process_, SIGNAL(finished(int,QProcess::ExitStatus)),
             this, SLOT(daemon_finished(int,QProcess::ExitStatus)));
-    connect(daemon_process_, SIGNAL(readyRead()),
+    connect(daemon_process_, SIGNAL(readyReadStandardOutput()),
             this, SLOT(daemon_stdout()));
+    connect(daemon_process_, SIGNAL(readyReadStandardError()),
+            this, SLOT(daemon_stderr()));
 
     // ipfs should be in the PATH
     daemon_process_->setProcessEnvironment(env);
     daemon_process_->start("ipfs", QStringList() << "daemon");
-    stdout_ = new QTextStream(daemon_process_);
 }
 
 void Ipfs::launch_access(IpfsAccess *access)
@@ -169,7 +169,7 @@ void Ipfs::launch_access(IpfsAccess *access)
 
             if(this->state_ == RUNNING)
             {
-                // TODO: restart process
+                // TODO: restart process ?
             }
 
             delete access;
@@ -187,7 +187,7 @@ void Ipfs::launch_access(IpfsAccess *access)
 void Ipfs::on_online()
 {
     // Configure the various log level we need
-    cli_process_->start("ipfs", QStringList() << "log" << "level" << "all" << "debug");
+    cli_process_->start("ipfs", QStringList() << "log" << "level" << "all" << "info");
     cli_process_->waitForFinished();
 
     init_commands();
@@ -225,11 +225,12 @@ void Ipfs::daemon_finished(int exit_code, QProcess::ExitStatus exit_status)
 
 void Ipfs::daemon_stdout()
 {
-    while (!stdout_->atEnd())
-    {
-        QString line = stdout_->readLine();
+    QByteArray raw = daemon_process_->readAllStandardOutput();
+    QTextStream stdout(&raw);
 
-        qDebug() << line;
+    while (!stdout.atEnd())
+    {
+        QString line = stdout.readLine();
 
         if(state_ == LAUNCH_DAEMON)
         {
@@ -240,21 +241,31 @@ void Ipfs::daemon_stdout()
                 on_online();
             }
         }
+    }
+}
 
-        // INFO[21:32:55:000] Added block QmR4e8BQXd18GeN5SRUCLByH6DYhEw7xfRtEGHhJqJQtvb  module=blockstore
-        QRegExp added("^.*Added block ([a-zA-Z0-9]*)  module=blockstore$");
+// Ipfs daemon output its log on stderr
+void Ipfs::daemon_stderr()
+{
+    QByteArray raw = daemon_process_->readAllStandardError();
+    QTextStream stderr(&raw);
+
+    while (!stderr.atEnd())
+    {
+        QString line = stderr.readLine();
+
+        QRegExp added("^.*Added block ([a-zA-Z0-9]*).* module=blockstore.*$");
         if(added.indexIn(line) >= 0)
         {
-            QString hash = added.cap(0);
-            qDebug() << hash;
+            QString hash = added.cap(1);
+            qDebug() << "added " << hash;
         }
 
-        // INFO[21:32:51:000] Removed block QmWogaMJxc7wKjT28W6GvgQC3zGDyiLoADuV2BXWDvkt3W  module=blockstore
-        QRegExp removed("^.*Removed block ([a-zA-Z0-9]*)  module=blockstore$");
+        QRegExp removed("^.*Removed block ([a-zA-Z0-9]*).* module=blockstore.*$");
         if(removed.indexIn(line) >= 0)
         {
-            QString hash = removed.cap(0);
-            qDebug() << hash;
+            QString hash = removed.cap(1);
+            qDebug() << "removed" << hash;
         }
     }
 }
