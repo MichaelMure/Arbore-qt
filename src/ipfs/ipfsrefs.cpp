@@ -12,11 +12,8 @@
 const QString API_COMMAND = "refs";
 
 IpfsRefs::IpfsRefs(QObject *parent)
-    : QObject(parent),
-      valid_data_(false),
-      local_objects_()
+    : QObject(parent)
 {
-    startTimer(10 * 1000); // 10s
 }
 
 RefsReply *IpfsRefs::recursive_refs(const IpfsHash &hash) const
@@ -62,7 +59,7 @@ RefsReply *IpfsRefs::recursive_refs(const IpfsHash &hash) const
 
             const QJsonObject json = doc.object();
 
-            refs_reply->refs << new IpfsHash(json.value("Ref").toString().trimmed());
+            refs_reply->refs << IpfsHash(json.value("Ref").toString().trimmed());
         }
 
         emit refs_reply->finished();
@@ -73,28 +70,32 @@ RefsReply *IpfsRefs::recursive_refs(const IpfsHash &hash) const
     return refs_reply;
 }
 
-bool IpfsRefs::is_object_local(const IpfsHash &hash) const
+RefsReply *IpfsRefs::local() const
 {
-    return local_objects_.contains(hash);
+    QUrl url = Ipfs::instance()->api_url(API_COMMAND + "/local");
+    IpfsAccess *access = Ipfs::instance()->query(url);
+
+    RefsReply *refs_reply = new RefsReply();
+
+    connect(access, &IpfsAccess::finished,
+            this, [access, refs_reply]()
+    {
+            QTextStream stream(access->reply->readAll());
+
+            while(!stream.atEnd())
+            {
+                refs_reply->refs << IpfsHash(stream.readLine());
+            }
+
+            emit refs_reply->finished();
+
+            delete access;
+    });
+
+    return refs_reply;
 }
 
-void IpfsRefs::init()
-{
-    refresh_objects();
-}
-
-bool IpfsRefs::valid_data() const
-{
-    return valid_data_;
-}
-
-void IpfsRefs::timerEvent(QTimerEvent *)
-{
-    if(Ipfs::instance()->online())
-        refresh_objects();
-}
-
-void IpfsRefs::refresh_objects()
+/*void IpfsRefs::refresh_objects()
 {
     QUrl url = Ipfs::instance()->api_url(API_COMMAND + "/local");
 
@@ -112,24 +113,7 @@ void IpfsRefs::refresh_objects()
             objects << IpfsHash(stream.readLine());
         }
 
-        qDebug() << objects.size() << " obj";
 
-        foreach (IpfsHash hash, objects)
-        {
-            if(this->local_objects_.contains(hash))
-            {
-                this->local_objects_.remove(hash);
-            }
-            else
-            {
-                emit objectAdded(hash);
-            }
-        }
-
-        foreach (IpfsHash hash, this->local_objects_)
-        {
-            emit objectRemoved(hash);
-        }
 
         this->local_objects_ = objects;
 
@@ -137,15 +121,6 @@ void IpfsRefs::refresh_objects()
 
         delete access;
     });
-}
-
-RefsReply::~RefsReply()
-{
-    int nb = refs.count();
-    for(int i = 0; i < nb; i++)
-    {
-        delete refs[i];
-    }
-}
+}*/
 
 

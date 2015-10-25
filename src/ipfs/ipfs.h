@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QQueue>
 #include <QProcess>
+#include <QSet>
 #include "ipfs/ipfsget.h"
 #include "ipfs/ipfsfile.h"
 #include "ipfs/ipfsid.h"
@@ -78,6 +79,15 @@ public:
      */
     bool online() const;
 
+    /**
+     * @return true if the block is stored locally
+     */
+    bool is_object_local(const IpfsHash &hash) const;
+
+signals:
+    void objectAdded(const IpfsHash& hash);
+    void objectRemoved(const IpfsHash& hash);
+
 private:
     void init_commands();
     void launch_daemon();
@@ -99,6 +109,7 @@ private:
     QString api_ip_;
     QString api_port_;
     QQueue<IpfsAccess*> access_buffer_;
+    QSet<const IpfsHash> local_objects_;
 };
 
 #endif // IPFS_H
