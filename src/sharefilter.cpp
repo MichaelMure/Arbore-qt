@@ -15,7 +15,7 @@ bool ShareFilter::filterAcceptsRow(int sourceRow, const QModelIndex& sourceParen
 {
     QModelIndex childIndex = sourceModel()->index(sourceRow, 0, sourceParent);
     QString shareName = childIndex.model()->data(childIndex, ShareModel::NameRole).value<QString>();
-    Share::ShareState state = childIndex.model()->data(childIndex, ShareModel::StateRole).value<Share::ShareState>();
+    Share::ShareState state = (Share::ShareState) childIndex.model()->data(childIndex, ShareModel::StateRole).value<int>();
 
     QRegExp regExp = filterRegExp();
     regExp.setCaseSensitivity(Qt::CaseInsensitive);
