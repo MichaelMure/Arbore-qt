@@ -178,6 +178,7 @@ private slots:
 
 private:
     void trigger_download();
+    void set_state(ShareState state);
 
 private:
     int id_;

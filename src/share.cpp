@@ -6,6 +6,7 @@
 #include "objectiterator.h"
 #include "objectcache.h"
 #include "ipfs/ipfs.h"
+#include "persist/persist.h"
 
 #include <QDateTime>
 #include <QDebug>
@@ -233,7 +234,7 @@ void Share::add_hash(const IpfsHash &hash)
         return;
     }
 
-    state_ = CREATING;
+    set_state(CREATING);
     waiting_for_hash_ << hash;
     ObjectReply *reply = Object::from_hash(hash);
 
@@ -270,7 +271,7 @@ void Share::add_hash(const IpfsHash &hash, Object::ObjectType type)
         return;
     }
 
-    state_ = CREATING;
+    set_state(CREATING);
     waiting_for_hash_ << hash;
 
     switch (type)
@@ -298,7 +299,7 @@ void Share::start()
     switch (state_)
     {
     case CREATING:
-        state_ = WAITING_FOR_DL;
+        set_state(WAITING_FOR_DL);
         break;
     case READY:
     case PAUSED:
@@ -343,14 +344,14 @@ void Share::objectChanged()
 {
     if(state_ == DOWNLOADING && block_local() == block_total())
     {
-        state_ = SHARING;
+        set_state(SHARING);
     }
 
     if(metadata_local())
     {
         if(state_ == CREATING)
         {
-            state_ = READY;
+            set_state(READY);
         }
 
         if(state_ == WAITING_FOR_DL)
@@ -372,5 +373,11 @@ void Share::trigger_download()
         Ipfs::instance()->pin.add_pin((*i)->hash(), true);
     }
 
-    state_ = DOWNLOADING;
+    set_state(DOWNLOADING);
+}
+
+void Share::set_state(Share::ShareState state)
+{
+    this->state_ = state;
+    Persist::instance()->share.persist(this);
 }
