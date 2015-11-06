@@ -34,3 +34,8 @@ const QString& IpfsHash::ToString() const
 {
     return str_;
 }
+
+IpfsHash::operator QString() const
+{
+    return ToString();
+}

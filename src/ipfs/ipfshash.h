@@ -19,6 +19,7 @@ public:
     IpfsHash& operator=(const IpfsHash& other);
     bool operator==(const IpfsHash& other) const;
     const QString& ToString() const;
+    operator QString() const;
 
 private:
     QString str_;

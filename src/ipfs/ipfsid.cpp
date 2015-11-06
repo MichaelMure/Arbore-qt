@@ -34,7 +34,7 @@ void IpfsId::init()
         this->id_ = new IpfsHash(id_value.toString());
 
         valid_data_ = true;
-        qDebug() << "Got local ID: " << id_->ToString();
+        qDebug() << "Got local ID: " << id_;
 
         delete access;
     });

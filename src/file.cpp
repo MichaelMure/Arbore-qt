@@ -17,9 +17,9 @@ File::File(const IpfsHash &hash, const QString &name)
       root_block_size_(0)
 {
     // listen to ipfs refs signal to update the locality of blocks
-    connect(&(Ipfs::instance()->refs), SIGNAL(objectAdded(IpfsHash)),
+    connect(Ipfs::instance(), SIGNAL(objectAdded(IpfsHash)),
             this, SLOT(objectAdded(IpfsHash)));
-    connect(&(Ipfs::instance()->refs), SIGNAL(objectRemoved(IpfsHash)),
+    connect(Ipfs::instance(), SIGNAL(objectRemoved(IpfsHash)),
             this, SLOT(objectRemoved(IpfsHash)));
 
     FileReply *flreply = Ipfs::instance()->file.ls(hash);
@@ -83,7 +83,7 @@ uint File::size_local() const
     uint size_local = root_block_size_;
     for(QHash<IpfsHash, Block*>::const_iterator i = blocks_.constBegin(); i != blocks_.constEnd(); i++)
     {
-        if(Ipfs::instance()->refs.is_object_local(i.key()))
+        if(Ipfs::instance()->is_object_local(i.key()))
         {
             size_local += i.value()->size;
         }
@@ -100,14 +100,14 @@ uint File::block_local() const
 {
     uint block_local = 0;
 
-    if(Ipfs::instance()->refs.is_object_local(hash_))
+    if(Ipfs::instance()->is_object_local(hash_))
     {
         block_local++;
     }
 
     for(QHash<IpfsHash, Block*>::const_iterator i = blocks_.constBegin(); i != blocks_.constEnd(); i++)
     {
-        if(Ipfs::instance()->refs.is_object_local(i.key()))
+        if(Ipfs::instance()->is_object_local(i.key()))
         {
             block_local++;
         }

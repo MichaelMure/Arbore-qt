@@ -12,6 +12,7 @@
 #include <QRegExp>
 #include <QStandardPaths>
 #include <QDir>
+#include <QDebug>
 
 #include "directory.h"
 
@@ -79,6 +80,7 @@ IpfsAccess *Ipfs::query(const QUrl &url)
     access->timer = new QElapsedTimer();
     access->request = new QNetworkRequest(url);
 
+    // If not connected to the daemon, pill up the requests in a buffer
     if(online())
         launch_access((access));
     else
@@ -92,10 +94,14 @@ bool Ipfs::online() const
     return state_ == RUNNING;
 }
 
+bool Ipfs::is_object_local(const IpfsHash &hash) const
+{
+    return local_objects_.contains(hash);
+}
+
 void Ipfs::init_commands()
 {
     id.init();
-    refs.init();
     stats.init();
     swarm.init();
     version.init();
@@ -192,6 +198,33 @@ void Ipfs::on_online()
 
     init_commands();
 
+    // Refresh local objects
+    RefsReply *refs_reply = refs.local();
+    connect(refs_reply, &RefsReply::finished,
+            this, [this, refs_reply]()
+    {
+        qDebug() << refs_reply->refs.size() << " obj";
+
+        foreach (IpfsHash hash, refs_reply->refs)
+        {
+            if(this->local_objects_.contains(hash))
+            {
+                this->local_objects_.remove(hash);
+            }
+            else
+            {
+                emit objectAdded(hash);
+            }
+        }
+
+        foreach (IpfsHash hash, this->local_objects_)
+        {
+            emit objectRemoved(hash);
+        }
+
+        this->local_objects_ = refs_reply->refs;
+    });
+
     while(!access_buffer_.empty())
     {
         launch_access(access_buffer_.dequeue());
@@ -257,15 +290,33 @@ void Ipfs::daemon_stderr()
         QRegExp added("^.*Added block ([a-zA-Z0-9]*).* module=blockstore.*$");
         if(added.indexIn(line) >= 0)
         {
-            QString hash = added.cap(1);
-            qDebug() << "added " << hash;
+            try
+            {
+                const IpfsHash hash(added.cap(1));
+                local_objects_.insert(hash);
+                emit objectAdded(hash);
+                qDebug() << "added " << hash;
+            }
+            catch(std::exception& e)
+            {
+                qDebug() << e.what() << added.cap(1);
+            }
         }
 
         QRegExp removed("^.*Removed block ([a-zA-Z0-9]*).* module=blockstore.*$");
         if(removed.indexIn(line) >= 0)
         {
-            QString hash = removed.cap(1);
-            qDebug() << "removed" << hash;
+            try
+            {
+                const IpfsHash hash(removed.cap(1));
+                local_objects_.remove(hash);
+                qDebug() << "removed" << hash;
+                emit objectRemoved(hash);
+            }
+            catch(std::exception& e)
+            {
+                qDebug() << e.what() << added.cap(1);
+            }
         }
     }
 }
