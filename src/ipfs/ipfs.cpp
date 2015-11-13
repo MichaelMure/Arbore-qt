@@ -43,7 +43,8 @@ Ipfs::Ipfs()
       daemon_process_(NULL),
       cli_process_(NULL),
       api_ip_("127.0.0.1"),
-      api_port_("5001")
+      api_port_("5001"),
+      log_reply_(NULL)
 {
     launch_daemon();
 }
@@ -51,6 +52,13 @@ Ipfs::Ipfs()
 Ipfs::~Ipfs()
 {
     this->state_ = QUITTING;
+
+    if(log_reply_)
+    {
+        log_reply_->abort();
+        log_reply_->deleteLater();
+    }
+
     if(daemon_process_)
     {
         daemon_process_->terminate();
@@ -234,10 +242,28 @@ void Ipfs::on_online()
         this->local_objects_ = refs_reply->refs;
     });
 
+    request_logs();
+
     while(!access_buffer_.empty())
     {
         launch_access(access_buffer_.dequeue());
     }
+}
+
+void Ipfs::request_logs()
+{
+    if(log_reply_)
+    {
+        log_reply_->deleteLater();
+    }
+
+    QUrl url = api_url("log/tail");
+    QNetworkRequest request(url);
+
+    log_reply_ = manager_->get(request);
+
+    connect(log_reply_, SIGNAL(readyRead()),
+            this, SLOT(daemon_logevent()));
 }
 
 void Ipfs::daemon_started()
@@ -274,6 +300,8 @@ void Ipfs::daemon_stdout()
     {
         QString line = stdout.readLine();
 
+        qDebug() << line;
+
         if(state_ == LAUNCH_DAEMON)
         {
             QRegExp regex("^Daemon is ready$");
@@ -295,36 +323,49 @@ void Ipfs::daemon_stderr()
     while (!stderr.atEnd())
     {
         QString line = stderr.readLine();
+        qDebug() << line;
+    }
+}
 
-        QRegExp added("^.*Added block ([a-zA-Z0-9]*).* module=blockstore.*$");
+void Ipfs::daemon_logevent()
+{
+    QByteArray raw = log_reply_->readAll();
+    QTextStream log(&raw);
+    while(!log.atEnd())
+    {
+        QString line = log.readLine();
+
+        QRegExp added(".*Added block.*");
         if(added.indexIn(line) >= 0)
         {
+            QJsonObject json = QJsonDocument::fromJson(line.toUtf8()).object();
             try
             {
-                const IpfsHash hash(added.cap(1));
+                const IpfsHash hash(json.value("key").toString());
                 local_objects_.insert(hash);
                 emit objectAdded(hash);
                 qDebug() << "added " << hash;
             }
             catch(std::exception& e)
             {
-                qDebug() << e.what() << added.cap(1);
+                qDebug() << e.what() << line;
             }
         }
 
-        QRegExp removed("^.*Removed block ([a-zA-Z0-9]*).* module=blockstore.*$");
+        QRegExp removed(".*Removed block.*");
         if(removed.indexIn(line) >= 0)
         {
+            QJsonObject json = QJsonDocument::fromJson(line.toUtf8()).object();
             try
             {
-                const IpfsHash hash(removed.cap(1));
+                const IpfsHash hash(json.value("key").toString());
                 local_objects_.remove(hash);
                 qDebug() << "removed" << hash;
                 emit objectRemoved(hash);
             }
             catch(std::exception& e)
             {
-                qDebug() << e.what() << added.cap(1);
+                qDebug() << e.what() << line;
             }
         }
     }

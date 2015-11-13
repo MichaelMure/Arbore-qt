@@ -93,6 +93,7 @@ private:
     void launch_daemon();
     void launch_access(IpfsAccess* access);
     void on_online();
+    void request_logs();
 
 private slots:
     void daemon_started();
@@ -100,6 +101,7 @@ private slots:
     void daemon_finished(int exit_code, QProcess::ExitStatus exit_status);
     void daemon_stdout();
     void daemon_stderr();
+    void daemon_logevent();
 
 private:
     IpfsState state_;
@@ -110,6 +112,7 @@ private:
     QString api_port_;
     QQueue<IpfsAccess*> access_buffer_;
     QSet<const IpfsHash> local_objects_;
+    QNetworkReply *log_reply_;
 };
 
 #endif // IPFS_H
