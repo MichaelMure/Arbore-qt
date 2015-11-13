@@ -142,6 +142,15 @@ void Ipfs::launch_daemon()
     api_port_ = "4280";
     qDebug() << "HTTP API set to /ip4/127.0.0.1/tcp/4280";
 
+    // Add the API url to the CORS config to avoid 403
+    cli_process_->start("ipfs",
+        QStringList() << "config"
+            << "--json"
+            << "API.HTTPHeaders"
+            << "{\"Access-Control-Allow-Origin\" : [\"http://127.0.0.1\", \"http://127.0.0.1:4280\"]}");
+    cli_process_->waitForFinished();
+    qDebug() << "Configured CORS";
+
     daemon_process_ = new QProcess(this);
 
     connect(daemon_process_, SIGNAL(started()),
