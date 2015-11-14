@@ -331,12 +331,12 @@ void Ipfs::daemon_logevent()
 {
     QByteArray raw = log_reply_->readAll();
     QTextStream log(&raw);
+
     while(!log.atEnd())
     {
         QString line = log.readLine();
 
-        QRegExp added(".*Added block Begin.*");
-        if(added.indexIn(line) >= 0)
+        if(line.contains("Added block Begin"))
         {
             QJsonObject json = QJsonDocument::fromJson(line.toUtf8()).object();
             try
@@ -352,8 +352,7 @@ void Ipfs::daemon_logevent()
             }
         }
 
-        QRegExp removed(".*Removed block.*");
-        if(removed.indexIn(line) >= 0)
+        if(line.contains("Removed block"))
         {
             QJsonObject json = QJsonDocument::fromJson(line.toUtf8()).object();
             try
