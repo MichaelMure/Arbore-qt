@@ -335,7 +335,7 @@ void Ipfs::daemon_logevent()
     {
         QString line = log.readLine();
 
-        QRegExp added(".*Added block.*");
+        QRegExp added(".*Added block Begin.*");
         if(added.indexIn(line) >= 0)
         {
             QJsonObject json = QJsonDocument::fromJson(line.toUtf8()).object();
