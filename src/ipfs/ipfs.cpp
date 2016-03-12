@@ -13,6 +13,7 @@
 #include <QStandardPaths>
 #include <QDir>
 #include <QDebug>
+#include <QHttpMultiPart>
 
 #include "directory.h"
 
@@ -46,6 +47,8 @@ Ipfs::Ipfs()
       api_port_("5001"),
       log_reply_(NULL)
 {
+    // We are doing localhost request, bypass the non-internet connectivity blocking
+    manager_->setNetworkAccessible(QNetworkAccessManager::Accessible);
     launch_daemon();
 }
 
@@ -82,11 +85,18 @@ QUrl Ipfs::api_url(const QString &command)
                 .arg(api_ip_, api_port_, command));
 }
 
-IpfsAccess *Ipfs::query(const QUrl &url)
+IpfsAccess *Ipfs::query(const QUrl &url, QHttpMultiPart *multipart)
 {
     IpfsAccess *access = new IpfsAccess();
+    access->multipart = multipart;
     access->timer = new QElapsedTimer();
     access->request = new QNetworkRequest(url);
+
+    // parent for cleaning
+    if(multipart)
+    {
+        multipart->setParent(access);
+    }
 
     // If not connected to the daemon, pill up the requests in a buffer
     if(online())
@@ -185,7 +195,15 @@ void Ipfs::launch_daemon()
 void Ipfs::launch_access(IpfsAccess *access)
 {
     access->timer->start();
-    access->reply = manager_->get(*access->request);
+
+    if(access->multipart)
+    {
+        access->reply = manager_->post(*access->request, access->multipart);
+    }
+    else
+    {
+        access->reply = manager_->get(*access->request);
+    }
 
     connect(access->reply, &QNetworkReply::finished,
             this, [this, access]()

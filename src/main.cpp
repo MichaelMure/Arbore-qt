@@ -8,6 +8,8 @@
 #include "sharefilter.h"
 #include "share.h"
 
+#include "ipfs/ipfs.h"
+
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
@@ -37,6 +39,7 @@ int main(int argc, char *argv[])
 //            trayIcon->show();
         }
     }
-      
+
+
     return app.exec();
 }

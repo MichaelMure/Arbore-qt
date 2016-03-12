@@ -45,7 +45,8 @@ SOURCES += main.cpp\
     ipfs/ipfsobject.cpp \
     ipfs/ipfsfile.cpp \
     ipfs/ipfsrepo.cpp \
-    ipfs/ipfslog.cpp
+    ipfs/ipfslog.cpp \
+    ipfs/ipfsadd.cpp
 
 HEADERS  += \
     ipfs/ipfs.h \
@@ -72,7 +73,8 @@ HEADERS  += \
     ipfs/ipfsobject.h \
     ipfs/ipfsfile.h \
     ipfs/ipfsrepo.h \
-    ipfs/ipfslog.h
+    ipfs/ipfslog.h \
+    ipfs/ipfsadd.h
 
 RESOURCES += ui/resources.qrc
 

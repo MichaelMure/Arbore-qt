@@ -5,6 +5,7 @@
 #include <QQueue>
 #include <QProcess>
 #include <QSet>
+#include "ipfs/ipfsadd.h"
 #include "ipfs/ipfsget.h"
 #include "ipfs/ipfsfile.h"
 #include "ipfs/ipfsid.h"
@@ -18,9 +19,11 @@
 #include "ipfs/ipfsswarm.h"
 #include "ipfs/ipfsversion.h"
 
+class QHttpMultiPart;
 class QNetworkAccessManager;
 class QNetworkReply;
 class QNetworkRequest;
+class QIODevice;
 class QElapsedTimer;
 enum IpfsState : short;
 
@@ -32,6 +35,7 @@ public:
     const QJsonObject json();
 public:
     QNetworkRequest *request;
+    QHttpMultiPart  *multipart;
     QNetworkReply   *reply;
     QElapsedTimer   *timer;
 
@@ -50,6 +54,7 @@ public:
     static Ipfs *instance();
 
     // IPFS API access
+    IpfsAdd add;
     IpfsFile file;
     IpfsGet get;
     IpfsId id;
@@ -71,8 +76,9 @@ public:
     /**
      * Query a specific API url, constructed from api_url()
      * @param url
+     * @param multipart If not null, send a post request with the data provided.
      */
-    IpfsAccess * query(const QUrl &url);
+    IpfsAccess * query(const QUrl &url, QHttpMultiPart *multipart = NULL);
 
     /**
      * @return true is the daemon is online and ready.
