@@ -74,7 +74,8 @@ HEADERS  += \
     ipfs/ipfsfile.h \
     ipfs/ipfsrepo.h \
     ipfs/ipfslog.h \
-    ipfs/ipfsadd.h
+    ipfs/ipfsadd.h \
+    ipfs/hashreply.h
 
 RESOURCES += ui/resources.qrc
 

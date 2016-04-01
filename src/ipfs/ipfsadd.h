@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include "ipfs/ipfshash.h"
+#include "ipfs/hashreply.h"
 
 class AddReply;
 
@@ -13,17 +14,7 @@ public:
     explicit IpfsAdd(QObject *parent = 0);
     virtual ~IpfsAdd() {}
 
-    AddReply *add(QString filepath);
-};
-
-class AddReply : public QObject
-{
-    Q_OBJECT
-signals:
-    void finished();
-
-public:
-    IpfsHash hash;
+    HashReply* add(QString filepath);
 };
 
 #endif // IPFSADD_H

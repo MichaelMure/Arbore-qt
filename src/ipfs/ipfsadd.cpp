@@ -21,7 +21,7 @@ IpfsAdd::IpfsAdd(QObject *parent)
 {
 }
 
-AddReply* IpfsAdd::add(QString filepath)
+HashReply *IpfsAdd::add(QString filepath)
 {
     QUrl url = Ipfs::instance()->api_url(API_COMMAND);
 
@@ -55,7 +55,7 @@ AddReply* IpfsAdd::add(QString filepath)
     file->setParent(multiPart);
     multiPart->append(part);
 
-    AddReply *add_reply = new AddReply();
+    HashReply *add_reply = new HashReply();
     IpfsAccess *access = Ipfs::instance()->query(url, multiPart);
 
     connect(access, &IpfsAccess::finished,

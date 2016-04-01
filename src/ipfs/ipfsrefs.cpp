@@ -94,33 +94,3 @@ RefsReply *IpfsRefs::local() const
 
     return refs_reply;
 }
-
-/*void IpfsRefs::refresh_objects()
-{
-    QUrl url = Ipfs::instance()->api_url(API_COMMAND + "/local");
-
-    IpfsAccess *access = Ipfs::instance()->query(url);
-
-    connect(access, &IpfsAccess::finished,
-            this, [this, access]()
-    {
-        QTextStream stream(access->reply->readAll());
-
-        QSet<IpfsHash> objects = QSet<IpfsHash>();
-
-        while(!stream.atEnd())
-        {
-            objects << IpfsHash(stream.readLine());
-        }
-
-
-
-        this->local_objects_ = objects;
-
-        valid_data_ = true;
-
-        delete access;
-    });
-}*/
-
-

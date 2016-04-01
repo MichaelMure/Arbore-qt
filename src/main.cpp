@@ -40,6 +40,11 @@ int main(int argc, char *argv[])
         }
     }
 
+    /*Ipfs::instance()->object.new_object();
+    Ipfs::instance()->object.add_link(IpfsHash("QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n"),
+                                      "bloh",
+                                      IpfsHash("QmRFv66mJPKj55DpkrRMa29WgZHjLm8kRdndjf9Q9vKyJF"));*/
+    //Ipfs::instance()->log.log_level_all(IpfsLog::ERROR);
 
     return app.exec();
 }
