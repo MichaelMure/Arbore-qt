@@ -1,3 +1,5 @@
+# ⚠ This project has been restarted here: https://github.com/MichaelMure/TotallyNotArbore/ ⚠ 
+
 ![Arbore](https://raw.githubusercontent.com/MichaelMure/Arbore-qt/master/resources/logo/arbore-prelogo.png)
 
 Here shall appear a friend-to-friend filesharing app with the following caracteristics:
